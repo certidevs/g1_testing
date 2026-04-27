@@ -12,7 +12,7 @@ import com.demo.model.Session;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
+@ToString(exclude={"user","session"})
 @Entity
 @Table(name="tickets")
 public class Ticket {
@@ -31,17 +31,18 @@ public class Ticket {
 
     private Double discont;
 
-    private LocalDateTime buyDateTime;
+    @Builder.Default
+    private LocalDateTime buyDateTime = LocalDateTime.now();
 
-    private BuyStatus status;
+    @Builder.Default
+    @Column
+    private BuyStatus status = BuyStatus.LIBRE;
 
     private String QRCode;
 
-    @ToString.Exclude
     @ManyToOne
     private User user;
 
-    @ToString.Exclude
     @ManyToOne
     private Session session;
 
