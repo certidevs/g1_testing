@@ -31,4 +31,16 @@ public class Session {
     //idioma ("VO", "doblada", "VOSE") (Podría ser enum)
     private String language;
 
+    //Integer numAds o Integer adMinutes o Duration adMinutes
+    private Integer adMinutes;
+
+     //asociación con la película que se proyectará en esta sesión.
+    //@ManyToOne
+    //@ToString.Exclude
+    //private Movie Movie;
+
+    //@ManyToOne
+   // @ToString.Exclude
+   // private Room Room;
+
 }
