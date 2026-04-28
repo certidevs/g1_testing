@@ -1,11 +1,10 @@
 package com.demo.model;
 
+import com.demo.model.enums.BuyStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-
-import com.demo.model.Session;
 
 @Getter
 @Setter
