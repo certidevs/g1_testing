@@ -19,7 +19,7 @@ public class TicketController {
         return "prueba";
     }
 
-    @GetMapping("tickets\{id}")
+    @GetMapping("tickets/{id}")
     public String getTicket(@PathVariable Long id, Model model){
         //return ticketRepository.findById(id).orElse(null);
         return "prueba";

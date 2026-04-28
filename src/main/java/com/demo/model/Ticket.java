@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString(exclude={"user","session"})
+@ToString(exclude={"session"})
 @Entity
 @Table(name="tickets")
 public class Ticket {
@@ -20,7 +20,7 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length=2)
+    @Column(name = "fila", length=2)
     private String row;
 
     @Column(length=3)
@@ -34,7 +34,7 @@ public class Ticket {
     private LocalDateTime buyDateTime = LocalDateTime.now();
 
     @Builder.Default
-    @Column
+    @Enumerated(EnumType.STRING)
     private BuyStatus status = BuyStatus.LIBRE;
 
     private String QRCode;
