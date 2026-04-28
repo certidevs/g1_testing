@@ -15,12 +15,14 @@ public class TicketController {
 
     @GetMapping("tickets")
     public String getTickets(){
-        return ticketRepository.findAll();
+        //return ticketRepository.findAll().orElse(null);
+        return "prueba";
     }
 
     @GetMapping("tickets\{id}")
     public String getTicket(@PathVariable Long id, Model model){
-        return ticketRepository.findById(id);
+        //return ticketRepository.findById(id).orElse(null);
+        return "prueba";
     }
 
 }

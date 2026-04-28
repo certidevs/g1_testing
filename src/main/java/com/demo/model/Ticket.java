@@ -40,8 +40,8 @@ public class Ticket {
 
     private String QRCode;
 
-    @ManyToOne
-    private User user;
+//    @ManyToOne
+//    private User user;
 
     @ManyToOne
     private Session session;
