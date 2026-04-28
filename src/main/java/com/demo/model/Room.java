@@ -1,6 +1,7 @@
 package com.demo.model;
 
 
+import com.demo.model.enums.ScreenType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +27,7 @@ public class Room {
 
     //tipo de sala (IMAX, STANDARD, 3D, 4DX...)
     @Enumerated(EnumType.STRING)
-    private String screenType;
+    private ScreenType screenType;
 
 
     private Integer floorNumber;
