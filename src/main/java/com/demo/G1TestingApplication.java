@@ -30,8 +30,8 @@ public class G1TestingApplication {
         //Datos de prueba de las salas (Room)
         RoomRepository roomRepository = context.getBean(RoomRepository.class);
         roomRepository.saveAll(List.of(
-                Room.builder().screenType(ScreenType.D4X).capacity(100).build(),
-                Room.builder().screenType(ScreenType.IMAX).capacity(150).build(),
+                Room.builder().name("Sala 1").screenType(ScreenType.D4X).capacity(100).build(),
+                Room.builder().name("Sala 2").screenType(ScreenType.IMAX).capacity(150).build(),
                 Room.builder().screenType(ScreenType.D3).capacity(80).build(),
                 Room.builder().screenType(ScreenType.D3).capacity(120).build(),
                 Room.builder().screenType(ScreenType.STANDARD).capacity(90).build()
