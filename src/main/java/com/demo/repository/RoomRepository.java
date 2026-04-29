@@ -11,5 +11,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findByScreenType(ScreenType screenType);
 
-    List<Room> findByCapacityGreaterThan(int i);
+    List<Room> findByCapacityGreaterThan(int capacity);
 }

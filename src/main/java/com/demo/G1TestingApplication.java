@@ -1,9 +1,13 @@
 package com.demo;
 
 import com.demo.model.Movie;
+import com.demo.model.Room;
+import com.demo.model.enums.ScreenType;
 import com.demo.repository.MovieRepository;
+import com.demo.repository.RoomRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.util.List;
 
 @SpringBootApplication
 public class G1TestingApplication {
@@ -22,7 +26,15 @@ public class G1TestingApplication {
         Movie p8 = movieRepository.save(Movie.builder().title("Interstellar").Director("Christopher Nolan").durationMinutes(169).genre("Ciencia ficcion").build());
         Movie p9 = movieRepository.save(Movie.builder().title("Interstellar").Director("Christopher Nolan").durationMinutes(169).genre("Ciencia ficcion").build());
         Movie p10 = movieRepository.save(Movie.builder().title("Interstellar").Director("Christopher Nolan").durationMinutes(169).genre("Ciencia ficcion").build());
+
+        //Datos de prueba de las salas (Room)
+        RoomRepository roomRepository = context.getBean(RoomRepository.class);
+        roomRepository.saveAll(List.of(
+                Room.builder().screenType(ScreenType.D4X).capacity(100).build(),
+                Room.builder().screenType(ScreenType.IMAX).capacity(150).build(),
+                Room.builder().screenType(ScreenType.D3).capacity(80).build(),
+                Room.builder().screenType(ScreenType.D3).capacity(120).build(),
+                Room.builder().screenType(ScreenType.STANDARD).capacity(90).build()
+        ));
     }
-
-
 }
