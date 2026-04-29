@@ -6,9 +6,7 @@ import com.demo.model.Session;
 import java.util.List;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
-    List<Session> findByMovieId (Long movieId);
-    List<Session> findByMovieIdAndRoomId (Long cinemaId);
-    List<Session> findByLanguage(Long cinemaId, Long roomId);
-
-
+    List<Session> findByMovie_Id (Long id);
+    List<Session> findByMovieIdAndRoomId (Long movieId, Long roomId);
+    List<Session> findByLanguage(String language);
 }
