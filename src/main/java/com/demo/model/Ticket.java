@@ -28,7 +28,7 @@ public class Ticket {
 
     private Double price;
 
-    private Double discont;
+    private Double discount;
 
     @Builder.Default
     private LocalDateTime buyDateTime = LocalDateTime.now();
