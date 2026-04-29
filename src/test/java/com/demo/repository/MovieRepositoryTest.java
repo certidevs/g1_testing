@@ -13,7 +13,7 @@ public class MovieRepositoryTest {
 
     @Test
     void guardarPelicula(){
-        Movie movie = Movie.builder().Director("Lee Toland Krieger").title("The Age of Adaline").durationMinutes(112).build();
+        Movie movie = Movie.builder().director("Lee Toland Krieger").title("The Age of Adaline").durationMinutes(112).build();
 
         assertNotNull(movie.getId());
         assertEquals("The Age of Adaline", movie.getTitle());
