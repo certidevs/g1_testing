@@ -15,5 +15,5 @@ public class SessionController {
 
     //GetMapping de Session
     @GetMapping("sessions")
-    public String Session(Model model) { return ""; }
+    public String Session(Model model) { return "sessions/session-list"; }
 }

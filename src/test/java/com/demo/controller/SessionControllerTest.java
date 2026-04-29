@@ -14,4 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 public class SessionControllerTest {
     @Autowired
     SessionRepository sessionRepository;
+
+    @Test
+    void sessionEmpty(){
+        //mockMvc.perform();
+    }
 }
