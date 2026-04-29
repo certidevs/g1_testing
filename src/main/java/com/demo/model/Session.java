@@ -34,13 +34,13 @@ public class Session {
     //Integer numAds o Integer adMinutes o Duration adMinutes
     private Integer adMinutes;
 
-     //asociación con la película que se proyectará en esta sesión.
-    //@ManyToOne
-    //@ToString.Exclude
-    //private Movie Movie;
+    //asociación con la película que se proyectará en esta sesión.
+    @ManyToOne
+    @ToString.Exclude
+    private Movie movie;
 
-    //@ManyToOne
-   // @ToString.Exclude
-   // private Room Room;
+    @ManyToOne
+    @ToString.Exclude
+    private Room room;
 
 }
