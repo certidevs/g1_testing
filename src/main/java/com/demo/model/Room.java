@@ -23,12 +23,15 @@ public class Room {
     private String name;
 
     //número máximo de asientos disponibles en la sala
+    //ToDo poner que la capacidad sea > 10
+    @Column(nullable = false)
     private Integer capacity;
 
     //tipo de sala (IMAX, STANDARD, 3D, 4DX...)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private ScreenType screenType;
-
+    @Builder.Default
+    private ScreenType screenType = ScreenType.STANDARD;
 
     private Integer floorNumber;
 

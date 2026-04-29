@@ -1,10 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title}">Salas</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.8/dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/7.2.0/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+<!--
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
+-->
+<main class="container flex-grow-1">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Salas</h1>
+        <span class="badge bg-secondary fs-6"
+              th:text="|${#lists.size(rooms)} resultados|">0 resultados</span>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <!--poner Gestiona las salas de cine en color gris:-->
+        <h5 class="mb-0 text-muted">
+            <i class="fa-solid fa-gears text-secondary me-2"></i>
+            Gestiona las salas del cine
+        </h5>
+    </div>
+    <div class="alert alert-primary" role="alert">
+        <i class="fa-solid fa-info-circle"></i>
+        Administra las salas, puedes crear nuevas salas, editar la información existente o eliminar salas.
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Capacidad</th>
+            <th scope="col">Tipo de pantalla</th>
+            <th scope="col">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="room : ${rooms}">
+            <th scope="row" th:text="${room.id}">1</th>
+
+            <td th:text="${room.name != null ? room.name : '(Sin nombre)'}">
+                (Sin nombre)
+            </td>
+
+            <td>
+            <span class="badge bg-success">
+                <i class="fa-solid fa-people-group"></i>
+                <span th:text="${room.capacity}">0</span>
+            </span>
+            </td>
+
+            <td th:switch="${room.screenType}">
+            <span class="badge bg-warning text-dark">
+                <i class="fa-solid fa-film"></i>
+
+                <span th:case="${T(com.demo.model.enums.ScreenType).D4X}"><b>4DX</b></span>
+                <span th:case="${T(com.demo.model.enums.ScreenType).IMAX}"><b>IMAX</b></span>
+                <span th:case="${T(com.demo.model.enums.ScreenType).D3}"><b>3D</b></span>
+                <span th:case="${T(com.demo.model.enums.ScreenType).STANDARD}"><b>Estándar</b></span>
+                <span th:case="*"><b>Estándar</b></span>
+            </span>
+            </td>
+
+            <td>
+                <a th:href="@{/rooms/{id}(id=${room.id})}"
+                   class="btn btn-outline-primary btn-sm">
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+                <a th:href="@{/rooms/{id}(id=${room.id})}"
+                   class="btn btn-outline-warning btn-sm">
+                    <i class="fa-solid fa-pencil" style="color: rgb(255, 212, 59);"></i>
+                </a>
+                <a th:href="@{/rooms/{id}(id=${room.id})}"
+                   class="btn btn-outline-danger btn-sm">
+                    <i class="fa-solid fa-trash-can" style="color: rgb(225, 24, 24);"></i>
+                </a>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</main>
+<!--
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<script th:replace="~{layout/footer :: scripts}"></script>
+-->
 </body>
 </html>
