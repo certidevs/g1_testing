@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString(exclude={"session"})
+@ToString(exclude={"session","user"})
 @Entity
 @Table(name="tickets")
 public class Ticket {
@@ -39,8 +39,8 @@ public class Ticket {
 
     private String QRCode;
 
-//    @ManyToOne
-//    private User user;
+    @ManyToOne
+    private User user;
 
     @ManyToOne
     private Session session;
