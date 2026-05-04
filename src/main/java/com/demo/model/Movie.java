@@ -18,6 +18,14 @@ public class Movie {
 
     private String title;
     private String director;
+    @Column(length = 600)
+    private String sinopsis;
     private Integer durationMinutes;
     private String genre;
+    private String imageUrl;
+    private Integer releaseYear;
+
+    @ToString.Exclude
+    @ManyToOne
+    private Session session;
 }
