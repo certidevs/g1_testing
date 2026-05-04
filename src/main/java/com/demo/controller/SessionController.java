@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 @AllArgsConstructor
@@ -16,8 +17,8 @@ public class SessionController {
     //GetMapping de Session
     @GetMapping("sessions")
     public String Session(Model model) {
-        model.addAttribute("sessions", sessionRepository.findAll());
-        model.addAttribute("sessionCount", sessionRepository.count());
+        model.addAttribute("proyecciones", sessionRepository.findAll());
+        model.addAttribute("proyeccionesCount", sessionRepository.count());
         return "sessions/session-list"; }
 
     @GetMapping("sessions/new")
@@ -25,9 +26,9 @@ public class SessionController {
         model.addAttribute("session", new com.demo.model.Session());
         return "sessions/session-form";}
 
-    @GetMapping("sessions/detail")
-    public String sessionDetail(Model model) {
-        model.addAttribute("session", new com.demo.model.Session());
+    @GetMapping("sessions/{id}")
+    public String sessionDetail(Model model, @PathVariable Long id) {
+        model.addAttribute("proyeccion", sessionRepository.findById(id).orElseThrow());
         return "sessions/session-detail";}
 
     }
