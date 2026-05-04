@@ -14,6 +14,8 @@ public class G1TestingApplication {
 
     public static void main(String[] args) {
         var context = SpringApplication.run(G1TestingApplication.class, args);
+
+        /*
         //Datos de prueba de las PELICULAS
         MovieRepository movieRepository = context.getBean(MovieRepository.class);
 
@@ -55,5 +57,6 @@ public class G1TestingApplication {
                 Room.builder().screenType(ScreenType.D3).capacity(120).build(),
                 Room.builder().screenType(ScreenType.STANDARD).capacity(90).build()
         ));
+        */
     }
 }
