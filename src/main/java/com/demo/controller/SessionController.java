@@ -15,5 +15,19 @@ public class SessionController {
 
     //GetMapping de Session
     @GetMapping("sessions")
-    public String Session(Model model) { return "sessions/session-list"; }
-}
+    public String Session(Model model) {
+        model.addAttribute("sessions", sessionRepository.findAll());
+        model.addAttribute("sessionCount", sessionRepository.count());
+        return "sessions/session-list"; }
+
+    @GetMapping("sessions/new")
+    public String newSession(Model model) {
+        model.addAttribute("session", new com.demo.model.Session());
+        return "sessions/session-form";}
+
+    @GetMapping("sessions/detail")
+    public String sessionDetail(Model model) {
+        model.addAttribute("session", new com.demo.model.Session());
+        return "sessions/session-detail";}
+
+    }
