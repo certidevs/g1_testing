@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/head :: head('Detalle del Ticket')}"></head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
+
+<main class="container flex-grow-1 py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Simulación de Ticket de Cine -->
+            <div class="card shadow-lg border-0 overflow-hidden" style="border-radius: 15px;">
+                <div class="row g-0">
+                    <!-- Columna Izquierda: Imagen y QR -->
+                    <div class="col-md-5 bg-dark text-white d-flex flex-column align-items-center justify-content-center p-4">
+                        <img th:src="${ticket.session.movie.imageUrl}" class="img-fluid rounded mb-3 shadow" alt="Poster">
+
+                        <!-- El QR Code -->
+                        <div class="bg-white p-2 rounded mb-2">
+                            <img th:src="${ticket.QRCode}" alt="Código QR" style="width: 120px; height: 120px;">
+                        </div>
+                        <small class="text-uppercase tracking-widest opacity-75">ID: #[[${ticket.id}]]</small>
+                    </div>
+
+                    <!-- Columna Derecha: Información -->
+                    <div class="col-md-7">
+                        <div class="card-body p-4">
+                            <div class="mb-4">
+                                <h2 class="h4 card-title mb-1" th:text="${ticket.session.movie.title}">Título de la Película</h2>
+                                <span class="badge bg-primary" th:text="${ticket.status}">COMPRADO</span>
+                            </div>
+
+                            <hr class="text-muted">
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <p class="text-muted small mb-0">FECHA Y HORA</p>
+                                    <p class="fw-bold mb-0" th:text="${#temporals.format(ticket.session.dateTime, 'dd/MM/yyyy HH:mm')}">01/01/2024</p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-muted small mb-0">SALA</p>
+                                    <p class="fw-bold mb-0" th:text="${ticket.session.room.name}">Sala 1</p>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-4">
+                                    <p class="text-muted small mb-0">FILA</p>
+                                    <p class="fw-bold fs-5 mb-0" th:text="${ticket.row}">A</p>
+                                </div>
+                                <div class="col-4">
+                                    <p class="text-muted small mb-0">BUTACA</p>
+                                    <p class="fw-bold fs-5 mb-0" th:text="${ticket.seat}">12</p>
+                                </div>
+                                <div class="col-4 text-end">
+                                    <p class="text-muted small mb-0">PRECIO</p>
+                                    <p class="fw-bold fs-5 mb-0 text-success" th:text="${#numbers.formatCurrency(ticket.price)}">€9.50</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-light p-3 rounded mb-4">
+                                <p class="text-muted small mb-1">COMPRADO POR</p>
+                                <p class="mb-0 small"><i class="fa-regular fa-user me-2"></i>[[${ticket.user.username}]]</p>
+                                <p class="mb-0 small text-muted italic">
+                                    Enviado el [[${#temporals.format(ticket.buyDateTime, 'dd/MM/yyyy HH:mm')}]]
+                                </p>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button onclick="window.print()" class="btn btn-outline-dark">
+                                    <i class="fa-solid fa-print me-2"></i> Imprimir Ticket
+                                </button>
+                                <a th:href="@{/tickets}" class="btn btn-link text-decoration-none text-muted">
+                                    Volver a mis tickets
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<script th:replace="~{layout/footer :: scripts}"></script>
+
+</body>
+</html>
