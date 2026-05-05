@@ -2,6 +2,7 @@ package com.demo.controller;
 
 import com.demo.repository.MovieRepository;
 import com.demo.repository.SessionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,11 @@ public class SessionControllerTest {
     SessionRepository sessionRepository;
     @Autowired
     MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        sessionRepository.deleteAll();
+    }
 
     @Test
     void sessionEmpty() throws Exception {
@@ -45,6 +51,16 @@ public class SessionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("sessions/session-form"))
                 .andExpect(model().attributeExists("session"));
+    }
+
+    @Test
+    void sessionDetail() throws Exception {
+        var session = sessionRepository.save(com.demo.model.Session.builder().build());
+        mockMvc.perform(get("/sessions/" + session.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("sessions/session-detail"))
+                .andExpect(model().attributeExists("proyeccion"))
+                .andExpect(model().attribute("proyeccion", hasProperty("id", is(session.getId()))));
     }
 
 }
