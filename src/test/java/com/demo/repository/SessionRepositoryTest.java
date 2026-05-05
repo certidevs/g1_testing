@@ -57,4 +57,15 @@ public class SessionRepositoryTest {
     assertEquals(1, sesionesVO.size());
     }
 
+    @Test
+    void findByAdMinutesLessThanEqual() {
+        List<Session> sesionesAd5 = sessionRepository.findByAdMinutesLessThanEqual(5);
+        assertEquals(1, sesionesAd5.size());
+    }
+
+    @Test
+    void findByAdMinutesLessThanEqualNegative() {
+        List<Session> sesionesAdNeg = sessionRepository.findByAdMinutesLessThanEqual(-5);
+        assertEquals(0, sesionesAdNeg.size());
+    }
 }
