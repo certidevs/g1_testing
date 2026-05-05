@@ -21,8 +21,9 @@
     <div class="card">
         <div class="card-header d-flex align-items-center gap-2">
             <i class="fa-solid fa-chalkboard"></i>
+
             <h4 class="mb-0"
-                th:text="${room.get().name != null ? room.get().name : '(Sin nombre)'}">
+                th:text="${room.name != null ? room.name : '(Sin nombre)'}">
                 Sala 1
             </h4>
         </div>
@@ -32,14 +33,14 @@
 
                     <tr>
                         <th class="w-35" scope="col">Nombre: </th>
-                        <td class="w-75" th:text="${room.get().name != null ? room.get().name : '(Sin nombre)'}">
+                        <td class="w-75" th:text="${room.name != null ? room.name : '(Sin nombre)'}">
                             (Sin nombre)
                         </td>
                     </tr>
 
                     <tr>
                         <th scope="col">Tipo: </th>
-                        <td th:switch="${room.get().screenType}">
+                        <td th:switch="${room.screenType}">
                                 <span th:case="${T(com.demo.model.enums.ScreenType).D4X}"><b>4DX</b></span>
                                 <span th:case="${T(com.demo.model.enums.ScreenType).IMAX}"><b>IMAX</b></span>
                                 <span th:case="${T(com.demo.model.enums.ScreenType).D3}"><b>3D</b></span>
@@ -50,7 +51,7 @@
 
                     <tr>
                         <th scope="col">Capacidad: </th>
-                        <td th:text="${room.get().capacity + ' personas'}">
+                        <td th:text="${room.capacity + ' personas'}">
                             100 personas
                         </td>
                     </tr>

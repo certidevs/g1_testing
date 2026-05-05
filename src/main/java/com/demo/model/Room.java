@@ -33,6 +33,9 @@ public class Room {
     @Builder.Default
     private ScreenType screenType = ScreenType.STANDARD;
 
+    @Column(columnDefinition = "BOOLEAN DEFAULT true") //por defecto será true cuando se inserta en base de datos
+    private Boolean active;
+
     private Integer floorNumber;
 
 }

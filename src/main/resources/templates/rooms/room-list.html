@@ -71,9 +71,10 @@
                    class="btn btn-outline-warning btn-sm">
                     <i class="fa-solid fa-pencil"></i>
                 </a>
-                <a th:href="@{/salas/{id}(id=${room.id})}"
-                   class="btn btn-outline-danger btn-sm">
-                    <i class="fa-solid fa-trash-can"></i>
+                <a th:href="@{/salas/deactivate/{id}(id=${room.id})}"
+                   class="btn btn-outline-danger btn-sm"
+                   onclick="return confirm('¿Seguro que quieres borrar esta sala?');">
+                    <i class="fa-solid fa-trash me-1"></i>
                 </a>
 
             </td>
