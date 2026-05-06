@@ -24,8 +24,4 @@ public class Movie {
     private String genre;
     private String imageUrl;
     private Integer releaseYear;
-
-    @ToString.Exclude
-    @ManyToOne
-    private Session session;
 }
