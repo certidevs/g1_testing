@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -23,15 +24,20 @@ public class MovieController {
         List<Movie> movies = movieRepository.findAll();
         model.addAttribute("movies", movies);
         model.addAttribute("numMovies", movies.size());
-        model.addAttribute("title", "Listado de peliculas");
 
         return "movies/movie-list";
     }
-
+    //Ver las asociaciones que apuntan a movie (session y review)
     @GetMapping("movies/{id}")
     public String movieDetail(@PathVariable Long id, Model model){
-        model.addAttribute("movie", movieRepository.findById(id).orElseThrow());
-        return "movies/movie-detail";
+        Optional<Movie> movieOptional = movieRepository.findById(id);
+        if(movieOptional.isPresent()){
+            Movie movie = movieOptional.get();
+            model.addAttribute("movie", movieRepository.findById(id).orElseThrow());
+            return "movies/movie-detail";
+        }
+        return"redirect:/movies";
+
     }
 
 }
