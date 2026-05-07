@@ -23,12 +23,12 @@ public class SessionController {
 
     @GetMapping("sessions/new")
     public String newSession(Model model) {
-        model.addAttribute("session", new com.demo.model.Session());
+        model.addAttribute("proyecciones", new com.demo.model.Session());
         return "sessions/session-form";}
 
     @GetMapping("sessions/{id}")
     public String sessionDetail(Model model, @PathVariable Long id) {
-        model.addAttribute("proyeccion", sessionRepository.findById(id).orElseThrow());
+        model.addAttribute("proyecciones", sessionRepository.findById(id).orElseThrow());
         return "sessions/session-detail";}
 
     }
