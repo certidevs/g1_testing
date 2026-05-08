@@ -3,7 +3,7 @@
 <body>
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/index.html}">
             <img th:src="@{/images/img_2.png}" alt="Cines"
                  height="32" class="me-2 rounded-3">
             <!--            <span>Restaurantes</span>-->
@@ -22,7 +22,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/rooms}">
+                    <a class="nav-link" th:href="@{/salas}">
                         <i class="fa-solid fa-tv"></i> Salas
                     </a>
                 </li>
@@ -34,7 +34,13 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link">
+                    <a class="nav-link" th:href="@{/tickets}">
+                        <i class="fa-solid fa-ticket"></i> Tickets
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/reviews}">
                         <i class="fa-regular fa-comments"></i> Opiniones
                     </a>
                 </li>
@@ -43,8 +49,9 @@
 <!--                <i class="fa-solid fa-plus"></i> Nueva pelicula-->
 <!--            </a>-->
             <a class="btn btn-outline-light btn-sm" th:href="@{/login}">
-                <i class="fa-solid fa-user"></i> Iniciar sesión
+                <i class="fa-solid fa-user"></i>
             </a>
+
             <a class="btn btn-light btn-sm ms-2" th:href="@{/register}">
                 <i class="fa-solid fa-user-plus"></i> Registrate aquí
             </a>
