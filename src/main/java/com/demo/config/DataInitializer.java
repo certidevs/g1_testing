@@ -50,29 +50,39 @@ public class DataInitializer implements CommandLineRunner {
                 .sinopsis("El profesor de ciencias Ryland Grace (Ryan Gosling) se despierta en una nave espacial a años luz de casa sin recordar quién es ni cómo ha llegado hasta allí. A medida que recupera la memoria, empieza a descubrir su misión: resolver el enigma de la misteriosa sustancia que provoca la extinción del sol. Deberá recurrir a sus conocimientos científicos y a sus ideas poco ortodoxas para salvar todo lo que hay en la Tierra de la extinción... pero una amistad inesperada significa que quizá no tenga que hacerlo solo.")
                 .imageUrl("https://m.media-amazon.com/images/M/MV5BYTJmNThhZGMtMmJiNC00MmQ5LWIzYzEtMmM4ZGM5NWY3NzRhXkEyXkFqcGc@._V1_.jpg").genre("Ciencia ficción").build());
 
-        Movie m5 = movieRepo.save(Movie.builder().title("The Age of Adeline").director("Lee Toland Krieger").durationMinutes(112).genre("Drama").build());
-        Movie m6 = movieRepo.save(Movie.builder().title("Sr y Sra Smith").director("Doug Liman").durationMinutes(120).genre("Accion").build());
-        Movie m7 = movieRepo.save(Movie.builder().title("The proposal").director("Anne Fletcher").durationMinutes(108).genre("Comedy").build());
-        Movie m8 = movieRepo.save(Movie.builder().title("Love & Other Drugs").director("Edward Zwick").durationMinutes(112).genre("Ciencia ficcion").build());
-        Movie m9 = movieRepo.save(Movie.builder().title("The Holiday").director("Nancy Meyers").durationMinutes(132).genre("Romance").build());
-        Movie m10 = movieRepo.save(Movie.builder().title("Deadpool").director("Tim Miller").durationMinutes(108).genre("Comedia obscena").build());
-        Movie m11 = movieRepo.save(Movie.builder().title("Joker").director("Todd Phillips").durationMinutes(122).genre("Thriller psicologico").build());
-        Movie m12 = movieRepo.save(Movie.builder().title("The wolf of the wall street").director("Martin Scorsese").durationMinutes(180).genre("Comedia obscena").build());
-        Movie m13 = movieRepo.save(Movie.builder().title("Fight Club").director("David Fincher").durationMinutes(139).genre("Thriller psicologico").build());
-        Movie m14 = movieRepo.save(Movie.builder().title("Pulp Fiction").director("Quentin Tarantino").durationMinutes(154).genre("Accion").build());
-        Movie m15 = movieRepo.save(Movie.builder().title("Maleficent").director("Robert Stromberg").durationMinutes(97).genre("Adventure").build());
-        Movie m16 = movieRepo.save(Movie.builder().title("Hacksaw Ridge").director("Mel Gibson").durationMinutes(139).genre("Docudrama").build());
-        Movie m17 = movieRepo.save(Movie.builder().title("Saving Private Ryan").director("Steven Spielberg").durationMinutes(169).genre("Drama de epoca").build());
-        Movie m18 = movieRepo.save(Movie.builder().title("Schindler's List").director("Steven Spielberg").durationMinutes(193).genre("Docudrama").build());
+        Movie m5 = movieRepo.save(Movie.builder().title("La odisea").director("Christopher Nolan").durationMinutes(112)
+                .sinopsis("El legendario Odiseo enfrenta peligros épicos en su viaje de regreso a casa tras la Guerra de Troya. Se topa con criaturas míticas y dioses caprichosos, superando obstáculos increíbles antes de reunirse con su amada Penélope.")
+                .imageUrl("https://m.media-amazon.com/images/M/MV5BMjVjZGJiMWItNTkxNC00ODFiLTlkZDYtOGFmZmE2ODkxZmJlXkEyXkFqcGc@._V1_.jpg").genre("Acción").build());
 
-        Movie m19 = movieRepo.save(Movie.builder()
-                .title(" The Super Mario Galaxy Movie").director("Aaron Horvath").durationMinutes(98).genre("Adventure").releaseYear(2026)
+
+        Movie m6 = movieRepo.save(Movie.builder().title("Todo lo que nunca fuimos").director("Jorge Alonso").durationMinutes(120)
+                .sinopsis("")
+                .imageUrl("https://m.media-amazon.com/images/M/MV5BYmI2NzVhZjMtOTgzOC00ZmMxLTkzMjctNjA4YTllN2Y0NjBhXkEyXkFqcGc@._V1_.jpg").genre("Romance").build());
+
+        Movie m7 = movieRepo.save(Movie.builder().title("Toy Story 5").director("McKenna Harris").durationMinutes(90)
+                .sinopsis("Cuando Woody, Buzz, Jessie y la pandilla se encuentran con un recién llegado de alta tecnología, sus aventuras dan un giro inesperado mientras compiten por demostrar que los juguetes más valiosos de la vida no se limitan a códigos y chips.")
+                .imageUrl("https://m.media-amazon.com/images/M/MV5BMDQwZTM3NWUtNGI4Yi00YWRmLWExYWItNDNmNWVmYWEyZGUxXkEyXkFqcGc@._V1_.jpg").genre("Comedy").build());
+
+        Movie m8 = movieRepo.save(Movie.builder().title("Playa de lobos").director("Javier Veiga").durationMinutes(100)
+                .sinopsis("Manu trabaja en un chiringuito. Klaus no suelta la última hamaca. Lo que parece un encuentro entre opuestos se vuelve sospechoso cuando Manu duda de Klaus. La tensión aumenta.")
+                .imageUrl("https://m.media-amazon.com/images/M/MV5BNjlkZDdiYzMtZmU3OS00ODk2LTk5YzgtMTg0NzMxNTZhNmY0XkEyXkFqcGc@._V1_.jpg").genre("Ciencia ficcion").build());
+
+        Movie m9 = movieRepo.save(Movie.builder().title("El ser querido").director("Rodrigo Sorogoyen").durationMinutes(135)
+                .sinopsis("Un aclamado director se reencuentra con su distanciada hija, una actriz sin éxito, para rodar juntos una película, enfrentándose a su tensa relación y a asuntos del pasado sin resolver que ninguno de los dos quiere abordar directamente.")
+                .imageUrl("https://m.media-amazon.com/images/M/MV5BMmI3OTI5Y2ItZTJlMS00MjIwLTg5ZGUtOWFiZmUzOTE1NDFjXkEyXkFqcGc@._V1_.jpg").genre("Romance").build());
+
+
+        Movie m10 = movieRepo.save(Movie.builder()
+                .title(" The Super Mario Galaxy Movie").director("Aaron Horvath").durationMinutes(98).sinopsis("").genre("Adventure")
+                .imageUrl("https://m.media-amazon.com/images/M/MV5BMGIzMGI4OWYtNzdkMy00MjJlLWJiMDMtZjY1Y2UwMzQ0YzY3XkEyXkFqcGc@._V1_.jpg")
                 .sinopsis("La película tiene lugar después de los acontecimientos de la primera, en la que dos hermanos, Mario y Luigi, y la princesa Peach emprenden una aventura hasta los confines del espacio y a través de la galaxia. Secuela de Super Mario Bros La película, basada en la saga Mario Galaxy.").build());
-        Movie m20 = movieRepo.save(Movie.builder()
-                .title(" The Devil Wears Prada 2").director("David Frankel").durationMinutes(119).genre("Comedy").releaseYear(2026)
+
+        Movie m11 = movieRepo.save(Movie.builder()
+                .title(" The Devil Wears Prada 2").director("David Frankel").durationMinutes(119).genre("Comedy")
+                .imageUrl("https://m.media-amazon.com/images/M/MV5BYjZhNTE0ZTktYThlZC00OWUwLTlhMDItNzlkMjJkOGJhZTc5XkEyXkFqcGc@._V1_.jpg")
                 .sinopsis("Casi veinte años después de interpretar a los icónicos personajes de Miranda, Andy, Emily y Nigel, Meryl Streep, Anne Hathaway, Emily Blunt y Stanley Tucci regresan a las calles de Nueva York y a las oficinas de la revista Runway en la secuela del fenómeno de 2006 que definió a toda una generación.").build());
 
-        movieRepo.saveAll(List.of(m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15, m16, m17, m18, m19, m20));
+        movieRepo.saveAll(List.of(m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11));
 
         //Datos de prueba de las salas (Room)
         roomRepo.saveAll(List.of(
