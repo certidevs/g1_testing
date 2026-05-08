@@ -23,17 +23,16 @@ public class MovieController {
     public String moviesList(Model model){
         List<Movie> movies = movieRepository.findAll();
         model.addAttribute("movies", movies);
-        model.addAttribute("numMovies", movies.size());
-
         return "movies/movie-list";
     }
+
     //Ver las asociaciones que apuntan a movie (session y review)
     @GetMapping("movies/{id}")
     public String movieDetail(@PathVariable Long id, Model model){
         Optional<Movie> movieOptional = movieRepository.findById(id);
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
-            model.addAttribute("movie", movieRepository.findById(id).orElseThrow());
+            model.addAttribute("movie", movie);
             return "movies/movie-detail";
         }
         return"redirect:/movies";
