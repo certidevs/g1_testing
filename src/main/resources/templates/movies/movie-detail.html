@@ -1,53 +1,41 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/head :: head('Detalle Película')}"></head>
+<head th:replace="~{layout/head :: head('Only Film')}"></head>
 <body class="d-flex flex-column min-vh-100">
 
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
 <main class="container flex-grow-1">
     <div class="d-flex justify-content-between align-items-start mb-3">
-        <div class="card card-movie h-100 shadow-sm">
-            <img th:src="${movie.getImageUrl}" class="card-img-top" alt="Film card">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title"><span th:text="${movie.title}"></span></h5>
+
+            </div>
+
             <div class="card-body">
-                <h5 class="card-title" th:text="${movie.title}">Nombre</h5>
-                <p class="card-text">
-                        <span class="badge bg-success">
-                            <span th:text="${movie.releaseYear}">0</span>
-                        </span>
+                <img th:src="${movie.imageUrl}" width="20%">
+                <p class="card-img">
+                    <span th:src="${movie.imageUrl}"></span>
                 </p>
-                <p class="card-text">
-                        <span class="badge bg-success">
-                            <span th:text="${movie.genres}">0</span>
-                        </span>
+
+                <p class="card-text">Director:
+                    <span th:text="${movie.director}"></span>
                 </p>
-                <p class="card-text">
-                        <span class="badge bg-success">
-                            <span th:text="${movie.minAge}">0</span>
-                        </span>
+
+                <p class="card-text">Duración:
+                    <span th:text="${movie.durationMinutes}"></span>
                 </p>
-                <p class="card-text">
-                        <span class="badge bg-success">
-                            <span th:text="${movie.duration}">0</span>
-                        </span>
+
+                <p class="card-text">Género:
+                    <span th:text="${movie.genre}"></span>
                 </p>
-                <p class="card-text">
-                        <span class="badge bg-success">
-                            <span th:text="${movie.trailerUrl}">0</span>
-                        </span>
+
+                <p class="card-text">Sinopsis:
+                    <span th:text="${movie.sinopsis}"></span>
                 </p>
-                <p class="card-text">
-                        <span class="badge bg-success">
-                            <span th:text="${movie.director}">0</span>
-                        </span>
-                </p>
-                <p class="card-text" th:text="${movie.sinopsis}"></p>
-                <div class="card-footer bg-transparent border-0 pt-0">
-                    <a th:href="@{/movies/{id}(id=${movie.id})}"
-                       class="btn btn-outline-primary btn-sm w-100">
-                        <i class="fa-regular fa-eye me-1"></i> Ver película
-                    </a>
-                </div>
+
+                <a href="#" class="btn btn-info">Ver trailer</a>
             </div>
         </div>
     </div>
