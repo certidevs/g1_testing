@@ -7,37 +7,48 @@
 
 <main class="container flex-grow-1">
     <div class="d-flex justify-content-between align-items-start mb-3">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title"><span th:text="${movie.title}"></span></h5>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title"><span th:text="${movie.title}"></span></h5>
+                </div>
 
+                <div class="card-body">
+                    <div class="d-flex flex-row">
+
+                        <div class="d-flex flex-col" style="height: 50vh; width: auto">
+                            <img th:src="${movie.imageUrl}">
+                        </div>
+
+                        <div class="d-flex flex-column" style="padding-left: 15px">
+
+
+                            <p class="card-text d-flex">Director:
+                                <span th:text="${movie.director}"></span>
+                            </p>
+
+                            <p class="card-text">Duración:
+                                <span th:text="${movie.durationMinutes}"></span>
+                            </p>
+
+                            <p class="card-text">Género:
+                                <span th:text="${movie.genre}"></span>
+                            </p>
+
+                            <p class="card-text">Sinopsis:
+                                <span th:text="${movie.sinopsis}"></span>
+                            </p>
+
+                            <a href="#" class="btn btn-info align-self-end">Ver trailer</a>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
             </div>
 
-            <div class="card-body">
-                <img th:src="${movie.imageUrl}" width="20%">
-                <p class="card-img">
-                    <span th:src="${movie.imageUrl}"></span>
-                </p>
 
-                <p class="card-text">Director:
-                    <span th:text="${movie.director}"></span>
-                </p>
-
-                <p class="card-text">Duración:
-                    <span th:text="${movie.durationMinutes}"></span>
-                </p>
-
-                <p class="card-text">Género:
-                    <span th:text="${movie.genre}"></span>
-                </p>
-
-                <p class="card-text">Sinopsis:
-                    <span th:text="${movie.sinopsis}"></span>
-                </p>
-
-                <a href="#" class="btn btn-info">Ver trailer</a>
-            </div>
-        </div>
     </div>
 </main>
 
