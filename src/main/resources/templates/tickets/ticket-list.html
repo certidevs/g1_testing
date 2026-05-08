@@ -1,48 +1,74 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/head :: head('Mis Tickets')}"></head>
-<body class="d-flex flex-column min-vh-100">
+<head th:replace="~{head :: head('Mis Tickets')}"></head>
+<body class="d-flex flex-column min-vh-100 bg-light">
 
-<nav th:replace="~{layout/navbar :: navbar}"></nav>
+<nav th:replace="~{navbar :: navbar}"></nav>
 
 <main class="container flex-grow-1 my-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0" th:text="${title}">Mis Tickets</h1>
-        <span class="badge bg-primary fs-6" th:text="|${tickets.size()} tickets|">0 resultados</span>
+        <div>
+            <h1 class="mb-0 text-dark"><i class="fa-solid fa-ticket-simple me-2 text-primary"></i>Mis Tickets</h1>
+            <p class="text-muted small mb-0">Gestiona tus entradas y reservas</p>
+        </div>
+        <span class="badge bg-primary rounded-pill px-3 py-2" th:text="|${tickets.size()} tickets|">0 resultados</span>
+    </div>
+
+    <div th:if="${tickets.isEmpty()}" class="alert alert-info shadow-sm text-center py-5">
+        <i class="fa-solid fa-circle-info fa-3x mb-3"></i>
+        <p class="fs-5">Aún no tienes tickets comprados.</p>
+        <a th:href="@{/movies}" class="btn btn-primary">Ir a la cartelera</a>
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <div class="col" th:each="ticket : ${tickets}">
-            <div class="card h-100 shadow-sm border-primary">
-                <!-- Imagen de la película desde la sesión -->
-                <img th:src="${ticket.session.movie.imageUrl}" class="card-img-top" alt="Póster" style="height: 200px; object-fit: cover;">
+            <div class="card h-100 shadow-sm border-0 overflow-hidden">
+                <div class="position-relative">
+                    <img th:src="${ticket.session.movie.imageUrl}"
+                         class="card-img-top"
+                         alt="Póster"
+                         style="height: 220px; object-fit: cover;">
+                    <span class="position-absolute top-0 end-0 m-3 badge bg-dark opacity-75 fs-6">
+                        [[${#numbers.formatCurrency(ticket.price)}]]
+                    </span>
+                </div>
 
                 <div class="card-body">
-                    <h5 class="card-title text-primary" th:text="${ticket.session.movie.title}">Título Película</h5>
+                    <h5 class="card-title text-truncate" th:text="${ticket.session.movie.title}">Título Película</h5>
 
-                    <div class="mb-3">
-                        <p class="mb-1"><strong>Ubicación:</strong></p>
-                        <span class="badge bg-dark">Fila: [[${ticket.row}]]</span>
-                        <span class="badge bg-dark">Asiento: [[${ticket.seat}]]</span>
+                    <div class="d-flex gap-2 mb-3">
+                        <span class="badge bg-light text-dark border">
+                            <i class="fa-solid fa-chair me-1 text-primary"></i> Fila: [[${ticket.row}]]
+                        </span>
+                        <span class="badge bg-light text-dark border">
+                            <i class="fa-solid fa-user-tag me-1 text-primary"></i> Asiento: [[${ticket.seat}]]
+                        </span>
                     </div>
 
-                    <div class="small text-muted mb-2">
-                        <i class="fa-regular fa-calendar-days"></i>
-                        <span th:text="${#temporals.format(ticket.session.dateTime, 'dd/MM/yyyy HH:mm')}">01/01/2024</span>
+                    <div class="small text-muted mb-3">
+                        <div class="mb-1">
+                            <i class="fa-regular fa-calendar-days me-1"></i>
+                            <span th:text="${#temporals.format(ticket.session.dateTime, 'dd/MM/yyyy')}">01/01/2024</span>
+                        </div>
+                        <div>
+                            <i class="fa-regular fa-clock me-1"></i>
+                            <span th:text="${#temporals.format(ticket.session.dateTime, 'HH:mm')}">20:00</span>
+                        </div>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="fw-bold fs-5 text-success" th:text="${#numbers.formatCurrency(ticket.price)}">10.00€</span>
-                        <span th:classappend="${ticket.status.name() == 'LIBRE' ? 'badge bg-success' : 'badge bg-info'}"
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span th:classappend="${ticket.status.name() == 'LIBRE' ? 'badge bg-success' :
+                                          (ticket.status.name() == 'PAGADO' ? 'badge bg-info' : 'badge bg-warning')}"
                               th:text="${ticket.status}">Estado</span>
+
+                        <small class="text-muted" th:text="${ticket.session.room.name}">Sala 1</small>
                     </div>
                 </div>
 
-                <div class="card-footer bg-transparent border-top-0 pb-3">
-                    <!-- Botón para ver el QR o detalle del ticket -->
+                <div class="card-footer bg-white border-top-0 pb-3">
                     <a th:href="@{/tickets/{id}(id=${ticket.id})}"
-                       class="btn btn-primary w-100">
-                        <i class="fa-solid fa-qrcode me-1"></i> Ver Ticket
+                       class="btn btn-outline-primary w-100">
+                        <i class="fa-solid fa-qrcode me-1"></i> Detalles del Ticket
                     </a>
                 </div>
             </div>
@@ -50,8 +76,8 @@
     </div>
 </main>
 
-<footer th:replace="~{layout/footer :: footer}"></footer>
-<script th:replace="~{layout/footer :: scripts}"></script>
+<footer th:replace="~{footer :: footer}"></footer>
+<div th:replace="~{footer :: scripts}"></div>
 
 </body>
 </html>
