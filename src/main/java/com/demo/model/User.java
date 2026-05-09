@@ -27,10 +27,10 @@ public class User {
 
     @NotBlank(message = "El nombre es obligatorio")
     @Column(name = "first_name", length = 50)
-    private String firstName; // Corregido 'fistName'
+    private String firstName;
 
     @Column(name = "last_name", length = 50)
-    private String lastName; // Corregido 'lastname' a CamelCase
+    private String lastName;
 
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
