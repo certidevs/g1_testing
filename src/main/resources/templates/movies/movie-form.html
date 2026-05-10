@@ -18,7 +18,8 @@
 
        <div class="mb-3" th:if="${isEdit}">
            <label class="form-label" for="id">Identificador</label>
-           <input type="text" class="form-control" id="id" th:field="*{id}" disabled>
+           <input type="hidden" th:field="*{id}">
+           <input type="text" class="form-control" id="id" th:value="*{id}" disabled>
        </div>
 
 
@@ -43,19 +44,25 @@
        <div class="d-flex flex-column container mb-3">
 
            <div class="row">
-               <div class="col-md-4 mb-3">
+               <div class="col-md-3 mb-3">
                    <label for="genre" class="form-label" >Género</label>
                    <input type="text" class="form-control" id="genre"
                           th:field="*{genre}" placeholder="Fantasía para adolescentes">
                </div>
 
-               <div class="col-md-4 mb-3" >
+               <div class="col-md-3 mb-3" >
                    <label for="releaseYear" class="form-label">Año de lanzamiento</label>
                    <input type="number" class="form-control" id="releaseYear"
-                          th:field="*{releaseYear}" step="1" min="1900" placeholder="1993 A.C">
+                          th:field="*{releaseYear}" step="1" min="1888" placeholder="1993 A.C...">
                </div>
 
-               <div class="col-md-4 form-check form-switch align-self-end" style="padding-bottom: 20px">
+               <div class="col-md-3 mb-3" >
+                   <label for="durationMinutes" class="form-label">Duración en minutos</label>
+                   <input type="number" class="form-control" id="durationMinutes"
+                          th:field="*{durationMinutes}" step="1" min="60" placeholder="60min">
+               </div>
+
+               <div class="col-md-3 form-check form-switch align-self-end" style="padding-bottom: 20px">
                    <label class="form-check-label" for="active">Película activa</label>
                    <input type="checkbox" class="form-check-input" id="active"
                           role="switch" th:field="*{active}">
