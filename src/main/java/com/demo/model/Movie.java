@@ -20,6 +20,10 @@ public class Movie {
     private String director;
     @Column(length = 600)
     private String sinopsis;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT true")
+    private Boolean active = true;
+
     private Integer durationMinutes;
     private String genre;
     private String imageUrl;
