@@ -1,10 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/head :: head('Formulario Pelicula')}"></head>
+
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
+
+<main class="container flex-grow-1 my-4" th:with="isEdit=${movie.id != null}">
+
+    <h1 class="mb-3" th:text="${isEdit ? 'Editar esta película' : 'Crear una película'}">
+        <i class="fa-solid fa-plus"></i> Formulario para crear una pelicula
+    </h1>
+
+    <!-- Formulario para crear una PELICULA-->
+   <form th:action="@{/movies}" method="post" th:object="${movie}">
+
+       <div class="mb-3" th:if="${isEdit}">
+           <label class="form-label" for="id">Identificador</label>
+           <input type="text" class="form-control" id="id" th:field="*{id}" disabled>
+       </div>
+
+
+       <div class="mb-3">
+           <label for="title" class="form-label">Titulo</label>
+           <input type="text" class="form-control" id="title"
+           th:field="*{title}" placeholder="Harry Potter y la piedra filosofal..." required>
+       </div>
+
+       <div class="mb-3">
+           <label for="director" class="form-label">Director</label>
+           <input type="text" class="form-control" id="director"
+                  th:field="*{director}" placeholder="Chris Columbus" required>
+       </div>
+
+       <div class="mb-3">
+           <label for="imageUrl" class="form-label">URL imagen</label>
+           <input type="text" class="form-control" id="imageUrl"
+                  th:field="*{imageUrl}" placeholder="https://m.media-amazon.com/......">
+       </div>
+
+       <div class="d-flex flex-column container mb-3">
+
+           <div class="row">
+               <div class="col-md-4 mb-3">
+                   <label for="genre" class="form-label" >Género</label>
+                   <input type="text" class="form-control" id="genre"
+                          th:field="*{genre}" placeholder="Fantasía para adolescentes">
+               </div>
+
+               <div class="col-md-4 mb-3" >
+                   <label for="releaseYear" class="form-label">Año de lanzamiento</label>
+                   <input type="number" class="form-control" id="releaseYear"
+                          th:field="*{releaseYear}" step="1" min="1900" placeholder="1993 A.C">
+               </div>
+
+               <div class="col-md-4 form-check form-switch align-self-end" style="padding-bottom: 20px">
+                   <label class="form-check-label" for="active">Película activa</label>
+                   <input type="checkbox" class="form-check-input" id="active"
+                          role="switch" th:field="*{active}">
+               </div>
+
+           </div>
+       </div>
+
+       <div class="mb-3">
+           <label for="sinopsis" class="form-label"> Sinopsis</label>
+
+
+           <textarea class="form-control" id="sinopsis" th:field="*{sinopsis}"
+                     rows="3" maxlength="600" placeholder="Érase una vez...">
+                   </textarea>
+
+<!--           <input type="text" class="form-control" id="sinopsis"-->
+<!--                  th:field="*{sinopsis}" placeholder="Érase una vez...">-->
+       </div>
+       <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+           <button type="submit" class="btn btn-success" th:text="${isEdit ? 'Actualizar' : 'Guardar'}">
+               <i class="fa-solid fa-floppy-disk"></i> Guardar
+           </button>
+
+           <a th:href="@{/movies}" class="btn btn-secondary">Cancelar</a>
+       </div>
+
+   </form>
+
+
+
+
+</main>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<script th:replace="~{layout/footer :: scripts}"></script>
 
 </body>
 </html>
