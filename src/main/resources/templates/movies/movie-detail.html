@@ -38,7 +38,14 @@
                                 <span th:text="${movie.sinopsis}"></span>
                             </p>
 
-                            <a href="#" class="btn btn-info align-self-end">Ver trailer</a>
+<!--                            Tengo que poner las sessiones AQUI-->
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+                                <a href="#" class="btn btn-info">Ver trailer</a>
+                                <a th:href="@{/movies}" class="btn btn-secondary">
+                                <i class="fa-solid fa-angle-left"></i>Volver</a>
+                            </div>
+
 
                         </div>
 
