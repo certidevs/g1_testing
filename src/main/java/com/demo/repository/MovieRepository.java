@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
+    List<Movie> findByActive(Boolean active);
+
+
     //Peliculas entre X min e Y max en orden descendente (entonces trae los de menos duracion)
     List<Movie> findByDurationMinutesBetween(Integer durationMinutesStart, Integer durationMinutesEnd);
 
