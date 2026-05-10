@@ -6,24 +6,72 @@
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
 <main class="container flex-grow-1">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-<!--        <h1 class="mb-0" th:text="${title}">Películas</h1>-->
-<!--        <span class="badge bg-secondary fs-6" th:text="|${numMovies} resultados|">0 resultados</span>-->
+    <div class="d-flex flex-column container mb-3">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <h1 class="mb-0" th:text="${title}">Películas</h1>
+
+            </div>
+
+            <div class="col-md-4 mb-3 align-self-center">
+                <span class="badge bg-secondary fs-6" th:text="|${numMovies} resultados|">0 resultados</span>
+            </div>
+
+            <div class="col-md-4 d-md-flex justify-content-md-end align-self-center">
+                <a th:href="@{/movies/new}" class="btn btn-outline-info" role="button">
+                    <i class="fa-solid fa-plus"></i> Agregar pelicula</a>
+            </div>
+        </div>
     </div>
 
-<!--    Boton de agregar pelicula-->
+    <!--    Boton de agregar pelicula-->
 
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
-        <a th:href="@{/movies/new}" class="btn btn-outline-info" role="button">
-            <i class="fa-solid fa-plus"></i> Agregar pelicula</a>
+    <!--    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">-->
+    <!--        -->
 
+    <!--    </div>-->
+
+    <!--    Realizar los filtros basicos de las peliculas-->
+    <div class="mb-3">
+        <h5>Filtros rápidos</h5>
+        <a th:href="@{/movies(durationMinutes=90)}" class="btn btn-sm btn-light">Hasta 90min</a>
+        <a th:href="@{/movies(durationMinutes=120)}" class="btn btn-sm btn-light">Hasta 120min</a>
+        <a th:href="@{/movies(durationMinutes=160)}" class="btn btn-sm btn-light">Hasta 160min</a>
+        <a th:href="@{/movies(genre='Romance')}" class="btn btn-sm btn-info">Romance</a>
+        <a th:href="@{/movies(genre='Accion')}" class="btn btn-sm btn-info">Accion</a>
+        <a th:href="@{/movies(genre='Comedia')}" class="btn btn-sm btn-info">Comedia</a>
+        <a th:href="@{/movies(releaseYear=2010)}" class="btn btn-sm btn-primary">Hasta 2010</a>
+        <a th:href="@{/movies(releaseYear=2020)}" class="btn btn-sm btn-primary">Hasta 2020</a>
+        <a th:href="@{/movies(releaseYear=2026)}" class="btn btn-sm btn-primary">Hasta 2026</a>
     </div>
 
-<!--    Realizar los filtros basicos de las peliculas-->
-    <div>
+
+    <div class="d-flex flex-column mb-3 w-100">
+        <h5>Filtros avanzados</h5>
+        <form th:action="@{/movies}" method="get" class="d-flex flex-row w-100">
+            <!--                <div class="col-auto">-->
+
+            <div class="d-flex flex-column w-75">
+                <label class="form-label form-label-sm">Película</label>
+                <input type="text" name="title" class="form-control form-control-sm w-100"
+                       placeholder="Buscar por título de película..." th:value="${param.title}">
+
+            </div>
+<!--            d-grid gap-2 d-md-flex justify-content-md-end mb-4-->
+            <div class="d-flex justify-content-end align-items-end w-25 gap-2">
+                <button type="submit" class="btn btn-outline-info btn-sm align-self-end">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Buscar
+                </button>
+                <a th:href="@{/movies}" class="btn btn-primary btn-sm align-self-end">
+                    <i class="fa-solid fa-trash"></i>
+                    Limpiar filtros
+                </a>
+            </div>
+            <!--                </div>-->
+        </form>
 
     </div>
-
 
     <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3">
         <div class="col" th:each="movie : ${movies}">
