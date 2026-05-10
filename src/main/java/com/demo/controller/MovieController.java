@@ -5,10 +5,7 @@ import com.demo.repository.MovieRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +19,16 @@ public class MovieController {
 
     //GetMapping de peliculas
     @GetMapping("movies")
-    public String moviesList(Model model){
-        List<Movie> movies = movieRepository.findByActive(true);
+    public String moviesList(Model model,
+                             @RequestParam(required = false) Integer durationMinutes,
+                             @RequestParam(required = false) String genre,
+                             @RequestParam(required = false) Integer releaseYear,
+                             @RequestParam(required = false) String title
+    ){
+        List<Movie> movies = movieRepository.findActiveFiltering(durationMinutes, genre, releaseYear, title);
         model.addAttribute("movies", movies);
+        model.addAttribute("numMovies", movies.size());
+        model.addAttribute("title", "Listado de peliculas");
         return "movies/movie-list";
     }
 
