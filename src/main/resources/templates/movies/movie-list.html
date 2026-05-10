@@ -11,6 +11,20 @@
 <!--        <span class="badge bg-secondary fs-6" th:text="|${numMovies} resultados|">0 resultados</span>-->
     </div>
 
+<!--    Boton de agregar pelicula-->
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+        <a th:href="@{/movies/new}" class="btn btn-outline-info" role="button">
+            <i class="fa-solid fa-plus"></i> Agregar pelicula</a>
+
+    </div>
+
+<!--    Realizar los filtros basicos de las peliculas-->
+    <div>
+
+    </div>
+
+
     <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3">
         <div class="col" th:each="movie : ${movies}">
             <div class="card card-movie h-100 shadow-sm">
@@ -29,9 +43,22 @@
                     </p>
                     <div class="card-footer bg-transparent border-0 pt-0">
                         <a th:href="@{/movies/{id}(id=${movie.id})}"
-                           class="btn btn-outline-info btn-sm w-100">
+                           class="btn btn-outline-info btn-sm w-100 mb-3">
                             <i class="fa-regular fa-eye me-1"></i> Más información
                         </a>
+
+                        <a th:href="@{/movies/edit/{id}(id=${movie.id})}"
+                           class="btn btn-outline-info btn-sm w-100 mb-3">
+                            <i class="fa-solid fa-paintbrush"></i> Editar
+
+                        </a>
+
+                        <a th:href="@{movies/deactivate/{id}(id=${movie.id})}"
+                           class="btn btn-outline-info btn-sm w-100"
+                           onclick="return confirm('¿Estás seguro que quieres inhabilitar esta película?');">
+                            <i class="fa-solid fa-circle-minus"></i> Inhabilitar
+                        </a>
+
                     </div>
                 </div>
             </div>
