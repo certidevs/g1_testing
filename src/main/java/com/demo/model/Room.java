@@ -20,6 +20,7 @@ public class Room {
     private Long id;
 
     //nombre de la sala (Sala 1...)
+    @Column(nullable = false)
     private String name;
 
     //número máximo de asientos disponibles en la sala
@@ -34,7 +35,9 @@ public class Room {
     private ScreenType screenType = ScreenType.STANDARD;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT true") //por defecto será true cuando se inserta en base de datos
-    private Boolean active;
+    private Boolean active = true;
+    // private Boolean active = true; Esto inicializa el atributo cuando creas el objeto:
+    // Room room = new Room();
 
     private Integer floorNumber;
 

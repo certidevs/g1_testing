@@ -89,8 +89,8 @@ public class DataInitializer implements CommandLineRunner {
                 Room.builder().name("Sala 1").active(true).screenType(ScreenType.D4X).capacity(100).build(),
                 Room.builder().name("Sala 2").active(true).screenType(ScreenType.IMAX).capacity(150).build(),
                 Room.builder().name("Sala 3").active(false).screenType(ScreenType.D3).capacity(80).build(),
-                Room.builder().screenType(ScreenType.D3).active(true).capacity(120).build(),
-                Room.builder().screenType(ScreenType.STANDARD).active(true).capacity(90).build()
+                Room.builder().name("Sala 4").screenType(ScreenType.D3).active(true).capacity(120).build(),
+                Room.builder().name("Sala 5").screenType(ScreenType.STANDARD).active(true).capacity(90).build()
         ));
     }
 }

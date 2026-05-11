@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
@@ -58,6 +60,19 @@ public class RoomController {
             room.setActive(false);
             roomRepository.save(room);
         });
+        return "redirect:/salas";
+    }
+
+
+    @GetMapping ("salas/new")
+    public String create(Model model){
+        model.addAttribute("room", new Room());
+        return "rooms/room-form";
+    }
+
+    @PostMapping("salas")
+    public String guardar(@ModelAttribute Room room){
+        roomRepository.save(room);
         return "redirect:/salas";
     }
 }
