@@ -3,6 +3,7 @@ package com.demo.config;
 
 import com.demo.model.Movie;
 import com.demo.model.Room;
+import com.demo.model.Session;
 import com.demo.model.enums.ScreenType;
 import com.demo.repository.MovieRepository;
 import com.demo.repository.RoomRepository;
@@ -85,12 +86,33 @@ public class DataInitializer implements CommandLineRunner {
         movieRepo.saveAll(List.of(m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11));
 
         //Datos de prueba de las salas (Room)
+        var room1 = Room.builder().name("Sala 1").active(true).screenType(ScreenType.D4X).capacity(100).build();
+        var room2 = Room.builder().name("Sala 2").active(true).screenType(ScreenType.IMAX).capacity(150).build();
+        var room3 = Room.builder().name("Sala 3").active(false).screenType(ScreenType.D3).capacity(80).build();
+        var room4 = Room.builder().name("Sala 4").screenType(ScreenType.D3).active(true).capacity(120).build();
         roomRepo.saveAll(List.of(
-                Room.builder().name("Sala 1").active(true).screenType(ScreenType.D4X).capacity(100).build(),
-                Room.builder().name("Sala 2").active(true).screenType(ScreenType.IMAX).capacity(150).build(),
-                Room.builder().name("Sala 3").active(false).screenType(ScreenType.D3).capacity(80).build(),
-                Room.builder().name("Sala 4").screenType(ScreenType.D3).active(true).capacity(120).build(),
-                Room.builder().name("Sala 5").screenType(ScreenType.STANDARD).active(true).capacity(90).build()
+                room1, room2, room3, room4
         ));
+
+        //Datos de prueba de las sesiones (Sessions)
+        sessionRepo.saveAll(List.of(
+                //Sesiones para la Sala 1
+                sessionRepo.save(Session.builder().movie(m0).room(room1).price(12.50).language("VO").adMinutes(15).build()),
+                sessionRepo.save(Session.builder().movie(m1).room(room1).price(12.50).language("VO").adMinutes(15).build()),
+                sessionRepo.save(Session.builder().movie(m2).room(room1).price(12.50).language("VO").adMinutes(15).build()),
+                //Sesiones para la Sala 2
+                sessionRepo.save(Session.builder().movie(m3).room(room2).price(15.00).language("doblada").adMinutes(20).build()),
+                sessionRepo.save(Session.builder().movie(m4).room(room2).price(15.00).language("doblada").adMinutes(20).build()),
+                sessionRepo.save(Session.builder().movie(m5).room(room2).price(15.00).language("doblada").adMinutes(20).build()),
+                //sesiones para la sala 3
+                sessionRepo.save(Session.builder().movie(m6).room(room3).price(10.00).language("VOSE").adMinutes(10).build()),
+                sessionRepo.save(Session.builder().movie(m7).room(room3).price(10.00).language("VOSE").adMinutes(10).build()),
+                sessionRepo.save(Session.builder().movie(m8).room(room3).price(10.00).language("VOSE").adMinutes(10).build()),
+                //sesiones para la sala 4
+                sessionRepo.save(Session.builder().movie(m9).room(room4).price(11.00).language("VO").adMinutes(12).build()),
+                sessionRepo.save(Session.builder().movie(m10).room(room4).price(11.00).language("VO").adMinutes(12).build()),
+                sessionRepo.save(Session.builder().movie(m11).room(room4).price(11.00).language("VO").adMinutes(12).build())
+                ));
     }
 }
+
