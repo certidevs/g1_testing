@@ -5,7 +5,7 @@
     <title>proyecciones</title>
 </head>
 <body class="bg-light">
-<div th:replace="~{layouts/layout::container}">
+ <div th:replace="~{layouts/layout::container}">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="mb-0" th:text="${saludo}">Proyecciones</h1>
         <span class="badge bg-secondary fs-6"
@@ -20,7 +20,7 @@
     <div class="my-3">
         <a th:href="@{/sessions(movieId=1)}" class="btn btn-primary btn-sm">Only Film</a>
         <a th:href="@{/sessions(movieId=2)}" class="btn btn-primary btn-sm">The Batman</a>
-</div>
+ </div>
 
     <div class="table-responsive">
         <table class="table table-hover align-middle table-bordered border-success">
@@ -39,10 +39,15 @@
                 <th>Acciones</th>
             </tr>
             </thead>
+            </table>
+            </div>
+            </div>
             <tbody>
-            <tr th:each="session : ${sessions}">
+              <tr th:each="session : ${sessions}">
                 <td th:text="${session.id}"></td>
                 <td class="fw-semibold" th:text="${#temporals.format(session.dateTime, 'dd/MM/yy HH:mm')}"></td>
-                <td class="text-muted
+                <td class="text-muted" th:text="${session.price}"></td>
+              </tr>
+            </tbody>
 </body>
 </html>
