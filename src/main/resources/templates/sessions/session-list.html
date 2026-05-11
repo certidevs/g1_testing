@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layouts/layout::top :: common-head}"/>
+<head th:replace="~{layout/head :: head('proyecciones')}"/>
     <meta charset="UTF-8">
     <title>proyecciones</title>
 </head>
-<body class="bg-light">
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
  <div th:replace="~{layouts/layout::container}">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="mb-0" th:text="${saludo}">Proyecciones</h1>
@@ -49,5 +50,9 @@
                 <td class="text-muted" th:text="${session.price}"></td>
               </tr>
             </tbody>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<script th:replace="~{layout/footer :: scripts}"></script>
+
 </body>
 </html>
