@@ -17,6 +17,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findAllByActiveTrue();
 
+    List<Room> findByName(String name);
+
     Optional<Room> findByIdAndActiveTrue(Long id);
 
     List <Room> findAllByIdAndActiveTrue(Long id);
