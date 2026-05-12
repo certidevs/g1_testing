@@ -15,6 +15,10 @@
                 <div class="col">
                     <i class="fa-solid fa-film me-1"></i>
                     Listado de salas
+                    <div class="my-3">
+                        <a th:href="@{/sessions(movieId=1)}" class="btn btn-primary btn-sm">Only Film</a>
+                        <a th:href="@{/sessions(movieId=2)}" class="btn btn-primary btn-sm">The Batman</a>
+                    </div>
                 </div>
             </div>
         </div>
