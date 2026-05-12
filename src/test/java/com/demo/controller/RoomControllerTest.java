@@ -5,7 +5,6 @@ import com.demo.model.enums.ScreenType;
 import com.demo.repository.RoomRepository;
 import com.demo.repository.SessionRepository;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 // imports importantes
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest // Activa Spring
@@ -27,7 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional // deshace los cambios al final de cada test para no afectar al siguiente test
 class RoomControllerTest {
     // importar mockMVC
-    @Autowired MockMvc mockMvc;
+    @Autowired
+    MockMvc mockMvc;
 
     // importar repos
     @Autowired
@@ -61,28 +64,36 @@ class RoomControllerTest {
     }*/
 
     @Test
-    void createSala() throws Exception {
+    void crearSala() throws Exception {
         //count
         long countBefore = roomRepository.count();
 
         // mockmvc perform post /salas
-        mockMvc.perform(post ("/salas")
-                .param("name","sala test")
-                .param("capacity","50")
-                .param("screenType",ScreenType.IMAX.toString())
-        ).andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl("/salas"));
+        mockMvc.perform(post("/salas")
+                        .param("name", "sala test")
+                        .param("capacity", "50")
+                        .param("screenType", ScreenType.IMAX.toString())
+                ).andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/salas"));
 
         //count +1
-        assertEquals(countBefore +1,roomRepository.count());
+        assertEquals(countBefore + 1, roomRepository.count());
         //findById y comprobar datos
         Room room = roomRepository.findAll().getLast();
         assertEquals("sala test", room.getName());
 
     }
 
+    //endpoint get del edit
     @Test
-    void editSala() throws Exception {
+    void verEdicionSala() throws Exception {
+        mockMvc.perform(get("/salas/edit/" + (room.getId())))
+                .andExpect(status().isOk());
+    }
+
+    //endpoint post
+    @Test
+    void editarSala() throws Exception {
         //Guardar valores originales para comparar
         Long id = room.getId();
         Optional<Room> roomBefore = roomRepository.findById(id);
@@ -90,23 +101,23 @@ class RoomControllerTest {
 
         long countBefore = roomRepository.count();
 
-        //Hacer el POST o PUT al endpoint de edición
+        //hacer el  post al endpoint de edición
         mockMvc.perform(post("/salas")
-                .param("id",roomBefore.get().getId().toString())
-                .param("name","sala testerrr")
-                .param("capacity", "200")
-                .param("screenType", ScreenType.IMAX.toString())
+                        .param("id", roomBefore.get().getId().toString())
+                        .param("name", "sala testerrr")
+                        .param("capacity", "200")
+                        .param("screenType", ScreenType.IMAX.toString())
                 ).andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/salas"));
-        //Comprobar que no se creó una nueva sala
+        //comprobar que no se creó una nueva sala
         assertEquals(countBefore, roomRepository.count());
 
-        //Buscar la sala editada en el repositorio
+        //buscar la sala editada en el repositorio
         Room roomAfter = roomRepository.findById(room.getId()).orElseThrow();
 
         assertEquals("sala testerrr", roomAfter.getName());
         assertEquals(200, roomAfter.getCapacity());
-        assertEquals(ScreenType.IMAX,roomAfter.getScreenType());
+        assertEquals(ScreenType.IMAX, roomAfter.getScreenType());
         assertEquals(true, roomAfter.getActive());
 
     }
