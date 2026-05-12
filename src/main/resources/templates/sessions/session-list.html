@@ -45,12 +45,10 @@
                         <th>
                             <i class="fa-solid fa-calendar"></i>
                             Fecha y hora
-                            <p th:text="${#temporals.format(session.dateTime, 'dd/MM/yyyy HH:mm')}"></p>
                         </th>
                         <th>
                             <i class="fa-solid fa-euro"></i>
                             Precio
-                            <p th:text="${#numbers.formatDecimal(session.price, 1, 2)}"></p>
                         </th>
                         <th>Película</th>
                         <th>Acciones</th>
