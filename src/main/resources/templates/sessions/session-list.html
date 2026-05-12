@@ -3,59 +3,22 @@
 <head th:replace="~{layout/head :: head('proyecciones')}"></head>
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
-
- <div th:replace="~{layouts/layout::container}">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="mb-0" th:text="${saludo}">Proyecciones</h1>
-        <span class="badge bg-secondary fs-6"
-              th:text="|${#lists.size(sessions)} resultados|">0 resultados</span>
-    </div>
-
-    <a th:href="@{/sessions/new}"
-       class="btn btn-success  btn-sm">
-        <i class="fa-solid fa-plus me-1"></i> Crear proyección
-    </a>
-
-    <div class="my-3">
-        <a th:href="@{/sessions(movieId=1)}" class="btn btn-primary btn-sm">Only Film</a>
-        <a th:href="@{/sessions(movieId=2)}" class="btn btn-primary btn-sm">The Batman</a>
- </div>
-
-    <div class="table-responsive">
-        <table class="table table-hover align-middle table-bordered border-success">
-            <thead class="table-dark">
-            <tr>
-                <th>Id</th>
-                <th>
-                    <i class="fa-solid fa-calendar"></i>
-                    Fecha y hora
-                </th>
-                <th>
-                    <i class="fa-solid fa-euro"></i>
-                    Precio
-                </th>
-                <th>Película</th>
-                <th>Acciones</th>
-            </tr>
-                        </thead>
-                        <tbody>
-                          <tr th:each="session : ${sessions}">
-                            <td th:text="${session.id}"></td>
-                            <td class="fw-semibold" th:text="${#temporals.format(session.dateTime, 'dd/MM/yy HH:mm')}"></td>
-                            <td class="text-muted" th:text="${session.price}"></td>
-                            <td th:text="${session.movie.title}"></td>
-                            <td>
-                              <a th:href="@{/sessions/{id}/edit(id=${session.id})}" class="btn btn-warning btn-sm">Editar</a>
-                              <a th:href="@{/sessions/{id}/delete(id=${session.id})}" class="btn btn-danger btn-sm">Eliminar</a>
-                            </td>
-                          </tr>
-                        </tbody>
-                    </table>
+<div class="container">
+    <h1 class="mt-4">Salas</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a th:href="@{/}">Inicio</a></li>
+        <li class="breadcrumb-item active">Salas</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                    <i class="fa-solid fa-film me-1"></i>
+                    Listado de salas
                 </div>
             </div>
-
-<footer th:replace="~{layout/footer :: footer}"></footer>
-<script th:replace="~{layout/footer :: scripts}"></script>
-
+        </div>
+    </div>
+</div>
 </body>
 </html>
