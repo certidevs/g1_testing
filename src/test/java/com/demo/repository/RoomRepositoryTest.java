@@ -23,11 +23,11 @@ class RoomRepositoryTest {
     void setUp() {
         roomRepository.saveAll(
                 List.of(
-                        Room.builder().screenType(ScreenType.D4X).capacity(100).build(),
-                        Room.builder().screenType(ScreenType.IMAX).capacity(150).build(),
-                        Room.builder().screenType(ScreenType.D4X).capacity(80).build(),
-                        Room.builder().screenType(ScreenType.IMAX).capacity(120).build(),
-                        Room.builder().screenType(ScreenType.D4X).capacity(90).build()
+                        Room.builder().name("Salita uno").screenType(ScreenType.D4X).capacity(100).build(),
+                        Room.builder().name("Salita due").screenType(ScreenType.IMAX).capacity(150).build(),
+                        Room.builder().name("Salita tresss").screenType(ScreenType.D4X).capacity(80).build(),
+                        Room.builder().name("Salita cuatre").screenType(ScreenType.IMAX).capacity(120).build(),
+                        Room.builder().name("Salita ultima").screenType(ScreenType.D4X).capacity(90).build()
                 ));
     }
 
