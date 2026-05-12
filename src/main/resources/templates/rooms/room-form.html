@@ -19,7 +19,7 @@
         </h5>
     </div>
     <form th:action="@{/salas}" method="post" th:object="${room}">
-        <input type="hidden" th:field="*{id}" disabled>
+        <input type="hidden" th:field="*{id}">
         <input type="hidden" th:field="*{active}" disabled>
 
         <div class="mb-3">

@@ -68,7 +68,8 @@
 
                 </tbody>
             </table>
-            <a class="btn btn-outline-warning btn-sm">
+            <a th:href="@{/salas/edit/{id}(id=${room.id})}"
+               class="btn btn-outline-warning btn-sm">
                 <i class="fa-solid fa-pencil"></i> Editar
             </a>
 

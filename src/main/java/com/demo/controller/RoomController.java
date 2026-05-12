@@ -75,4 +75,10 @@ public class RoomController {
         roomRepository.save(room);
         return "redirect:/salas";
     }
+        @GetMapping ("salas/edit/{id}")
+    public String edit(Model model, @PathVariable Long id){
+        model.addAttribute("room", roomRepository.findById(id).orElseThrow());
+        return "rooms/room-form";
+    }
+
 }
