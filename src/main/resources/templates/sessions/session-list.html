@@ -20,8 +20,51 @@
                             <i class="fa-solid fa-plus me-1"></i> Nueva proyección
                         </a>
                     </div>
-                    <!--añadir los Datos de prueba de las sesiones (Sessions)-->
                 </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-bordered border-success">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Id</th>
+                        <th>
+                            <i class="fa-solid fa-calendar"></i>
+                            Fecha y hora
+                        </th>
+                        <th>
+                            <i class="fa-solid fa-euro"></i>
+                            Precio
+                        </th>
+                        <th>Película</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="session : ${sessions}">
+                        <td th:text="${session.id}"></td>
+                        <td class="fw-semibold" th:text="${#temporals.format(session.dateTime, 'dd/MM/yy HH:mm')}"></td>
+                        <td class="text-muted small" th:text="${#numbers.formatDecimal(session.price, 1, 2)}"></td>
+                        <td th:text="${session.movie.title}"></td>
+                        <td>
+                            <a th:href="@{/sessions/{id}(id=${session.id})}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fa-regular fa-eye me-1"></i> Ver proyección
+                            </a>
+                            <a th:href="@{/sessions/edit/{id}(id=${session.id})}"
+                               class="btn btn-sm btn-outline-success">
+                                <i class="fa-solid fa-pencil me-1"></i> Editar
+                            </a>
+                            <a th:href="@{/sessions/delete/{id}(id=${session.id})}"
+                               class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
+                                <i class="fa-solid fa-trash me-1"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
