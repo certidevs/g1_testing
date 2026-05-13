@@ -34,11 +34,11 @@ public class SessionController {
         model.addAttribute("proyecciones", sessionRepository.findById(id).orElseThrow());
         return "sessions/session-detail";}
 
-    @GetMapping("/sessions")
+    /*@GetMapping("/sessions")
     public String listSessions(Model model) {
         List<Session> sessions = sessionRepository.findAll();
         model.addAttribute("sessions", sessions);
-        return "sessions/session-list";
-    };
+        return "sessions/session-list"
+    }*/
 
     }
