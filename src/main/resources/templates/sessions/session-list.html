@@ -42,7 +42,6 @@
                     <thead class="table-dark">
                       <tr>
                         <th>Id</th>
-                          <td th:text="${session.id}"></td>
                         <th>
                             <i class="fa-solid fa-calendar"></i>
                             Fecha y hora
@@ -54,13 +53,12 @@
                         <th>Película</th>
                         <th>Acciones</th>
                       </tr>
-                      <!--<tr>
+                      <tr>
                         <td th:text="${session.id}"></td>
                         <td class="fw-semibold" th:text="${#temporals.format(session.dateTime, 'dd/MM/yy HH:mm')}"></td>
                         <td class="text-muted small" th:text="${#numbers.formatDecimal(session.price, 1, 2)}"></td>
                         <td th:text="${session.movie.title}"></td>
-                        <td>
-                      </tr>-->
+                      </tr>
                     </thead>
                 </table>
             </div>
