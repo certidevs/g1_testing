@@ -1,13 +1,12 @@
 package com.demo.repository;
 
 import com.demo.model.*;
+import com.demo.model.enums.BuyStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +19,13 @@ public class TicketRepositoryTest {
     private TicketRepository ticketRepository;
 
     @Autowired
-    private TestEntityManager entityManager;
+    private MovieRepository movieRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private SessionRepository sessionRepository;
 
     private User user;
     private Session session;
@@ -28,16 +33,14 @@ public class TicketRepositoryTest {
     @BeforeEach
     void setUp() {
         // 1. Creamos y persistimos las dependencias necesarias
-        user = User.builder().username("coder").email("coder@demo.com").build();
-        entityManager.persist(user);
+        user = User.builder().email("coder@demo.com").build();
+        userRepository.save(user);
 
         Movie movie = Movie.builder().title("Interstellar").build();
-        entityManager.persist(movie);
+        movieRepository.save(movie);
 
         session = Session.builder().movie(movie).build();
-        entityManager.persist(session);
-
-        entityManager.flush();
+        sessionRepository.save(session);
     }
 
     @Test
@@ -95,6 +98,6 @@ public class TicketRepositoryTest {
         List<Ticket> ticketsPelicula = ticketRepository.findBySession_Movie_Id(movieId);
 
         assertFalse(ticketsPelicula.isEmpty());
-        assertEquals("Interstellar", ticketsPelicula.get(0).getSession().getMovie().getTitle());
+        assertEquals("Interstellar", ticketsPelicula.getFirst().getSession().getMovie().getTitle());
     }
 }
