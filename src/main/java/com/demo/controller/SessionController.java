@@ -1,11 +1,14 @@
 package com.demo.controller;
 
+import com.demo.model.Session;
 import com.demo.repository.SessionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -30,5 +33,12 @@ public class SessionController {
     public String sessionDetail(Model model, @PathVariable Long id) {
         model.addAttribute("proyecciones", sessionRepository.findById(id).orElseThrow());
         return "sessions/session-detail";}
+
+    @GetMapping("/sessions")
+    public String listSessions(Model model) {
+        List<Session> sessions = sessionRepository.findAll();
+        model.addAttribute("sessions", sessions);
+        return "sessions/session-list";
+    }
 
     }

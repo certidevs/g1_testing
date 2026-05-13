@@ -61,17 +61,19 @@
                         <td class="text-muted small" th:text="${#numbers.formatDecimal(session.price, 1, 2)}"></td>
                         <td th:text="${session.movie.title}"></td>
                         <td>
-                            <a th:href="@{/sessions/{id}(id=${session.id})}" class="btn btn-sm btn-outline-primary">
+                            <a th:href="@{/sessions/{id}(id=${session.id})}"
+                               class="btn btn-sm btn-outline-primary">
                                 <i class="fa-regular fa-eye me-1"></i> Ver
                             </a>
-                            <a th:href="@{/sessions/edit/{id}(id=${session.id})}" class="btn btn-sm btn-outline-success">
-                                <i class="fa-solid fa-pencil me-1"></i> Editar
+                            <a th:href="@{/sessions/edit/{id}(id=${session.id})}"
+                               class="btn btn-sm btn-outline-success">  Editar
+                                <i class="fa-solid fa-pencil me-1"></i>
                             </a>
-                            <a th:href="@{/sessions/delete/{id}(id=${session.id})}" class="btn btn-sm btn-outline-danger"
-                               onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
-                                <i class="fa-solid fa-trash me-1"></i> Eliminar
+                            <a th:href="@{/sessions/delete/{id}(id=${session.id})}"
+                               class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');"> Eliminar
+                                <i class="fa-solid fa-trash me-1"></i>
                             </a>
-                        </td>
                     </tr>
                     </tbody>
                 </table>
