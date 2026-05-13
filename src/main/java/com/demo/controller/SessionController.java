@@ -34,6 +34,8 @@ public class SessionController {
         model.addAttribute("proyecciones", sessionRepository.findById(id).orElseThrow());
         return "sessions/session-detail";}
 
+
+    // TODO Crear session
     /*@GetMapping("/sessions")
     public String listSessions(Model model) {
         List<Session> sessions = sessionRepository.findAll();

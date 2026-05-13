@@ -113,6 +113,10 @@ public class DataInitializer implements CommandLineRunner {
                 sessionRepo.save(Session.builder().movie(m10).room(room4).price(11.00).language("VO").adMinutes(12).build()),
                 sessionRepo.save(Session.builder().movie(m11).room(room4).price(11.00).language("VO").adMinutes(12).build())
                 ));
+
+
+
+        // TODO ticket
     }
 }
 
