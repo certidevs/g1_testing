@@ -31,4 +31,10 @@ public class TicketController {
         return "tickets/ticket-detail";
     }
 
+    @GetMapping("tickets/edit/{id}")
+    public String editTicket(@PathVariable Long id, Model model){
+        model.addAttribute("ticket", ticketRepository.findById(id).orElseThrow());
+        return"tickets/ticket-form";
+    }
+
 }
