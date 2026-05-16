@@ -54,7 +54,19 @@
                         <th>Acciones</th>
                       </tr>
                     </thead>
+
                     <tbody>
+                    <tr th:if="${#lists.isEmpty(sessions)}">
+                        <td>1</td>
+                        <td class="fw-semibold">01/01/23 20:00</td>
+                        <td class="text-muted small">9.99</td>
+                        <td>Película de prueba</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary disabled"><i class="fa-regular fa-eye me-1"></i> Ver</a>
+                            <a class="btn btn-sm btn-outline-success disabled"><i class="fa-solid fa-pencil me-1"></i> Editar</a>
+                            <a class="btn btn-sm btn-outline-danger disabled"><i class="fa-solid fa-trash me-1"></i> Eliminar</a>
+                        </td>
+
                     <tr th:each="session : ${sessions}">
                         <td th:text="${session.id}"></td>
                         <td class="fw-semibold" th:text="${#temporals.format(session.dateTime, 'dd/MM/yy HH:mm')}"></td>
