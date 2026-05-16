@@ -68,32 +68,11 @@
         </div>
     </div>
 
-    <!-- Sección opcional: lista de tickets para esta sesión (requiere que el controlador añada 'tickets' al modelo) -->
-    <div class="mt-4" th:if="${tickets != null}">
-        <h3 class="h5">Entradas para esta proyección</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Fila</th>
-                    <th>Asiento</th>
-                    <th>Precio</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="t : ${tickets}">
-                    <td th:text="${t.row}">A</td>
-                    <td th:text="${t.seat}">12</td>
-                    <td th:text="${#numbers.formatCurrency(t.price)}">10.00€</td>
-                    <td th:text="${t.status}">LIBRE</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
-<div th:replace="~{layout/footer :: scripts}"></div>
+<script th:replace="~{layout/footer :: scripts}"></script>
+
 <!-- TODO session detail   room   movie   tickets  -->
 </body>
 </html>
