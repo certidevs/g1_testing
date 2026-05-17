@@ -39,7 +39,7 @@ public class SessionController {
     @GetMapping("/sessions")
     public String listSessions(Model model) {
         List<Session> sessions = sessionRepository.findAll();
-        model.addAttribute("proyecciones", sessions);
+        model.addAttribute("sessions", sessions);
         return "sessions/session-list";}
 
     }
