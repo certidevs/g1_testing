@@ -60,7 +60,7 @@
                     </div>
 
                     <div class="mt-4">
-                        <a th:href="@{'/sessions/' + ${proyecciones.id} + '/edit'}" class="btn btn-outline-primary me-2">Editar</a>
+                        <a th:href="@{/sessions/{id}/edit(id=${proyecciones.id})}" class="btn btn-outline-primary me-2">Editar</a>
                         <a th:href="@{/sessions}" class="btn btn-secondary">Volver</a>
                     </div>
                 </div>
