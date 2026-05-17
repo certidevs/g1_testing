@@ -36,10 +36,10 @@ public class SessionController {
 
 
     // TODO Crear session
-    /*@GetMapping("/sessions")
-    public String listSessions(Model model) {
-        List<Session> sessions = sessionRepository.findAll();
-        model.addAttribute("proyecciones", sessions);
-        return "sessions/session-list";}*/
+    @GetMapping
+    public String list(Model model) {
+        model.addAttribute("proyecciones", sessionRepository.findAll());
+        return "sessions/session-list";}
+
 
     }
