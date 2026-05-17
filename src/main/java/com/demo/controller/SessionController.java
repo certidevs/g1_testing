@@ -36,10 +36,6 @@ public class SessionController {
 
 
     // TODO Crear session
-    @GetMapping
-    public String list(Model model) {
-        model.addAttribute("proyecciones", sessionRepository.findAll());
-        return "sessions/session-list";}
 
 
     }

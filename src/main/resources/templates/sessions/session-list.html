@@ -19,19 +19,6 @@
                         <a th:href="@{/sessions/new}" class="btn btn-outline-primary">
                             <i class="fa-solid fa-plus me-1"></i> Nueva proyección
                         </a>
-                        <a th:href="@{/sessions/{id}(id=${session.id})}"
-                           class="btn btn-sm btn-outline-primary">
-                            <i class="fa-regular fa-eye me-1"></i> Ver proyección
-                        </a>
-                        <a th:href="@{/sessions/edit/{id}(id=${session.id})}"
-                           class="btn btn-sm btn-outline-success">
-                            <i class="fa-solid fa-pencil me-1"></i> Editar
-                        </a>
-                        <a th:href="@{/sessions/delete/{id}(id=${session.id})}"
-                           class="btn btn-sm btn-outline-danger"
-                           onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
-                            <i class="fa-solid fa-trash me-1"></i> Eliminar
-                        </a>
                     </div>
                 </div>
             </div>
