@@ -1,10 +1,112 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<!-- TODO   session detail   room   movie   tickets  -->
+<head th:replace="~{layout/head :: head('formulario de proyección')}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
+
+<main class="container my-5">
+    <a th:href="@{/sessions}" class="text-decoration-none mb-3 d-inline-block">&larr; Volver a proyecciones</a>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                <span th:if="${proyecciones.id == null}">Nueva proyección</span>
+                <span th:unless="${proyecciones.id == null}">Editar proyección #<span th:text="${proyecciones.id}"></span></span>
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Formulario -->
+            <form th:action="@{/sessions}" th:object="${proyecciones}" method="POST">
+
+                <!-- ID oculto si es edición -->
+                <input type="hidden" th:if="${proyecciones.id != null}" th:field="*{id}">
+
+                <!-- Fila 1: Película y Sala -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="movie" class="form-label">
+                            <i class="fa-solid fa-film me-1"></i> Película <span class="text-danger">*</span>
+                        </label>
+                        <select id="movie" th:field="*{movie}" class="form-select" required>
+                            <option value="">-- Selecciona una película --</option>
+                            <option th:each="movie : ${movies}"
+                                    th:value="${movie.id}"
+                                    th:text="${movie.title}"
+                                    th:selected="${proyecciones.movie?.id == movie.id}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="room" class="form-label">
+                            <i class="fa-solid fa-door-open me-1"></i> Sala <span class="text-danger">*</span>
+                        </label>
+                        <select id="room" th:field="*{room}" class="form-select" required>
+                            <option value="">-- Selecciona una sala --</option>
+                            <option th:each="room : ${rooms}"
+                                    th:value="${room.id}"
+                                    th:text="${room.name + ' (' + room.screenType + ')'}"
+                                    th:selected="${proyecciones.room?.id == room.id}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Fila 2: Fecha/Hora y Precio -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="startTime" class="form-label">
+                            <i class="fa-solid fa-calendar me-1"></i> Fecha y Hora <span class="text-danger">*</span>
+                        </label>
+                        <input type="datetime-local" id="startTime" th:field="*{startTime}" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="price" class="form-label">
+                            <i class="fa-solid fa-euro me-1"></i> Precio €<span class="text-danger">*</span>
+                        </label>
+                        <input type="number" id="price" th:field="*{price}" class="form-control"
+                               min="0" step="0.01" placeholder="12.50" required>
+                    </div>
+                </div>
+
+                <!-- Fila 3: Idioma y Duración de anuncios -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="language" class="form-label">
+                            <i class="fa-solid fa-language me-1"></i> Idioma
+                        </label>
+                        <select id="language" th:field="*{language}" class="form-select">
+                            <option value="">-- Selecciona idioma --</option>
+                            <option value="VO" th:selected="${proyecciones.language == 'VO'}">VO (Original)</option>
+                            <option value="VOSE" th:selected="${proyecciones.language == 'VOSE'}">VOSE (Subtítulos)</option>
+                            <option value="Doblada" th:selected="${proyecciones.language == 'Doblada'}">Doblada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="adMinutes" class="form-label">
+                            <i class="fa-solid fa-hourglass-end me-1"></i> Duración anuncios (min)
+                        </label>
+                        <input type="number" id="adMinutes" th:field="*{adMinutes}" class="form-control"
+                               min="0" placeholder="15">
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="fa-solid fa-check me-1"></i>
+                        <span th:if="${proyecciones.id == null}">Crear proyección</span>
+                        <span th:unless="${proyecciones.id == null}">Guardar cambios</span>
+                    </button>
+                    <a th:href="@{/sessions}" class="btn btn-secondary">
+                        <i class="fa-solid fa-xmark me-1"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<script th:replace="~{layout/footer :: scripts}"></script>
 </body>
 </html>
