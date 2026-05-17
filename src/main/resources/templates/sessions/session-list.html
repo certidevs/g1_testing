@@ -15,22 +15,9 @@
                 <div class="col">
                     <i class="fa-solid fa-film me-1"></i>
                     Listado de proyecciones
-                    <div class="float-right">
+                    <div class="float-right"> <!-- Si usas Bootstrap 5: cambiar a "float-end" -->
                         <a th:href="@{/sessions/new}" class="btn btn-outline-primary">
                             <i class="fa-solid fa-plus me-1"></i> Nueva proyección
-                        </a>
-                        <a th:href="@{/sessions/{id}(id=${session.id})}"
-                           class="btn btn-sm btn-outline-primary">
-                            <i class="fa-regular fa-eye me-1"></i> Ver proyección
-                        </a>
-                        <a th:href="@{/sessions/edit/{id}(id=${session.id})}"
-                           class="btn btn-sm btn-outline-success">
-                            <i class="fa-solid fa-pencil me-1"></i> Editar
-                        </a>
-                        <a th:href="@{/sessions/delete/{id}(id=${session.id})}"
-                           class="btn btn-sm btn-outline-danger"
-                           onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
-                            <i class="fa-solid fa-trash me-1"></i> Eliminar
                         </a>
                     </div>
                 </div>
@@ -56,20 +43,14 @@
                     </thead>
 
                     <tbody>
+                    <!-- Fila para el caso "sin proyecciones" -->
                     <tr th:if="${#lists.isEmpty(sessions)}">
-                        <td>1</td>
-                        <td class="fw-semibold">01/01/23 20:00</td>
-                        <td class="text-muted small">9.99</td>
-                        <td>Película de prueba</td>
-                        <td>
-                            <a class="btn btn-sm btn-outline-primary disabled"><i class="fa-regular fa-eye me-1"></i> Ver</a>
-                            <a class="btn btn-sm btn-outline-success disabled"><i class="fa-solid fa-pencil me-1"></i> Editar</a>
-                            <a class="btn btn-sm btn-outline-danger disabled"><i class="fa-solid fa-trash me-1"></i> Eliminar</a>
-                        </td>
+                        <td colspan="5" class="text-center text-muted">No hay proyecciones disponibles.</td>
+                    </tr>
 
+                    <!-- Filas normales -->
                     <tr th:each="session : ${sessions}">
                         <td th:text="${session.id}"></td>
-                        <td> <p th:text="${session.id}"></p> </td>
                         <td class="fw-semibold" th:text="${#temporals.format(session.dateTime, 'dd/MM/yy HH:mm')}"></td>
                         <td class="text-muted small" th:text="${#numbers.formatDecimal(session.price, 1, 2)}"></td>
                         <td th:text="${session.movie.title}"></td>
@@ -79,14 +60,15 @@
                                 <i class="fa-regular fa-eye me-1"></i> Ver
                             </a>
                             <a th:href="@{/sessions/edit/{id}(id=${session.id})}"
-                               class="btn btn-sm btn-outline-success">  Editar
-                                <i class="fa-solid fa-pencil me-1"></i>
+                               class="btn btn-sm btn-outline-success">
+                                <i class="fa-solid fa-pencil me-1"></i> Editar
                             </a>
                             <a th:href="@{/sessions/delete/{id}(id=${session.id})}"
                                class="btn btn-sm btn-outline-danger"
-                               onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');"> Eliminar
-                                <i class="fa-solid fa-trash me-1"></i>
+                               onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
+                                <i class="fa-solid fa-trash me-1"></i> Eliminar
                             </a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
