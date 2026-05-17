@@ -22,25 +22,26 @@ public class SessionController {
     public String Session(Model model) {
         model.addAttribute("proyecciones", sessionRepository.findAll());
         model.addAttribute("proyeccionesCount", sessionRepository.count());
-        return "sessions/session-list"; }
+        return "sessions/session-list";
+    }
 
     @GetMapping("sessions/new")
     public String newSession(Model model) {
         model.addAttribute("proyecciones", new com.demo.model.Session());
-        return "sessions/session-form";}
+        return "sessions/session-form";
+    }
 
     @GetMapping("sessions/{id}")
     public String sessionDetail(Model model, @PathVariable Long id) {
         model.addAttribute("proyecciones", sessionRepository.findById(id).orElseThrow());
-        return "sessions/session-detail";}
+        return "sessions/session-detail";
+    }
 
 
     // TODO Crear session
-    /*@GetMapping("/sessions")
-    public String listSessions(Model model) {
-        List<Session> sessions = sessionRepository.findAll();
-        model.addAttribute("sessions", sessions);
-        return "sessions/session-list"
-    }*/
-
+    @GetMapping
+    public String list(Model model) {
+        model.addAttribute("proyecciones", sessionRepository.findAll());
+        return "sessions/session-list";
     }
+}
