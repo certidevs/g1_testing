@@ -6,7 +6,7 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
-<h1 class="mt-4" th:text="${session.name}"></h1>
+<h1 class="mt-4" th:text="${proyecciones.movie != null ? proyecciones.movie.title : 'Proyección #' + proyecciones.id}"></h1>
 
 <main class="container my-5">
     <a th:href="@{/sessions}" class="text-decoration-none mb-3 d-inline-block">&larr; Volver a proyecciones</a>
@@ -60,7 +60,7 @@
                     </div>
 
                     <div class="mt-4">
-                        <a th:href="@{/sessions/{id}/edit(id=${proyecciones.id})}" class="btn btn-outline-primary me-2">Editar</a>
+                        <a th:href="@{/sessions/edit/{id}(id=${proyecciones.id})}" class="btn btn-outline-primary me-2">Editar</a>
                         <a th:href="@{/sessions}" class="btn btn-secondary">Volver</a>
                     </div>
                 </div>
