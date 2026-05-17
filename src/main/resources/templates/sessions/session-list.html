@@ -5,7 +5,6 @@
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 <div class="container">
     <h1 class="mt-4">proyecciones</h1>
-    <p th:if="${proyeccionesCount != null}" class="text-muted">Total: <span th:text="${proyeccionesCount}">0</span></p>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a th:href="@{/}">Inicio</a></li>
         <li class="breadcrumb-item active">proyecciones</li>
@@ -20,6 +19,19 @@
                         <a th:href="@{/sessions/new}" class="btn btn-outline-primary">
                             <i class="fa-solid fa-plus me-1"></i> Nueva proyección
                         </a>
+                        <a th:href="@{/sessions/{id}(id=${session.id})}"
+                           class="btn btn-sm btn-outline-primary">
+                            <i class="fa-regular fa-eye me-1"></i> Ver proyección
+                        </a>
+                        <a th:href="@{/sessions/edit/{id}(id=${session.id})}"
+                           class="btn btn-sm btn-outline-success">
+                            <i class="fa-solid fa-pencil me-1"></i> Editar
+                        </a>
+                        <a th:href="@{/sessions/delete/{id}(id=${session.id})}"
+                           class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
+                            <i class="fa-solid fa-trash me-1"></i> Eliminar
+                        </a>
                     </div>
                 </div>
             </div>
@@ -28,7 +40,7 @@
             <div class="table-responsive">
                 <table class="table table-hover align-middle table-bordered border-success">
                     <thead class="table-dark">
-                      <tr>
+                    <tr>
                         <th>Id</th>
                         <th>
                             <i class="fa-solid fa-calendar"></i>
@@ -39,59 +51,42 @@
                             Precio
                         </th>
                         <th>Película</th>
-                        <th>Sala</th>
-                        <th>Idioma</th>
-                        <th>Anuncios (min)</th>
                         <th>Acciones</th>
-                      </tr>
+                    </tr>
                     </thead>
 
                     <tbody>
-                    <!-- Mensaje cuando no hay sesiones -->
-                    <tr th:if="${#lists.isEmpty(proyecciones)}">
-                        <td colspan="8" class="text-center text-muted">No hay proyecciones disponibles.</td>
-                    </tr>
-
-                    <!-- Iterar sobre la lista de sesiones -->
-                    <tr th:each="session : ${proyecciones}">
-                        <td th:text="${session.id}">1</td>
-
-                        <!-- Formatear fecha/hora; proteger si startTime es null -->
-                        <td class="fw-semibold"
-                            th:text="${session.startTime != null} ? ${#temporals.format(session.startTime, 'dd/MM/yyyy HH:mm')} : '---'">
-                            01/01/2023 20:00
-                        </td>
-
-                        <!-- Precio con 2 decimales, fallback si null -->
-                        <td class="text-muted small"
-                            th:text="${session.price != null} ? ${#numbers.formatDecimal(session.price,1,2)} : '-'">
-                            9.99
-                        </td>
-
-                        <!-- Película (title) con fallback -->
-                        <td th:text="${session.movie != null} ? ${session.movie.title} : 'Sin película'">Película de prueba</td>
-
-                        <!-- Sala (room.name) con fallback -->
-                        <td th:text="${session.room != null} ? ${session.room.name} : 'Sin sala'">Sala 1</td>
-
-                        <!-- Idioma -->
-                        <td th:text="${session.language != null} ? ${session.language} : '-'">VO</td>
-
-                        <!-- Minutos de anuncios -->
-                        <td th:text="${session.adMinutes != null} ? ${session.adMinutes} : '-'">15</td>
-
+                    <tr th:if="${#lists.isEmpty(sessions)}">
+                        <td>1</td>
+                        <td class="fw-semibold">01/01/23 20:00</td>
+                        <td class="text-muted small">9.99</td>
+                        <td>Película de prueba</td>
                         <td>
-                            <a th:href="@{/sessions/{id}(id=${session.id})}" class="btn btn-sm btn-outline-primary">
+                            <a class="btn btn-sm btn-outline-primary disabled"><i class="fa-regular fa-eye me-1"></i> Ver</a>
+                            <a class="btn btn-sm btn-outline-success disabled"><i class="fa-solid fa-pencil me-1"></i> Editar</a>
+                            <a class="btn btn-sm btn-outline-danger disabled"><i class="fa-solid fa-trash me-1"></i> Eliminar</a>
+                        </td>
+
+                    <tr th:each="session : ${sessions}">
+                        <td th:text="${session.id}"></td>
+                        <td> <p th:text="${session.id}"></p> </td>
+                        <td class="fw-semibold" th:text="${#temporals.format(session.dateTime, 'dd/MM/yy HH:mm')}"></td>
+                        <td class="text-muted small" th:text="${#numbers.formatDecimal(session.price, 1, 2)}"></td>
+                        <td th:text="${session.movie.title}"></td>
+                        <td>
+                            <a th:href="@{/sessions/{id}(id=${session.id})}"
+                               class="btn btn-sm btn-outline-primary">
                                 <i class="fa-regular fa-eye me-1"></i> Ver
                             </a>
-                            <a th:href="@{/sessions/edit/{id}(id=${session.id})}" class="btn btn-sm btn-outline-success">
-                                Editar <i class="fa-solid fa-pencil me-1"></i>
+                            <a th:href="@{/sessions/edit/{id}(id=${session.id})}"
+                               class="btn btn-sm btn-outline-success">  Editar
+                                <i class="fa-solid fa-pencil me-1"></i>
                             </a>
-                            <a th:href="@{/sessions/delete/{id}(id=${session.id})}" class="btn btn-sm btn-outline-danger"
-                               onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
-                                Eliminar <i class="fa-solid fa-trash me-1"></i>
+                            <a th:href="@{/sessions/delete/{id}(id=${session.id})}"
+                               class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');"> Eliminar
+                                <i class="fa-solid fa-trash me-1"></i>
                             </a>
-                        </td>
                     </tr>
                     </tbody>
                 </table>
