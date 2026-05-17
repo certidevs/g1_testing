@@ -43,37 +43,36 @@
                     </thead>
 
                     <tbody>
-                    <tr th:if="${#lists.isEmpty(proyecciones)}">
+                      <tr th:if="${#lists.isEmpty(proyecciones)}">
                         <td>1</td>
                         <td class="fw-semibold">01/01/23 20:00</td>
                         <td class="text-muted small">9.99</td>
                         <td>Película de prueba</td>
                         <td>
-                            <a class="btn btn-sm btn-outline-primary disabled"><i class="fa-regular fa-eye me-1"></i> Ver</a>
-                            <a class="btn btn-sm btn-outline-success disabled"><i class="fa-solid fa-pencil me-1"></i> Editar</a>
-                            <a class="btn btn-sm btn-outline-danger disabled"><i class="fa-solid fa-trash me-1"></i> Eliminar</a>
+                          <a class="btn btn-sm btn-outline-primary disabled"><i class="fa-regular fa-eye me-1"></i> Ver</a>
+                          <a class="btn btn-sm btn-outline-success disabled"><i class="fa-solid fa-pencil me-1"></i> Editar</a>
+                          <a class="btn btn-sm btn-outline-danger disabled"><i class="fa-solid fa-trash me-1"></i> Eliminar</a>
                         </td>
+                      </tr>
 
-                     <tr th:each="proyeccion : ${proyecciones}">
+                      <tr th:each="session : ${proyecciones}">
                         <td th:text="${session.id}"></td>
-                        <td class="fw-semibold" th:text="${#temporals.format(session.dateTime, 'dd/MM/yy HH:mm')}"></td>
+                        <td class="fw-semibold" th:text="${#temporals.format(session.startTime, 'dd/MM/yy HH:mm')}"></td>
                         <td class="text-muted small" th:text="${#numbers.formatDecimal(session.price, 1, 2)}"></td>
                         <td th:text="${session.movie.title}"></td>
                         <td>
-                            <a th:href="@{/sessions/{id}(id=${session.id})}"
-                               class="btn btn-sm btn-outline-primary">
-                                <i class="fa-regular fa-eye me-1"></i> Ver
-                            </a>
-                            <a th:href="@{/sessions/edit/{id}(id=${session.id})}"
-                               class="btn btn-sm btn-outline-success">  Editar
-                                <i class="fa-solid fa-pencil me-1"></i>
-                            </a>
-                            <a th:href="@{/sessions/delete/{id}(id=${session.id})}"
-                               class="btn btn-sm btn-outline-danger"
-                               onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');"> Eliminar
-                                <i class="fa-solid fa-trash me-1"></i>
-                            </a>
-                    </tr>
+                          <a th:href="@{/sessions/{id}(id=${session.id})}" class="btn btn-sm btn-outline-primary">
+                            <i class="fa-regular fa-eye me-1"></i> Ver
+                          </a>
+                          <a th:href="@{/sessions/edit/{id}(id=${session.id})}" class="btn btn-sm btn-outline-success">
+                            Editar <i class="fa-solid fa-pencil me-1"></i>
+                          </a>
+                          <a th:href="@{/sessions/delete/{id}(id=${session.id})}" class="btn btn-sm btn-outline-danger"
+                             onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
+                            Eliminar <i class="fa-solid fa-trash me-1"></i>
+                          </a>
+                        </td>
+                      </tr>
                     </tbody>
                 </table>
             </div>
