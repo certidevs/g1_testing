@@ -15,7 +15,7 @@
                 <div class="col">
                     <i class="fa-solid fa-film me-1"></i>
                     Listado de proyecciones
-                    <div class="float-right"> <!-- Si usas Bootstrap 5: cambiar a "float-end" -->
+                    <div class="float-right">
                         <a th:href="@{/sessions/new}" class="btn btn-outline-primary">
                             <i class="fa-solid fa-plus me-1"></i> Nueva proyección
                         </a>
@@ -44,26 +44,26 @@
 
                     <tbody>
                     <!-- Fila para el caso "sin proyecciones" -->
-                    <tr th:if="${#lists.isEmpty(sessions)}">
+                    <tr th:if="${#lists.isEmpty(proyecciones)}">
                         <td colspan="5" class="text-center text-muted">No hay proyecciones disponibles.</td>
                     </tr>
 
                     <!-- Filas normales -->
-                    <tr th:each="session : ${sessions}">
-                        <td th:text="${session.id}"></td>
-                        <td class="fw-semibold" th:text="${#temporals.format(session.dateTime, 'dd/MM/yy HH:mm')}"></td>
-                        <td class="text-muted small" th:text="${#numbers.formatDecimal(session.price, 1, 2)}"></td>
-                        <td th:text="${session.movie.title}"></td>
+                    <tr th:each="proyeccion : ${proyecciones}">
+                        <td th:text="${proyeccion.id}"></td>
+                        <td class="fw-semibold" th:text="${proyeccion.startTime != null ? #temporals.format(proyeccion.startTime, 'dd/MM/yy HH:mm') : '—'}"></td>
+                        <td class="text-muted small" th:text="${proyeccion.price != null ? #numbers.formatDecimal(proyeccion.price, 1, 2) : '-'}"></td>
+                        <td th:text="${proyeccion.movie != null ? proyeccion.movie.title : '—'}"></td>
                         <td>
-                            <a th:href="@{/sessions/{id}(id=${session.id})}"
+                            <a th:href="@{/sessions/{id}(id=${proyeccion.id})}"
                                class="btn btn-sm btn-outline-primary">
                                 <i class="fa-regular fa-eye me-1"></i> Ver
                             </a>
-                            <a th:href="@{/sessions/edit/{id}(id=${session.id})}"
+                            <a th:href="@{/sessions/edit/{id}(id=${proyeccion.id})}"
                                class="btn btn-sm btn-outline-success">
                                 <i class="fa-solid fa-pencil me-1"></i> Editar
                             </a>
-                            <a th:href="@{/sessions/delete/{id}(id=${session.id})}"
+                            <a th:href="@{/sessions/delete/{id}(id=${proyeccion.id})}"
                                class="btn btn-sm btn-outline-danger"
                                onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
                                 <i class="fa-solid fa-trash me-1"></i> Eliminar
