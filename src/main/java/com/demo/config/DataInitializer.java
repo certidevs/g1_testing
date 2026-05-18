@@ -2,6 +2,7 @@ package com.demo.config;
 
 
 import com.demo.model.*;
+import com.demo.model.enums.Role;
 import com.demo.model.enums.ScreenType;
 import com.demo.repository.*;
 import lombok.AllArgsConstructor;
@@ -118,15 +119,19 @@ public class DataInitializer implements CommandLineRunner {
         var user1 = User.builder()
                 .firstName("John")
                 .lastName("Doe")
+                .username("user1")
                 .email("john.doe@example.com")
-                .password("password123") // Idealmente usarías BCryptPasswordEncoder aquí si tienes seguridad configurada
+                .role(Role.ROLE_USER)
+                .password("{noop}1234") // Idealmente usarías BCryptPasswordEncoder aquí si tienes seguridad configurada
                 .build();
 
         var user2 = User.builder()
                 .firstName("Jane")
                 .lastName("Smith")
+                .username("user2")
                 .email("jane.smith@example.com")
-                .password("secure456")
+                .role(Role.ROLE_USER)
+                .password("{noop}1234")
                 .build();
 
         userRepo.saveAll(List.of(user1, user2));

@@ -16,6 +16,7 @@ class TicketTest {
         // 1. Setup de dependencias (Objetos relacionados)
         User mockUser = User.builder()
                 .id(1L)
+                .username("test")
                 .email("test@example.com")
                 .build();
 
