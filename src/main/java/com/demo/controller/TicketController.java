@@ -1,7 +1,9 @@
 package com.demo.controller;
 
 import com.demo.model.Ticket;
+import com.demo.repository.SessionRepository;
 import com.demo.repository.TicketRepository;
+import com.demo.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,8 @@ import java.util.List;
 public class TicketController {
 
     private final TicketRepository ticketRepository;
+    private final UserRepository userRepository;
+    private final SessionRepository sessionRepository;
 
     @GetMapping("tickets")
     public String getTickets(Model model){
@@ -34,6 +38,8 @@ public class TicketController {
     @GetMapping("tickets/edit/{id}")
     public String editTicket(@PathVariable Long id, Model model){
         model.addAttribute("ticket", ticketRepository.findById(id).orElseThrow());
+        model.addAttribute("users",userRepository.findAll());
+        model.addAttribute("sessions",sessionRepository.findAll());
         return"tickets/ticket-form";
     }
 
