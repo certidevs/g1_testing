@@ -1,5 +1,6 @@
 package com.demo.repository;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.demo.model.Session;
 

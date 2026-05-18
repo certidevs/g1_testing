@@ -4,10 +4,12 @@ package com.demo.controller;
     import com.demo.repository.SessionRepository;
     import com.demo.repository.MovieRepository;
     import com.demo.repository.RoomRepository;
+    import com.demo.repository.TicketRepository;
     import lombok.AllArgsConstructor;
     import org.springframework.stereotype.Controller;
     import org.springframework.ui.Model;
     import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.ModelAttribute;
     import org.springframework.web.bind.annotation.PathVariable;
     import org.springframework.web.bind.annotation.PostMapping;
 
@@ -18,6 +20,7 @@ package com.demo.controller;
         private final SessionRepository sessionRepository;
         private final MovieRepository movieRepository;
         private final RoomRepository roomRepository;
+        private final TicketRepository ticketRepository;
 
         // Lista de sesiones
         @GetMapping("/sessions")
@@ -30,6 +33,8 @@ package com.demo.controller;
         // Formulario nueva sesión
         @GetMapping("/sessions/new")
         public String newSession(Model model) {
+            // TODO cambiar proyecciones a proyeccion porque es solo una
+
             model.addAttribute("proyecciones", new Session());
             model.addAttribute("movies", movieRepository.findAll()); // Todas las películas
             model.addAttribute("rooms", roomRepository.findAll());   // Todas las salas
@@ -39,13 +44,17 @@ package com.demo.controller;
         // Detalle de sesión
         @GetMapping("/sessions/{id}")
         public String sessionDetail(Model model, @PathVariable Long id) {
+            // TODO cambiar proyecciones a proyeccion porque es solo una
             model.addAttribute("proyecciones", sessionRepository.findById(id).orElseThrow());
+            model.addAttribute("tickets", ticketRepository.findBySession_Id(id)); // Cargar los tickets de esta sesión
             return "sessions/session-detail";
         }
 
         // Formulario editar sesión
         @GetMapping("/sessions/edit/{id}")
         public String editSession(Model model, @PathVariable Long id) {
+            // TODO cambiar proyecciones a proyeccion porque es solo una
+
             model.addAttribute("proyecciones", sessionRepository.findById(id).orElseThrow());
             model.addAttribute("movies", movieRepository.findAll());
             model.addAttribute("rooms", roomRepository.findAll());
@@ -54,8 +63,14 @@ package com.demo.controller;
 
         // POST: Guardar (crear o actualizar)
         @PostMapping("/sessions")
-        public String saveSession(Session proyecciones) {
-            sessionRepository.save(proyecciones);
+        public String saveSession(@ModelAttribute  Session session) {
+            sessionRepository.save(session);
+            // TODO generar automaticamente los tickets de la session
+            // List tickets
+            // new Ticket()
+            // ticket.setSession(session)
+            // asociar fila y butaca a cada ticket se puede hacer hacer con dos bucles for anidados
+            // tickerRepository.saveAll(tickets)
             return "redirect:/sessions";
         }
 

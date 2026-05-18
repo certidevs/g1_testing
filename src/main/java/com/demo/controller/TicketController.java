@@ -1,6 +1,7 @@
 package com.demo.controller;
 
 import com.demo.model.Ticket;
+import com.demo.model.enums.BuyStatus;
 import com.demo.repository.SessionRepository;
 import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -43,6 +45,32 @@ public class TicketController {
         return"tickets/ticket-form";
     }
 
-    // TODO tickets/new
+    // @PostMapping("tickets/new")
+
+    @GetMapping("tickets/buy/{id}")
+    public String buyTicket(@PathVariable Long id, Model model){
+
+        Ticket ticket = ticketRepository.findById(id).orElseThrow();
+        ticket.setBuyDateTime(LocalDateTime.now());
+        ticket.setStatus(BuyStatus.PAGADO);
+
+        Double totalPrice;
+        // primero sacar el precio de la sala
+        // segundo sumar precio de comida
+        // tercero restar descuento
+        // LocalDateTime.now().getDayOfWeek() == 3 entonces aplicar descuento
+        // descuento por edad de usuario si tenemos su cumpleaños
+
+
+        // ticket.setUser(user);
+        // ticket.setPrice(totalPrice);
+        // TODO sumar precios de comida
+
+        ticketRepository.save(ticket);
+        return "redirect:/tickets/" + ticket.getId();
+
+    }
+
+
 
 }

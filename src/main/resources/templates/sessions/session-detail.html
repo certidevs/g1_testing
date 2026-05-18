@@ -59,6 +59,20 @@
                         <p th:text="${proyecciones.adMinutes != null ? proyecciones.adMinutes : '0'}">10</p>
                     </div>
 
+                    <div class="mt-3">
+
+                        <!--                           TODO  Tengo que poner las sessiones AQUI-->
+                        <ul class="list-group list-group-flush">
+                            <li th:each="ticket : ${tickets}">
+                                <span th:text="${'Fila: ' + ticket.row}"></span>
+                                <span th:text="${'Butaca: ' + ticket.seat}"></span>
+<!--                                TODO if status != PAGADO entonces puedes comprar, si PAGADO entonces no hay boton comra-->
+                                <a th:href="@{/tickets/buy/{id}(id=${ticket.id})}">Comprar ticket</a>
+                            </li>
+                        </ul>
+
+                    </div>
+
                     <div class="mt-4">
                         <a th:href="@{/sessions/edit/{id}(id=${proyecciones.id})}" class="btn btn-outline-primary me-2">Editar</a>
                         <a th:href="@{/sessions}" class="btn btn-secondary">Volver</a>

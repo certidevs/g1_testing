@@ -2,6 +2,7 @@ package com.demo.controller;
 
 import com.demo.model.Movie;
 import com.demo.repository.MovieRepository;
+import com.demo.repository.SessionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class MovieController {
     //Inyectar el repositorio de movie
     private final MovieRepository movieRepository;
+    private final SessionRepository sessionRepository;
 
     //GetMapping de peliculas
     @GetMapping("movies")
@@ -39,6 +41,7 @@ public class MovieController {
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
             model.addAttribute("movie", movie);
+            model.addAttribute("sessions", sessionRepository.findByMovie_Id(id));
             return "movies/movie-detail";
         }
         return"redirect:/movies";

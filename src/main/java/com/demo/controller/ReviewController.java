@@ -29,6 +29,14 @@ public class ReviewController {
         return "reviews/review-detail";
     }
 
+    // TODO GetMapping reviews/new
+
+    // TODO GetMapping reviews/edit/{id}
+
+    // TODO PostMapping reviews/new
+
+
+
     @GetMapping("reviews/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         reviewRepository.deleteById(id);
