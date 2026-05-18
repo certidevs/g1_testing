@@ -13,7 +13,13 @@ package com.demo.controller;
     import org.springframework.web.bind.annotation.PathVariable;
     import org.springframework.web.bind.annotation.PostMapping;
 
-    @Controller
+    import com.demo.model.Ticket;
+    import com.demo.model.Room;
+    import com.demo.model.enums.BuyStatus;
+    import java.util.ArrayList;
+    import java.util.List;
+
+@Controller
     @AllArgsConstructor
     public class SessionController {
 
@@ -65,12 +71,52 @@ package com.demo.controller;
         @PostMapping("/sessions")
         public String saveSession(@ModelAttribute  Session session) {
             sessionRepository.save(session);
-            // TODO generar automaticamente los tickets de la session
-            // List tickets
-            // new Ticket()
-            // ticket.setSession(session)
-            // asociar fila y butaca a cada ticket se puede hacer hacer con dos bucles for anidados
-            // tickerRepository.saveAll(tickets)
+            // Guardar la sesión (crea o actualiza)
+            boolean isNew = session.getId() == null;
+            Session saved = sessionRepository.save(session);
+
+            if (isNew) {
+                // Recuperar la sala completa (por si el objeto session solo trae el id)
+                Room room = null;
+                if (saved.getRoom() != null && saved.getRoom().getId() != null) {
+                    room = roomRepository.findById(saved.getRoom().getId()).orElse(null);
+                }
+
+                if (room == null) {
+                    // No hay sala asociada o no encontrada: no se generan tickets
+                } else {
+                    Integer capacity = room.getCapacity();
+                    if (capacity == null || capacity <= 0) {
+                        // Capacidad no válida: no generar tickets
+                    } else {
+                        // Configuración simple: X butacas por fila
+                        final int seatsPerRow = 10; // puedes ajustar o sacar de Room si lo modelas
+                        List<Ticket> tickets = new ArrayList<>(capacity);
+                        char rowLetter = 'A';
+                        int created = 0;
+
+                        while (created < capacity && rowLetter <= 'Z') {
+                            for (int seatNum = 1; seatNum <= seatsPerRow && created < capacity; seatNum++) {
+                                Ticket t = Ticket.builder()
+                                        .session(saved)
+                                        .row(String.valueOf(rowLetter))
+                                        .seat(String.valueOf(seatNum))
+                                        .price(saved.getPrice())
+                                        .discount(0.0)
+                                        .status(BuyStatus.LIBRE)
+                                        .build();
+                                tickets.add(t);
+                                created++;
+                            }
+                            rowLetter++;
+                        }
+
+                        if (!tickets.isEmpty()) {
+                            ticketRepository.saveAll(tickets);
+                        }
+                    }
+                }
+            }
             return "redirect:/sessions";
         }
 

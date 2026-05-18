@@ -67,7 +67,8 @@
                                 <span th:text="${'Fila: ' + ticket.row}"></span>
                                 <span th:text="${'Butaca: ' + ticket.seat}"></span>
 <!--                                TODO if status != PAGADO entonces puedes comprar, si PAGADO entonces no hay boton comra-->
-                                <a th:href="@{/tickets/buy/{id}(id=${ticket.id})}">Comprar ticket</a>
+                                <a th:if="${ticket.status != 'PAGADO'}" th:href="@{/tickets/buy/{id}(id=${ticket.id})}" class="btn btn-sm btn-primary">Comprar ticket</a>
+                                <span th:if="${ticket.status == 'PAGADO'}" class="badge bg-success">Pagado</span>
                             </li>
                         </ul>
 
