@@ -45,7 +45,7 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Estado</label>
                                 <select th:field="*{status}" class="form-select">
-                                    <option th:each="status : ${T(com.tuapp.model.BuyStatus).values()}"
+                                    <option th:each="status : ${T(com.demo.model.enums.BuyStatus).values()}"
                                             th:value="${status}" th:text="${status}"></option>
                                 </select>
                             </div>
