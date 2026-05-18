@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
-<head th:replace="~{head :: head('Formulario de Ticket')}"></head>
+<head th:replace="~{layout/head :: head('Formulario de Ticket')}"></head>
 
 <body class="bg-light">
 
-<nav th:replace="~{navbar :: navbar}"></nav>
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
 
 <main class="container">
     <div class="row justify-content-center">
@@ -92,8 +92,8 @@
     </div>
 </main>
 
-<footer th:replace="~{footer :: footer}"></footer>
-<div th:replace="~{footer :: scripts}"></div>
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<div th:replace="~{layout/footer :: scripts}"></div>
 
 </body>
 </html>
