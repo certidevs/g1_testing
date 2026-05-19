@@ -27,6 +27,10 @@ public class Review {
     //rating, de cinco
     private Integer rating;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Builder.Default // para que el builder no ponga este campo a null
+    private LocalDateTime creationDate = LocalDateTime.now();
+
     //película
     @ManyToOne
     private Movie movie;

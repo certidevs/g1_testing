@@ -22,6 +22,7 @@ public class DataInitializer implements CommandLineRunner {
     private MovieRepository movieRepo;
     private TicketRepository ticketRepo;
     private UserRepository userRepo;
+    private ReviewRepository reviewRepo;
 
     @Override
     public void run(String... args) throws Exception {
@@ -180,6 +181,10 @@ public class DataInitializer implements CommandLineRunner {
 
             ticketRepo.saveAll(List.of(ticket1, ticket2, ticket3));
             System.out.println("TICKETS E HILOS DE PRUEBA INICIALIZADOS CORRECTAMENTE");
+
+            reviewRepo.save(Review.builder().title("ok").rating(4).movie(m1).build());
+            reviewRepo.save(Review.builder().title("bad").rating(1).movie(m2).build());
+            reviewRepo.save(Review.builder().title("okk").rating(2).movie(m3).build());
         }
     }
 }
