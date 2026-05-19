@@ -10,16 +10,16 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
             <h3 class="mb-0">
-                <span th:if="${proyecciones.id == null}">Nueva proyección</span>
-                <span th:unless="${proyecciones.id == null}">Editar proyección #<span th:text="${proyecciones.id}"></span></span>
+                <span th:if="${proyeccion.id == null}">Nueva proyección</span>
+                <span th:unless="${proyeccion.id == null}">Editar proyección #<span th:text="${proyeccion.id}"></span></span>
             </h3>
         </div>
         <div class="card-body">
             <!-- Formulario -->
-            <form th:action="@{/sessions}" th:object="${proyecciones}" method="POST">
+            <form th:action="@{/sessions}" th:object="${proyeccion}" method="POST">
 
                 <!-- ID oculto si es edición -->
-                <input type="hidden" th:if="${proyecciones.id != null}" th:field="*{id}">
+                <input type="hidden" th:if="${proyeccion.id != null}" th:field="*{id}">
 
                 <!-- Fila 1: Película y Sala -->
                 <div class="row mb-3">
@@ -32,7 +32,7 @@
                             <option th:each="movie : ${movies}"
                                     th:value="${movie.id}"
                                     th:text="${movie.title}"
-                                    th:selected="${proyecciones.movie?.id == movie.id}">
+                                    th:selected="${proyeccion.movie?.id == movie.id}">
                             </option>
                         </select>
                     </div>
@@ -45,7 +45,7 @@
                             <option th:each="room : ${rooms}"
                                     th:value="${room.id}"
                                     th:text="${room.name + ' (' + room.screenType + ')'}"
-                                    th:selected="${proyecciones.room?.id == room.id}">
+                                    th:selected="${proyeccion.room?.id == room.id}">
                             </option>
                         </select>
                     </div>
@@ -76,9 +76,9 @@
                         </label>
                         <select id="language" th:field="*{language}" class="form-select">
                             <option value="">-- Selecciona idioma --</option>
-                            <option value="VO" th:selected="${proyecciones.language == 'VO'}">VO (Original)</option>
-                            <option value="VOSE" th:selected="${proyecciones.language == 'VOSE'}">VOSE (Subtítulos)</option>
-                            <option value="Doblada" th:selected="${proyecciones.language == 'Doblada'}">Doblada</option>
+                            <option value="VO" th:selected="${proyeccion.language == 'VO'}">VO (Original)</option>
+                            <option value="VOSE" th:selected="${proyeccion.language == 'VOSE'}">VOSE (Subtítulos)</option>
+                            <option value="Doblada" th:selected="${proyeccion.language == 'Doblada'}">Doblada</option>
                         </select>
                     </div>
                     <div class="col-md-6">
@@ -94,8 +94,8 @@
                 <div class="mt-4">
                     <button type="submit" class="btn btn-success me-2">
                         <i class="fa-solid fa-check me-1"></i>
-                        <span th:if="${proyecciones.id == null}">Crear proyección</span>
-                        <span th:unless="${proyecciones.id == null}">Guardar cambios</span>
+                        <span th:if="${proyeccion.id == null}">Crear proyección</span>
+                        <span th:unless="${proyeccion.id == null}">Guardar cambios</span>
                     </button>
                     <a th:href="@{/sessions}" class="btn btn-secondary">
                         <i class="fa-solid fa-xmark me-1"></i> Cancelar

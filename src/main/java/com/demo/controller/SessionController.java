@@ -41,7 +41,7 @@ package com.demo.controller;
         public String newSession(Model model) {
             // TODO cambiar proyecciones a proyeccion porque es solo una
 
-            model.addAttribute("proyecciones", new Session());
+            model.addAttribute("proyeccion", new Session());
             model.addAttribute("movies", movieRepository.findAll()); // Todas las películas
             model.addAttribute("rooms", roomRepository.findAll());   // Todas las salas
             return "sessions/session-form";
@@ -50,8 +50,8 @@ package com.demo.controller;
         // Detalle de sesión
         @GetMapping("/sessions/{id}")
         public String sessionDetail(Model model, @PathVariable Long id) {
-            // TODO cambiar proyecciones a proyeccion porque es solo una
-            model.addAttribute("proyecciones", sessionRepository.findById(id).orElseThrow());
+            // TODO cambiar proyecciones a proyección porque es solo una
+            model.addAttribute("proyección", sessionRepository.findById(id).orElseThrow());
             model.addAttribute("tickets", ticketRepository.findBySession_Id(id)); // Cargar los tickets de esta sesión
             return "sessions/session-detail";
         }
@@ -60,8 +60,7 @@ package com.demo.controller;
         @GetMapping("/sessions/edit/{id}")
         public String editSession(Model model, @PathVariable Long id) {
             // TODO cambiar proyecciones a proyeccion porque es solo una
-
-            model.addAttribute("proyecciones", sessionRepository.findById(id).orElseThrow());
+            model.addAttribute("proyeccion", sessionRepository.findById(id).orElseThrow());
             model.addAttribute("movies", movieRepository.findAll());
             model.addAttribute("rooms", roomRepository.findAll());
             return "sessions/session-form";
