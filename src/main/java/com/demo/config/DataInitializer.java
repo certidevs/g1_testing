@@ -88,6 +88,8 @@ public class DataInitializer implements CommandLineRunner {
         var room2 = Room.builder().name("Sala 2").active(true).screenType(ScreenType.IMAX).capacity(150).build();
         var room3 = Room.builder().name("Sala 3").active(false).screenType(ScreenType.D3).capacity(80).build();
         var room4 = Room.builder().name("Sala 4").screenType(ScreenType.D3).active(true).capacity(120).build();
+        var room5 = Room.builder().name("Sala 5").screenType(ScreenType.STANDARD).active(true).capacity(100).build();
+        var room6 = Room.builder().name("Sala 6").screenType(ScreenType.STANDARD).active(true).capacity(125).build();
         roomRepo.saveAll(List.of(
                 room1, room2, room3, room4
         ));
@@ -123,7 +125,7 @@ public class DataInitializer implements CommandLineRunner {
                 .username("user1")
                 .email("john.doe@example.com")
                 .role(Role.ROLE_USER)
-                .password("{noop}1234") // Idealmente usarías BCryptPasswordEncoder aquí si tienes seguridad configurada
+                .password("{noop}   1234") // Idealmente usarías BCryptPasswordEncoder aquí si tienes seguridad configurada
                 .build();
 
         var user2 = User.builder()
