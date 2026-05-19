@@ -51,7 +51,7 @@ package com.demo.controller;
         @GetMapping("/sessions/{id}")
         public String sessionDetail(Model model, @PathVariable Long id) {
             // TODO cambiar proyecciones a proyección porque es solo una
-            model.addAttribute("proyección", sessionRepository.findById(id).orElseThrow());
+            model.addAttribute("proyeccion", sessionRepository.findById(id).orElseThrow());
             model.addAttribute("tickets", ticketRepository.findBySession_Id(id)); // Cargar los tickets de esta sesión
             return "sessions/session-detail";
         }

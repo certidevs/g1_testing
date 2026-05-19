@@ -51,9 +51,13 @@
                     <!-- Filas normales -->
                     <tr th:each="proyeccion : ${proyecciones}">
                         <td th:text="${proyeccion.id}"></td>
-                        <td class="fw-semibold" th:text="${proyeccion.startTime != null ? #temporals.format(proyeccion.startTime, 'dd/MM/yy HH:mm') : '—'}"></td>
-                        <td class="text-muted small" th:text="${proyeccion.price != null ? #numbers.formatDecimal(proyeccion.price, 1, 2) : '-'}"></td>
-                        <td th:text="${proyeccion.movie != null ? proyeccion.movie.title : '—'}"></td>
+                        <td class="fw-semibold"
+                            th:text="${proyeccion.startTime != null ? #temporals.format(proyeccion.startTime, 'dd/MM/yy HH:mm') : '—'}">
+                        </td>
+                        <td class="text-muted small"
+                            th:text="${proyeccion.price != null ? #numbers.formatDecimal(proyeccion.price, 1, 2) + ' €' : '-'}">
+                        </td>
+                        <td th:text="${proyeccion.movie?.title ?: '—'}"></td>
                         <td>
                             <a th:href="@{/sessions/{id}(id=${proyeccion.id})}"
                                class="btn btn-sm btn-outline-primary">
