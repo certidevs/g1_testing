@@ -62,15 +62,19 @@
                     <div class="mt-3">
 
                         <!--                           TODO  Tengo que poner las sessiones AQUI-->
-                        <ul class="list-unstyled">
-                            <li th:each="ticket : ${tickets}">
-                                <span th:text="${'Fila: ' + ticket.row}"></span>
-                                <span th:text="${'Butaca: ' + ticket.seat}"></span>
-<!--                                TODO if status != PAGADO entonces puedes comprar, si PAGADO entonces no hay boton comra-->
-                                <a th:if="${ticket.status != 'PAGADO'}" th:href="@{/tickets/buy/{id}(id=${ticket.id})}" class="btn btn-sm btn-primary">Comprar ticket</a>
-                                <span th:if="${ticket.status == 'PAGADO'}" class="badge bg-success">Pagado</span>
-                            </li>
-                        </ul>
+                        <div class="mt-3">
+                            <p class="text-muted small mb-0">Tickets Disponibles</p>
+                            <div th:each="ticket : ${tickets}" class="mb-3 p-3 border rounded">
+                                <p class="mb-2">
+                                    <strong th:text="${'Fila: ' + ticket.row}"></strong>
+                                    <span th:text="${' | Butaca: ' + ticket.seat}"></span>
+                                </p>
+                                <p class="mb-0">
+                                    <a th:if="${ticket.status != 'PAGADO'}" th:href="@{/tickets/buy/{id}(id=${ticket.id})}" class="btn btn-sm btn-primary">Comprar ticket</a>
+                                    <span th:if="${ticket.status == 'PAGADO'}" class="badge bg-success">Pagado</span>
+                                </p>
+                            </div>
+                        </div>
 
                     </div>
 
