@@ -94,25 +94,80 @@ public class DataInitializer implements CommandLineRunner {
                 room1, room2, room3, room4
         ));
 
-        //Datos de prueba de las sesiones (Sessions)
-        sessionRepo.saveAll(List.of(
-                //Sesiones para la Sala 1
-                sessionRepo.save(Session.builder().movie(m0).room(room1).price(12.50).language("VO").adMinutes(15).build()),
-                sessionRepo.save(Session.builder().movie(m1).room(room1).price(12.50).language("VO").adMinutes(15).build()),
-                sessionRepo.save(Session.builder().movie(m2).room(room1).price(12.50).language("VO").adMinutes(15).build()),
-                //Sesiones para la Sala 2
-                sessionRepo.save(Session.builder().movie(m3).room(room2).price(15.00).language("doblada").adMinutes(20).build()),
-                sessionRepo.save(Session.builder().movie(m4).room(room2).price(15.00).language("doblada").adMinutes(20).build()),
-                sessionRepo.save(Session.builder().movie(m5).room(room2).price(15.00).language("doblada").adMinutes(20).build()),
-                //sesiones para la sala 3
-                sessionRepo.save(Session.builder().movie(m6).room(room3).price(10.00).language("VOSE").adMinutes(10).build()),
-                sessionRepo.save(Session.builder().movie(m7).room(room3).price(10.00).language("VOSE").adMinutes(10).build()),
-                sessionRepo.save(Session.builder().movie(m8).room(room3).price(10.00).language("VOSE").adMinutes(10).build()),
-                //sesiones para la sala 4
-                sessionRepo.save(Session.builder().movie(m9).room(room4).price(11.00).language("VO").adMinutes(12).build()),
-                sessionRepo.save(Session.builder().movie(m10).room(room4).price(11.00).language("VO").adMinutes(12).build()),
-                sessionRepo.save(Session.builder().movie(m11).room(room4).price(11.00).language("VO").adMinutes(12).build())
-                ));
+                //Datos de prueba de las sesiones (Sessions)
+                        sessionRepo.saveAll(List.of(
+                                //Sesiones para la movie(m0)
+                                sessionRepo.save(Session.builder().movie(m0).room(room1).price(12.50).language("VO").adMinutes(15).startTime(java.time.LocalDateTime.of(2026, 5, 20, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m0).room(room2).price(22.60).language("doblada").adMinutes(20).startTime(java.time.LocalDateTime.of(2026, 6, 30, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m0).room(room3).price(10.00).language("VOSE").adMinutes(25).startTime(java.time.LocalDateTime.of(2026, 5, 10, 19, 10)).build()),
+                                sessionRepo.save(Session.builder().movie(m0).room(room4).price(50.00).language("VO").adMinutes(52).startTime(java.time.LocalDateTime.of(2026, 5, 30, 21, 15)).build()),
+
+                                //Sesiones para la movie(m1)
+                                sessionRepo.save(Session.builder().movie(m1).room(room1).price(32.50).language("VO").adMinutes(25).startTime(java.time.LocalDateTime.of(2026, 5, 21, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m1).room(room2).price(55.00).language("doblada").adMinutes(30).startTime(java.time.LocalDateTime.of(2026, 6, 11, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m1).room(room3).price(60.00).language("VOSE").adMinutes(40).startTime(java.time.LocalDateTime.of(2026, 5, 30, 19, 10)).build()),
+                                sessionRepo.save(Session.builder().movie(m1).room(room4).price(19.50).language("doblada").adMinutes(19).startTime(java.time.LocalDateTime.of(2026, 5, 16, 21, 15)).build()),
+
+                                //Sesiones para la movie(m2)
+                                sessionRepo.save(Session.builder().movie(m2).room(room1).price(12.50).language("VO").adMinutes(35).startTime(java.time.LocalDateTime.of(2026, 5, 22, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m2).room(room2).price(24.10).language("doblada").adMinutes(20).startTime(java.time.LocalDateTime.of(2026, 6, 12, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m2).room(room3).price(30.20).language("VOSE").adMinutes(40).startTime(java.time.LocalDateTime.of(2026, 5, 22, 19, 7)).build()),
+                                sessionRepo.save(Session.builder().movie(m2).room(room4).price(60.50).language("VO").adMinutes(10).startTime(java.time.LocalDateTime.of(2026, 5, 12, 21, 15)).build()),
+
+                                //Sesiones para la movie(m3)
+                                sessionRepo.save(Session.builder().movie(m3).room(room1).price(15.00).language("VO").adMinutes(20).startTime(java.time.LocalDateTime.of(2026, 5, 23, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m3).room(room2).price(20.20).language("doblada").adMinutes(17).startTime(java.time.LocalDateTime.of(2026, 5, 23, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m3).room(room3).price(30.50).language("VOSE").adMinutes(45).startTime(java.time.LocalDateTime.of(2026, 6, 13, 19, 20)).build()),
+                                sessionRepo.save(Session.builder().movie(m3).room(room4).price(77.00).language("VO").adMinutes(20).startTime(java.time.LocalDateTime.of(2026, 5, 25, 21, 15)).build()),
+
+                                //Sesiones para la movie(m4)
+                                sessionRepo.save(Session.builder().movie(m4).room(room1).price(15.00).language("VO").adMinutes(30).startTime(java.time.LocalDateTime.of(2026, 5, 24, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m4).room(room2).price(7.00).language("doblada").adMinutes(5).startTime(java.time.LocalDateTime.of(2026, 5, 24, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m4).room(room3).price(10.99).language("VOSE").adMinutes(9).startTime(java.time.LocalDateTime.of(2026, 6, 14, 19, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m4).room(room4).price(5.50).language("VO").adMinutes(2).startTime(java.time.LocalDateTime.of(2026, 5, 22, 21, 15)).build()),
+
+                                //Sesiones para la movie(m5)
+                                sessionRepo.save(Session.builder().movie(m5).room(room1).price(5.00).language("VO").adMinutes(6).startTime(java.time.LocalDateTime.of(2026, 5, 25, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m5).room(room2).price(10.20).language("doblada").adMinutes(10).startTime(java.time.LocalDateTime.of(2026, 5, 25, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m5).room(room3).price(2.32).language("VOSE").adMinutes(4).startTime(java.time.LocalDateTime.of(2026, 5, 25, 19, 20)).build()),
+                                sessionRepo.save(Session.builder().movie(m5).room(room4).price(8.88).language("VO").adMinutes(29).startTime(java.time.LocalDateTime.of(2026, 5, 25, 21, 15)).build()),
+
+                                //Sesiones para la movie(m6)
+                                sessionRepo.save(Session.builder().movie(m6).room(room1).price(10.05).language("VO").adMinutes(10).startTime(java.time.LocalDateTime.of(2026, 5, 26, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m6).room(room2).price(15.15).language("doblada").adMinutes(40).startTime(java.time.LocalDateTime.of(2026, 5, 26, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m6).room(room3).price(9.4).language("VOSE").adMinutes(5).startTime(java.time.LocalDateTime.of(2026, 5, 30, 19, 10)).build()),
+                                sessionRepo.save(Session.builder().movie(m6).room(room4).price(25.19).language("VO").adMinutes(17).startTime(java.time.LocalDateTime.of(2026, 5, 16, 21, 15)).build()),
+
+                                //Sesiones para la movie(m7)
+                                sessionRepo.save(Session.builder().movie(m7).room(room1).price(10.00).language("VO").adMinutes(10).startTime(java.time.LocalDateTime.of(2026, 5, 27, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m7).room(room2).price(35.90).language("doblada").adMinutes(90).startTime(java.time.LocalDateTime.of(2026, 5, 27, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m7).room(room3).price(55.10).language("VOSE").adMinutes(8).startTime(java.time.LocalDateTime.of(2026, 5, 13, 19, 20)).build()),
+                                sessionRepo.save(Session.builder().movie(m7).room(room4).price(5.50).language("VO").adMinutes(5).startTime(java.time.LocalDateTime.of(2026, 5, 25, 21, 15)).build()),
+
+                                //Sesiones para la movie(m8)
+                                sessionRepo.save(Session.builder().movie(m8).room(room1).price(10.00).language("VOSE").adMinutes(10).startTime(java.time.LocalDateTime.of(2026, 5, 28, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m8).room(room2).price(15.00).language("VO").adMinutes(20).startTime(java.time.LocalDateTime.of(2026, 5, 28, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m8).room(room3).price(20.00).language("VO").adMinutes(30).startTime(java.time.LocalDateTime.of(2026, 5, 28, 19, 20)).build()),
+                                sessionRepo.save(Session.builder().movie(m8).room(room4).price(25.00).language("doblada").adMinutes(40).startTime(java.time.LocalDateTime.of(2026, 5, 28, 21, 15)).build()),
+
+                                //Sesiones para la movie(m9)
+                                sessionRepo.save(Session.builder().movie(m9).room(room1).price(11.00).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 29, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m9).room(room2).price(20.11).language("VOSE").adMinutes(97).startTime(java.time.LocalDateTime.of(2026, 5, 25, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m9).room(room3).price(5.60).language("doblada").adMinutes(55).startTime(java.time.LocalDateTime.of(2026, 5, 19, 19, 6)).build()),
+                                sessionRepo.save(Session.builder().movie(m9).room(room4).price(15.30).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 29, 21, 15)).build()),
+
+                                //Sesiones para la movie(m10)
+                                sessionRepo.save(Session.builder().movie(m10).room(room1).price(11.00).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 10, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m10).room(room2).price(10.00).language("VOSE").adMinutes(97).startTime(java.time.LocalDateTime.of(2026, 5, 25, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m10).room(room3).price(9.00).language("doblada").adMinutes(55).startTime(java.time.LocalDateTime.of(2026, 5, 30, 19, 5)).build()),
+                                sessionRepo.save(Session.builder().movie(m10).room(room4).price(8.00).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 20, 21, 15)).build()),
+
+                                //Sesiones para la movie(m11)
+                                sessionRepo.save(Session.builder().movie(m11).room(room1).price(11.00).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 31, 14, 30)).build()),
+                                sessionRepo.save(Session.builder().movie(m11).room(room2).price(9.10).language("VOSE").adMinutes(21).startTime(java.time.LocalDateTime.of(2026, 5, 31, 16, 45)).build()),
+                                sessionRepo.save(Session.builder().movie(m11).room(room3).price(7.50).language("doblada").adMinutes(55).startTime(java.time.LocalDateTime.of(2026, 5, 31, 19, 8)).build()),
+                                sessionRepo.save(Session.builder().movie(m11).room(room4).price(11.00).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 31, 21, 15)).build())
+                                ));
 
 
 
