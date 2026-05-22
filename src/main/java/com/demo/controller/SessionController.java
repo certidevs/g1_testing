@@ -69,7 +69,6 @@ package com.demo.controller;
         // POST: Guardar (crear o actualizar)
         @PostMapping("/sessions")
         public String saveSession(@ModelAttribute  Session session) {
-            sessionRepository.save(session);
             // Guardar la sesión (crea o actualiza)
             boolean isNew = session.getId() == null;
             Session saved = sessionRepository.save(session);
