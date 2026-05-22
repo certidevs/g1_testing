@@ -1,6 +1,7 @@
 package com.demo.controller;
 
 import com.demo.model.Ticket;
+import com.demo.model.User;
 import com.demo.model.enums.BuyStatus;
 import com.demo.repository.SessionRepository;
 import com.demo.repository.TicketRepository;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
@@ -48,13 +50,13 @@ public class TicketController {
     // @PostMapping("tickets/new")
 
     @GetMapping("tickets/buy/{id}")
-    public String buyTicket(@PathVariable Long id, Model model){
+    public String buyTicket(@PathVariable Long id, Model model, @ModelAttribute User user){
 
         Ticket ticket = ticketRepository.findById(id).orElseThrow();
         ticket.setBuyDateTime(LocalDateTime.now());
         ticket.setStatus(BuyStatus.PAGADO);
 
-        Double totalPrice;
+        Double totalPrice = ticket.getSession().getPrice();
         // primero sacar el precio de la sala
         // segundo sumar precio de comida
         // tercero restar descuento
@@ -62,8 +64,11 @@ public class TicketController {
         // descuento por edad de usuario si tenemos su cumpleaños
 
 
-        // ticket.setUser(user);
-        // ticket.setPrice(totalPrice);
+        if (user!=null){
+            ticket.setUser(user);
+        }
+
+        ticket.setPrice(totalPrice);
         // TODO sumar precios de comida
 
         ticketRepository.save(ticket);
