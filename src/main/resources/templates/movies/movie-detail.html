@@ -39,16 +39,17 @@
                                 <span th:text="${movie.sinopsis}"></span>
                             </p>
 
-<!--                           TODO  Tengo que poner las sessiones AQUI-->
-                            <ul class="list-group list-group-flush">
-                                <li th:each="proyeccion : ${sessions}">
-                                    <span th:text="${'sala: ' + proyeccion.room}"></span>
-                                    <span th:text="${'price: ' + proyeccion.price}"></span>
-                                    <span th:text="${'fecha: ' + proyeccion.startTime}"></span>
-                                    <a th:href="@{/sessions/{id}(id=${proyeccion.id})}">Comprar</a>
-                                </li>
-                            </ul>
 
+                            <div class="d-flex flex-column" style="padding-left: 15px">
+                                <ul class="list-group list-group-flush" >
+                                    <li th:each="proyeccion : ${sessions} " class="mt-2">
+                                        <strong th:text="${'Sala: ' + proyeccion.room}"></strong>
+                                        <span th:text="${'Precio: ' + proyeccion.price}"></span>
+                                        <span th:text="${'Fecha: ' + proyeccion.startTime}"></span>
+                                        <a th:href="@{/sessions/{id}(id=${proyeccion.id})}" class="btn btn-info">Ver entradas disponibles</a>
+                                    </li>
+                                </ul>
+                            </div>
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
                                 <a href="#" class="btn btn-info">Ver trailer</a>
@@ -56,15 +57,12 @@
                                 <i class="fa-solid fa-angle-left"></i>Volver</a>
                             </div>
 
-
                         </div>
 
                     </div>
 
-
                 </div>
             </div>
-
 
     </div>
 </main>
