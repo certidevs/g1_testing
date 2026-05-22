@@ -1,10 +1,14 @@
 package com.demo.service;
 
+import com.demo.model.User;
+import com.demo.model.enums.Role;
 import com.demo.repository.UserRepository;
+import com.demo.dto.RegisterForm;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,9 +16,34 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("user not found with username: " + username) );
+    }
+
+    public User register(RegisterForm form) {
+
+        if (userRepository.existsByUsername(form.getUsername()))
+            throw new IllegalArgumentException("username ya existe, elige otro username");
+
+        if (userRepository.existsByEmail(form.getEmail()))
+            throw new IllegalArgumentException("email ya existe, elige otro email");
+
+        if (! form.getPassword().equals(form.getPasswordConfirm()))
+            throw new IllegalArgumentException("Las contraseñas no coinciden");
+
+//        if (!form.getAcceptRGPD())
+//            throw new IllegalArgumentException("Debes aceptar la política de privacidad");
+
+        User user = new User();
+        user.setUsername(form.getUsername());
+        user.setEmail(form.getEmail());
+        user.setRole(Role.ROLE_USER);
+        // user.setPassword(form.getPassword()); // password en texto plano
+        String encodedPassword = passwordEncoder.encode(form.getPassword());
+        user.setPassword(encodedPassword); // $2a$10$u7/W/ivh4XDB40YBjdE9o.wTRaXFitlUrXSUorudG1IdZs/mL2DHu
+        return userRepository.save(user);
     }
 }
