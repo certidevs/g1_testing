@@ -7,6 +7,7 @@ import com.demo.repository.SessionRepository;
 import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +51,7 @@ public class TicketController {
     // @PostMapping("tickets/new")
 
     @GetMapping("tickets/buy/{id}")
-    public String buyTicket(@PathVariable Long id, Model model, @ModelAttribute User user){
+    public String buyTicket(@PathVariable Long id, Model model, @AuthenticationPrincipal User user){
 
         Ticket ticket = ticketRepository.findById(id).orElseThrow();
         ticket.setBuyDateTime(LocalDateTime.now());
