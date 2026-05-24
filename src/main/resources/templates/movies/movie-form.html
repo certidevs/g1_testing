@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{layout/head :: head('Formulario Pelicula')}"></head>
 
@@ -83,7 +83,7 @@
 <!--                  th:field="*{sinopsis}" placeholder="Érase una vez...">-->
        </div>
        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
-           <button type="submit" class="btn btn-success" th:text="${isEdit ? 'Actualizar' : 'Guardar'}">
+           <button sec:authorize="hasRole('ADMIN')" type="submit" class="btn btn-success" th:text="${isEdit ? 'Actualizar' : 'Guardar'}">
                <i class="fa-solid fa-floppy-disk"></i> Guardar
            </button>
 
