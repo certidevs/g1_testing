@@ -3,3 +3,12 @@
 body {
     font-family: 'Urbanist', sans-serif;
 }
+
+.login-container {
+    background-image: url('../images/fondo.png');
+    background-size: cover;
+    background-position: center;
+    /* Asegúrate de que el contenedor tenga altura y ancho definidos */
+    min-height: 100vh;
+    width: 100%;
+}
