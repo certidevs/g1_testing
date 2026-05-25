@@ -3,6 +3,7 @@ package com.demo.controller;
 import com.demo.model.Ticket;
 import com.demo.model.User;
 import com.demo.model.enums.BuyStatus;
+import com.demo.model.enums.Role;
 import com.demo.repository.SessionRepository;
 import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
@@ -26,10 +27,20 @@ public class TicketController {
     private final SessionRepository sessionRepository;
 
     @GetMapping("tickets")
-    public String getTickets(Model model){
-        List<Ticket> tickets = ticketRepository.findAll();
+    public String getTickets(Model model, @AuthenticationPrincipal User user){
+        List<Ticket> tickets = null;
+        if (user.getRole()== Role.ROLE_ADMIN){
+            tickets = ticketRepository.findAll();
+
+        } else if (user.getRole()== Role.ROLE_USER){
+            tickets = ticketRepository.findByUser_Id(user.getId());
+
+        }
         model.addAttribute("tickets", tickets);
-        model.addAttribute("numTickets", tickets.size());
+        if (tickets!=null)
+            model.addAttribute("numTickets", tickets.size());
+        else
+            model.addAttribute("numTickets",0);
         model.addAttribute("title", "Listado de tickets");
         return "tickets/ticket-list";
     }
