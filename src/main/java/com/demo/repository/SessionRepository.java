@@ -2,6 +2,7 @@ package com.demo.repository;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import com.demo.model.Session;
 
 import java.util.List;
@@ -12,6 +13,6 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     List<Session> findByLanguage(String language);
     List<Session> findByAdMinutesLessThanEqual(int i);
 
-
-    // TODO query order by startTIme desc para listado proyecciones admin
+    @Query("SELECT s FROM Session s ORDER BY s.startTime DESC")
+    List<Session> findAllOrderByStartTimeDesc();
 }
