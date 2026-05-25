@@ -11,4 +11,7 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     List<Session> findByMovieIdAndRoomId (Long movieId, Long roomId);
     List<Session> findByLanguage(String language);
     List<Session> findByAdMinutesLessThanEqual(int i);
+
+
+    // TODO query order by startTIme desc para listado proyecciones admin
 }

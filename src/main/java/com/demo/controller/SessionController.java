@@ -31,7 +31,7 @@ package com.demo.controller;
         // Lista de sesiones
         @GetMapping("/sessions")
         public String listSessions(Model model) {
-            model.addAttribute("proyecciones", sessionRepository.findAll());
+            model.addAttribute("proyecciones", sessionRepository.findAllOrderByStartTimeDesc());
             model.addAttribute("proyeccionesCount", sessionRepository.count());
             return "sessions/session-list";
         }

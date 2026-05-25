@@ -50,10 +50,9 @@ public class SecurityConfig {
                 .requestMatchers("/reviews/disable/**", "/reviews/delete/**").hasRole("ADMIN")
 
                 // 6. Control de Tickets / Compras (TicketController y Órdenes)
-                .requestMatchers(HttpMethod.GET, "/tickets", "/tickets/{id}").hasRole("ADMIN") // Ver todos los tickets es de Admin
+                .requestMatchers(HttpMethod.GET, "/tickets", "/tickets/{id}").authenticated() // Ver todos los tickets es de Admin
                 .requestMatchers("/tickets/edit/**").hasRole("ADMIN")
-                .requestMatchers("/tickets/buy/**").hasAnyRole("ADMIN", "USER") // Comprar requiere estar logueado
-                .requestMatchers("/orders", "/orders/**").authenticated()
+                .requestMatchers("/tickets/buy/**").authenticated() // Comprar requiere estar logueado
 
                 // 7. Cualquier otra ruta no especificada requerirá estar autenticado
                 .anyRequest().authenticated()

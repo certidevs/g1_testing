@@ -2,14 +2,17 @@ package com.demo.config;
 
 
 import com.demo.model.*;
+import com.demo.model.enums.BuyStatus;
 import com.demo.model.enums.Role;
 import com.demo.model.enums.ScreenType;
 import com.demo.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -23,6 +26,7 @@ public class DataInitializer implements CommandLineRunner {
     private TicketRepository ticketRepo;
     private UserRepository userRepo;
     private ReviewRepository reviewRepo;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
@@ -180,7 +184,7 @@ public class DataInitializer implements CommandLineRunner {
                 .username("user1")
                 .email("john.doe@example.com")
                 .role(Role.ROLE_USER)
-                .password("{noop}   1234") // Idealmente usarías BCryptPasswordEncoder aquí si tienes seguridad configurada
+                .password(passwordEncoder.encode("user1")) // Idealmente usarías BCryptPasswordEncoder aquí si tienes seguridad configurada
                 .build();
 
         var user2 = User.builder()
@@ -189,10 +193,19 @@ public class DataInitializer implements CommandLineRunner {
                 .username("user2")
                 .email("jane.smith@example.com")
                 .role(Role.ROLE_USER)
-                .password("{noop}1234")
+                .password(passwordEncoder.encode("user2"))
                 .build();
 
-        userRepo.saveAll(List.of(user1, user2));
+        var admin = User.builder()
+                .firstName("Jane")
+                .lastName("Smith")
+                .username("admin")
+                .email("admin@example.com")
+                .role(Role.ROLE_ADMIN)
+                .password(passwordEncoder.encode("admin"))
+                .build();
+
+        userRepo.saveAll(List.of(user1, user2, admin));
 
         List<Session> creadas = sessionRepo.findAll();
 
@@ -236,7 +249,19 @@ public class DataInitializer implements CommandLineRunner {
                     .buyDateTime(java.time.LocalDateTime.now())
                     .build();
 
-            ticketRepo.saveAll(List.of(ticket1, ticket2, ticket3));
+
+            var ticket4 = Ticket.builder()
+                    .row("D")
+                    .seat("05")
+                    .price(sesionSala1.getPrice())
+                    .discount(0.0)
+                    .status(BuyStatus.LIBRE) // Usamos el estado PAGADO para que se renderice bien en tu vista
+                    .QRCode("QR_CODE_DATA_MOCK_1")
+                    .session(sesionSala1) // Asociamos a la sesión de Top Gun
+                    .buyDateTime(LocalDateTime.now())
+                    .build();
+
+            ticketRepo.saveAll(List.of(ticket1, ticket2, ticket3, ticket4));
             System.out.println("TICKETS E HILOS DE PRUEBA INICIALIZADOS CORRECTAMENTE");
 
             reviewRepo.save(Review.builder().title("ok").rating(4).movie(m1).build());

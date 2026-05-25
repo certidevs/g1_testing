@@ -6,6 +6,7 @@ import com.demo.repository.RoomRepository;
 import com.demo.repository.TicketRepository;
 import com.demo.model.Movie;
 import com.demo.model.Room;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @SpringBootTest
-@AutoConfigureMockMvc
-@WithMockUser
-
+@AutoConfigureMockMvc(addFilters = false)
+@Transactional
 public class SessionControllerTest {
     @Autowired
     SessionRepository sessionRepository;

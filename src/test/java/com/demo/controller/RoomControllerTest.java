@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @SpringBootTest // Activa Spring
-@AutoConfigureMockMvc // Activa MockMvc para testing de controller
+@AutoConfigureMockMvc(addFilters = false) // Activa MockMvc para testing de controller
 @Transactional // deshace los cambios al final de cada test para no afectar al siguiente test
 class RoomControllerTest {
     // importar mockMVC
