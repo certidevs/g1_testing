@@ -6,6 +6,8 @@ import com.demo.model.enums.BuyStatus;
 import com.demo.model.enums.Role;
 import com.demo.model.enums.ScreenType;
 import com.demo.repository.*;
+import com.demo.service.TicketService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -26,6 +28,7 @@ public class DataInitializer implements CommandLineRunner {
     private TicketRepository ticketRepo;
     private UserRepository userRepo;
     private ReviewRepository reviewRepo;
+    private TicketService ticketService;
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -213,57 +216,48 @@ public class DataInitializer implements CommandLineRunner {
             Session sesionSala1 = creadas.get(0); // Primera sesión de la Sala 1 (Top Gun)
             Session sesionSala2 = creadas.get(3); // Primera sesión de la Sala 2 (El drama)
 
-            var ticket1 = Ticket.builder()
-                    .row("A")
-                    .seat("05")
-                    .price(sesionSala1.getPrice())
-                    .discount(0.0)
-                    .status(com.demo.model.enums.BuyStatus.PAGADO) // Usamos el estado PAGADO para que se renderice bien en tu vista
-                    .QRCode("QR_CODE_DATA_MOCK_1")
-                    .user(user1)          // Asociamos al usuario 1
-                    .session(sesionSala1) // Asociamos a la sesión de Top Gun
-                    .buyDateTime(java.time.LocalDateTime.now())
-                    .build();
 
-            var ticket2 = Ticket.builder()
-                    .row("B")
-                    .seat("12")
-                    .price(sesionSala1.getPrice())
-                    .discount(2.0) // Un pequeño descuento de ejemplo
-                    .status(com.demo.model.enums.BuyStatus.PAGADO)
-                    .QRCode("QR_CODE_DATA_MOCK_2")
-                    .user(user1)          // Mismo usuario, otra entrada
-                    .session(sesionSala1)
-                    .buyDateTime(java.time.LocalDateTime.now())
-                    .build();
+            ticketService.generarTickets(sesionSala1);
+ /*
+ var ticket1 = Ticket.builder()
+ .row("A")
+ .seat("05")
+ .price(sesionSala1.getPrice())
+ .discount(0.0)
+ .status(com.demo.model.enums.BuyStatus.PAGADO) // Usamos el estado PAGADO para que se renderice bien en tu vista
+ .QRCode("QR_CODE_DATA_MOCK_1")
+ .user(user1) // Asociamos al usuario 1
+ .session(sesionSala1) // Asociamos a la sesión de Top Gun
+ .buyDateTime(java.time.LocalDateTime.now())
+ .build();
 
-            var ticket3 = Ticket.builder()
-                    .row("F")
-                    .seat("22")
-                    .price(sesionSala2.getPrice())
-                    .discount(0.0)
-                    .status(com.demo.model.enums.BuyStatus.INICIADO)
-                    .QRCode("QR_CODE_DATA_MOCK_3")
-                    .user(user2)          // Asociamos al usuario 2
-                    .session(sesionSala2) // Otra película
-                    .buyDateTime(java.time.LocalDateTime.now())
-                    .build();
+ var ticket2 = Ticket.builder()
+ .row("B")
+ .seat("12")
+ .price(sesionSala1.getPrice())
+ .discount(2.0) // Un pequeño descuento de ejemplo
+ .status(com.demo.model.enums.BuyStatus.PAGADO)
+ .QRCode("QR_CODE_DATA_MOCK_2")
+ .user(user1) // Mismo usuario, otra entrada
+ .session(sesionSala1)
+ .buyDateTime(java.time.LocalDateTime.now())
+ .build();
 
+ var ticket3 = Ticket.builder()
+ .row("F")
+ .seat("22")
+ .price(sesionSala2.getPrice())
+ .discount(0.0)
+ .status(com.demo.model.enums.BuyStatus.INICIADO)
+ .QRCode("QR_CODE_DATA_MOCK_3")
+ .user(user2) // Asociamos al usuario 2
+ .session(sesionSala2) // Otra película
+ .buyDateTime(java.time.LocalDateTime.now())
+ .build();
 
-            var ticket4 = Ticket.builder()
-                    .row("D")
-                    .seat("05")
-                    .price(sesionSala1.getPrice())
-                    .discount(0.0)
-                    .status(BuyStatus.LIBRE) // Usamos el estado PAGADO para que se renderice bien en tu vista
-                    .QRCode("QR_CODE_DATA_MOCK_1")
-                    .session(sesionSala1) // Asociamos a la sesión de Top Gun
-                    .buyDateTime(LocalDateTime.now())
-                    .build();
-
-            ticketRepo.saveAll(List.of(ticket1, ticket2, ticket3, ticket4));
+            ticketRepo.saveAll(List.of(ticket1, ticket2, ticket3));
             System.out.println("TICKETS E HILOS DE PRUEBA INICIALIZADOS CORRECTAMENTE");
-
+*/
             reviewRepo.save(Review.builder().title("ok").rating(4).movie(m1).build());
             reviewRepo.save(Review.builder().title("bad").rating(1).movie(m2).build());
             reviewRepo.save(Review.builder().title("okk").rating(2).movie(m3).build());

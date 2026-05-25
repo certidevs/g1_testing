@@ -7,10 +7,8 @@
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 <h1 class="mt-4" th:text="${proyeccion.movie != null ? proyeccion.movie.title : 'Proyección #' + proyeccion.id}"></h1>
-
 <main class="container my-5">
     <a th:href="@{/sessions}" class="text-decoration-none mb-3 d-inline-block">&larr; Volver a proyecciones</a>
-
     <div class="card shadow-sm">
         <div class="row g-0">
             <div class="col-md-4" th:if="${proyeccion.movie != null}">
@@ -20,7 +18,6 @@
                 <div class="card-body">
                     <h1 class="h3 mb-2" th:text="${proyeccion.movie != null ? proyeccion.movie.title : 'Proyección #' + proyeccion.id}">Título</h1>
                     <p class="text-muted mb-1" th:if="${proyeccion.movie != null}" th:text="${proyeccion.movie.genre}">Género</p>
-
                     <div class="row g-3 my-3">
                         <div class="col-sm-4">
                             <p class="text-muted small mb-0">Fecha</p>
@@ -35,7 +32,6 @@
                             <p class="fs-6" th:text="${#numbers.formatCurrency(proyeccion.price)}">10.00€</p>
                         </div>
                     </div>
-
                     <div class="row g-3">
                         <div class="col-sm-4">
                             <p class="text-muted small mb-0">Sala</p>
@@ -50,15 +46,12 @@
                             <p class="fs-6" th:text="${proyeccion.room != null ? proyeccion.room.screenType : '-'}">STANDARD</p>
                         </div>
                     </div>
-
                     <div class="mt-3">
                         <p class="text-muted small mb-0">Idioma</p>
                         <p th:text="${proyeccion.language != null ? proyeccion.language : '—'}">VO</p>
-
                         <p class="text-muted small mb-0">Duración anuncios (min)</p>
                         <p th:text="${proyeccion.adMinutes != null ? proyeccion.adMinutes : '0'}">10</p>
                     </div>
-
                     <div class="mt-3">
                         <!-- Tickets disponibles -->
                         <div class="mt-3">
@@ -66,19 +59,36 @@
                             <div th:if="${#lists.isEmpty(tickets)}" class="alert alert-info">
                                 No hay tickets disponibles.
                             </div>
-                            <div th:each="ticket : ${tickets}" class="mb-3 p-3 border rounded">
-                                <p class="mb-2">
-                                    <strong th:text="${'Fila: ' + ticket.row}"></strong>
-                                    <span th:text="${' | Butaca: ' + ticket.seat}"></span>
-                                </p>
-                                <p class="mb-0">
-                                    <a th:if="${ticket.status.name() != 'PAGADO'}" th:href="@{/tickets/buy/{id}(id=${ticket.id})}" class="btn btn-sm btn-primary">Comprar ticket</a>
-                                    <span th:if="${ticket.status.name() == 'PAGADO'}" class="badge bg-success">Pagado</span>
-                                </p>
-                            </div>
+                            <table class="cinema">
+                                <!-- numeros en las columnas -->
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th th:each="i : ${#numbers.sequence(1, seatsPerRow)}"
+                                        th:text="${i}"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="ticket, stat : ${tickets}"
+                                    th:if="${stat.index == 0 or ticket.row != tickets[stat.index - 1].row}">
+                                    <!-- letras en las filas -->
+                                    <td class="row-label" th:text="${ticket.row}"></td>
+                                    <!-- ASIENTOS DE ESA FILA -->
+                                    <td th:each="t : ${tickets}"
+                                        th:if="${t.row == ticket.row}">
+                                        <a th:if="${t.status.name() != 'PAGADO'}"
+                                           th:href="@{/tickets/buy/{id}(id=${t.id})}">
+                                            <i class="fa-solid fa-couch text-primary"></i>
+                                        </a>
+                                        <span th:if="${t.status.name() == 'PAGADO'}">
+ <i class="fa-solid fa-couch text-danger"></i>
+ </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-
                     <div class="mt-4">
                         <a th:href="@{/sessions/edit/{id}(id=${proyeccion.id})}" class="btn btn-outline-primary me-2">Editar</a>
                         <a th:href="@{/sessions}" class="btn btn-secondary">Volver</a>
@@ -87,11 +97,8 @@
             </div>
         </div>
     </div>
-
 </main>
-
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
-
 </body>
 </html>
