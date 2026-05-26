@@ -75,12 +75,22 @@ public class SessionControllerTest {
 
     @Test
     void sessionDetail() throws Exception {
-        var session = sessionRepository.save(com.demo.model.Session.builder().build());
+        var room = roomRepository.save(Room.builder()
+                .name("Sala test")
+                .capacity(10)
+                .build());
+
+
+        var session = sessionRepository.save(com.demo.model.Session.builder()
+                .room(room)
+                .build());
+
         mockMvc.perform(get("/sessions/" + session.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("sessions/session-detail"))
                 .andExpect(model().attributeExists("proyeccion"))
-                .andExpect(model().attributeExists("tickets"));
+                .andExpect(model().attributeExists("tickets"))
+                .andExpect(model().attributeExists("seatsPerRow"));
     }
 
     @Test
