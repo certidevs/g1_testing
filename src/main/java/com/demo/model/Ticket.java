@@ -27,8 +27,9 @@ public class Ticket {
     private String seat;
 
     private Double price;
-    // private Double foodPrice; // ticket-form select 5, 8, 10
-    // TODO alternativa TicketLine, Food
+
+    @Builder.Default
+    private Double foodPrice = 0.0;
 
     private Double discount;
 
