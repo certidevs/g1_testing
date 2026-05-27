@@ -59,34 +59,36 @@
                             <div th:if="${#lists.isEmpty(tickets)}" class="alert alert-info">
                                 No hay tickets disponibles.
                             </div>
-                            <table class="cinema">
-                                <!-- numeros en las columnas -->
-                                <thead>
-                                <tr>
-                                    <th></th>
-                                    <th th:each="i : ${#numbers.sequence(1, seatsPerRow)}"
-                                        th:text="${i}"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="ticket, stat : ${tickets}"
-                                    th:if="${stat.index == 0 or ticket.row != tickets[stat.index - 1].row}">
-                                    <!-- letras en las filas -->
-                                    <td class="row-label" th:text="${ticket.row}"></td>
-                                    <!-- ASIENTOS DE ESA FILA -->
-                                    <td th:each="t : ${tickets}"
-                                        th:if="${t.row == ticket.row}">
-                                        <a th:if="${t.status.name() != 'PAGADO'}"
-                                           th:href="@{/tickets/buy/{id}(id=${t.id})}">
-                                            <i class="fa-solid fa-couch text-primary"></i>
-                                        </a>
-                                        <span th:if="${t.status.name() == 'PAGADO'}">
- <i class="fa-solid fa-couch text-danger"></i>
- </span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div th:if="${!#lists.isEmpty(tickets)}">
+                                <table class="cinema">
+                                    <!-- numeros en las columnas -->
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th th:each="i : ${#numbers.sequence(1, seatsPerRow)}"
+                                            th:text="${i}"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="ticket, stat : ${tickets}"
+                                        th:if="${stat.index == 0 or ticket.row != tickets[stat.index - 1].row}">
+                                        <!-- letras en las filas -->
+                                        <td class="row-label" th:text="${ticket.row}"></td>
+                                        <!-- ASIENTOS DE ESA FILA -->
+                                        <td th:each="t : ${tickets}"
+                                            th:if="${t.row == ticket.row}">
+                                            <a th:if="${t.status.name() != 'PAGADO'}"
+                                               th:href="@{/tickets/buy/{id}(id=${t.id})}">
+                                                <i class="fa-solid fa-couch text-primary"></i>
+                                            </a>
+                                            <span th:if="${t.status.name() == 'PAGADO'}">
+     <i class="fa-solid fa-couch text-danger"></i>
+     </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     <div class="mt-4">
