@@ -42,30 +42,25 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
-    public void generarTickets(Session session) {
+    public List <Ticket> generarTickets(Session session) {
 
         // Validar que session tenga una sala asociada
         if (session.getRoom() == null || session.getRoom().getId() == null) {
-            return;
+            return List.of();
         }
 
         // Recuperar el id de la room asociada a la sesion
 
         Room room = roomRepository.findById(session.getRoom().getId()).orElseThrow();
 
-        if (room ==null){
-            return;
-        }
-
         Integer capacity = room.getCapacity();
 
         if (capacity == null || capacity <=0){
-            return;
+            return List.of();
         }
 
         //int seatsPerRow = 15;
         int seatsPerRow = (int) Math.ceil(Math.sqrt(capacity));
-
 
         List<Ticket> tickets = new ArrayList<>(capacity);
         char rowLetter = 'A';
@@ -93,5 +88,6 @@ public class TicketService {
         if (!tickets.isEmpty()) {
             ticketRepository.saveAll(tickets);
         }
+        return tickets;
     }
 }
