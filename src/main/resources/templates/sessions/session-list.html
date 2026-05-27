@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layout/head :: head('proyecciones')}"></head>
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
@@ -11,15 +11,15 @@
     </ol>
     <div class="card mb-4">
         <div class="card-header">
-            <div class="row">
-                <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
                     <i class="fa-solid fa-film me-1"></i>
                     Listado de proyecciones
-                    <div class="float-right">
-                        <a th:href="@{/sessions/new}" class="btn btn-outline-primary">
-                            <i class="fa-solid fa-plus me-1"></i> Nueva proyección
-                        </a>
-                    </div>
+                </div>
+                <div>
+                    <a th:href="@{/sessions/new}" class="btn btn-outline-primary">
+                        <i class="fa-solid fa-plus me-1"></i> Nueva proyección
+                    </a>
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                             Precio
                         </th>
                         <th>Película</th>
-                        <th>Acciones</th>
+                        <th sec:authorize="hasRole('ADMIN')">Acciones</th>
                     </tr>
                     </thead>
 
@@ -59,7 +59,8 @@
                             th:text="${proyeccion.price != null ? #numbers.formatDecimal(proyeccion.price, 1, 2) + ' €' : '-'}">
                         </td>
                         <td th:text="${proyeccion.movie?.title ?: '—'}"></td>
-                        <td>
+
+                        <td sec:authorize="hasRole('ADMIN')">
                             <a th:href="@{/sessions/{id}(id=${proyeccion.id})}"
                                class="btn btn-sm btn-outline-primary">
                                 <i class="fa-regular fa-eye me-1"></i> Ver
