@@ -20,7 +20,7 @@ public class SessionRepositoryTest {
     MovieRepository movieRepository;
     @Autowired
     SessionRepository sessionRepository;
-
+    Movie movie1;
     @BeforeEach
     void setUp(){
 
@@ -28,7 +28,7 @@ public class SessionRepositoryTest {
         Room room1 = Room.builder().name("Sala 1").capacity(100).build();
 
         //movie
-        Movie movie1 = Movie.builder().title("peli1").build();
+        movie1 = Movie.builder().title("peli1").build();
         movieRepository.save(movie1);
 
         //session
@@ -40,9 +40,9 @@ public class SessionRepositoryTest {
 
     @Test
     void findByMovieId(){
-    List<Session> sesionesPeli1 = sessionRepository.findByMovie_Id(1L);
+    List<Session> sesionesPeli1 = sessionRepository.findByMovie_Id(movie1.getId());
     assertEquals(2, sesionesPeli1.size());
-    sessionRepository.findByMovie_Id(2L);
+
     }
 
     @Test

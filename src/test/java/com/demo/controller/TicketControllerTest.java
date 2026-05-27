@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.security.test.context.support.WithMockUser;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 @Transactional
 public class TicketControllerTest {
 
@@ -50,6 +51,9 @@ public class TicketControllerTest {
 
     @Autowired
     private RoomRepository roomRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private Ticket ticket1;
     private Ticket ticket2;
@@ -74,8 +78,8 @@ public class TicketControllerTest {
                 .username("cliente_test")
                 .email("test@cinema.com")
                 .firstName("Juan")          // <--- Requerido por la validación ("El nombre es obligatorio")
-                .password("123456")         // <--- Requerido por la validación ("La contraseña es obligatoria")
-                .role(com.demo.model.enums.Role.ROLE_USER) // Asegúrate de asignar el rol si tu enumerado o flujo lo requiere
+                .password(passwordEncoder.encode("user"))         // <--- Requerido por la validación ("La contraseña es obligatoria")
+                .role(com.demo.model.enums.Role.ROLE_ADMIN) // Asegúrate de asignar el rol si tu enumerado o flujo lo requiere
                 .build());
 
         session = sessionRepository.save(Session.builder()
@@ -90,6 +94,7 @@ public class TicketControllerTest {
                 .row("A") // Nota: Cambiado de .row() a .fila() para coincidir con la columna hibernate de tus logs
                 .seat("1")
                 .price(10.0)
+                .user(user)
                 .status(BuyStatus.LIBRE)
                 .build());
 
@@ -105,7 +110,7 @@ public class TicketControllerTest {
     @Test
     void getTicketsFull() throws Exception {
         // Verifica que cargue correctamente la lista con los 2 tickets iniciales
-        mockMvc.perform(get("/tickets"))
+        mockMvc.perform(get("/tickets").with(user(user)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tickets/ticket-list"))
                 .andExpect(model().attributeExists("tickets"))
@@ -118,7 +123,7 @@ public class TicketControllerTest {
     void getTicketsEmpty() throws Exception {
         ticketRepository.deleteAll();
 
-        mockMvc.perform(get("/tickets"))
+        mockMvc.perform(get("/tickets").with(user(user)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tickets/ticket-list"))
                 .andExpect(model().attribute("tickets", hasSize(0)))
@@ -126,12 +131,12 @@ public class TicketControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin_test", roles = {"ADMIN"}) // <--- Simula un Administrador
+    // @WithMockUser(username = "admin_test", roles = {"ADMIN"}) // <--- Simula un Administrador
     @DisplayName("GET /tickets/{id}")
     void ticketDetailFound() throws Exception {
         Long ticketId = ticket1.getId();
 
-        mockMvc.perform(get("/tickets/" + ticketId))
+        mockMvc.perform(get("/tickets/" + ticketId).with(user(user)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tickets/ticket-detail"))
                 .andExpect(model().attributeExists("ticket"))
@@ -145,7 +150,7 @@ public class TicketControllerTest {
         Long ticketId = ticket1.getId();
 
         // El endpoint GET tickets/edit/{id} debe inyectar el ticket, la lista de usuarios y las sesiones
-        mockMvc.perform(get("/tickets/edit/" + ticketId))
+        mockMvc.perform(get("/tickets/edit/" + ticketId).with(user(user)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tickets/ticket-form"))
                 .andExpect(model().attributeExists("ticket"))
@@ -166,7 +171,7 @@ public class TicketControllerTest {
         assertNull(ticket2.getUser());
 
         // Simulamos la llamada pasando el modelo implícito o flash attribute si requiere mapear el @ModelAttribute User
-        mockMvc.perform(get("/tickets/buy/" + ticketId)
+        mockMvc.perform(get("/tickets/buy/" + ticketId).with(user(user))
                         .flashAttr("user", user))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/tickets/" + ticketId));

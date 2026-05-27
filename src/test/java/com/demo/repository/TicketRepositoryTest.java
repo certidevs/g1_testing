@@ -2,11 +2,14 @@ package com.demo.repository;
 
 import com.demo.model.*;
 import com.demo.model.enums.BuyStatus;
+import com.demo.model.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,10 +33,16 @@ public class TicketRepositoryTest {
     private User user;
     private Session session;
 
+
     @BeforeEach
     void setUp() {
         // 1. Creamos y persistimos las dependencias necesarias
-        user = User.builder().email("coder@demo.com").build();
+        user = User.builder().email("coder@demo.com")
+                .firstName("pepe")
+                .lastName("pepe")
+                .username("pepe")
+                .password("$2a$10$Bsw2uXDBS18RshkSkZDxOOTyWPG/KSQsjwwqXEfzusiMYT7qs528y")
+                .role(Role.ROLE_USER).build();
         userRepository.save(user);
 
         Movie movie = Movie.builder().title("Interstellar").build();
