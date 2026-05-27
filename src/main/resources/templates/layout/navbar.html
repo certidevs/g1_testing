@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <body>
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
     <div class="container">
@@ -53,13 +54,25 @@
             <!-- TODO is authenticated mostrar nombre username -->
 
 
-            <a class="btn btn-outline-light btn-sm" th:href="@{/login}">
+            <a sec:authorize="!isAuthenticated()" class="btn btn-outline-light btn-sm" th:href="@{/login}">
                 <i class="fa-solid fa-user"></i>
             </a>
 
-            <a class="btn btn-light btn-sm ms-2" th:href="@{/register}">
+            <a sec:authorize="!isAuthenticated()" class="btn btn-light btn-sm ms-2" th:href="@{/register}">
                 <i class="fa-solid fa-user-plus"></i> Registrate aquí
             </a>
+
+            <span class="text-light me-2" sec:authorize="isAuthenticated()">
+                <i class="fa-solid fa-user"></i>
+                <span sec:authentication="name"></span>
+            </span>
+
+            <form th:action="@{/logout}" method="post" class="d-inline" sec:authorize="isAuthenticated()">
+                <button class="btn btn-danger">
+                    <i class="fa-solid fa-sign-out"></i>
+                </button>
+            </form>
+
         </div>
     </div>
 </nav>
