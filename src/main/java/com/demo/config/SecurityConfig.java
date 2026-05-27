@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 @Configuration
 public class SecurityConfig {
@@ -63,13 +64,35 @@ public class SecurityConfig {
                 .accessDeniedHandler((request, response, e) ->
                         response.sendRedirect(request.getContextPath() + "/movies"))
         );
-
+        // Config del formulario de login
         http.formLogin(form -> form
+                // pagina personalizada de login (en vez de la login por defecto de Spring)
                 .loginPage("/login")
-                .defaultSuccessUrl("/movies", true)
+
+                // Qué hacer cuando el login es correcto ->
+                .successHandler(savedRequestAwareAuthenticationSuccessHandler())
+                // eso anterior es un "handler" que decide a dónde redirigir tras login
+
+                // Permite que cualquiera pueda acceder al login sin estar autenticado
                 .permitAll()
         );
 
+        // contruir la cadena de filtros de seguridad (vamos, la configuración final obligatoria)
         return http.build();
+    }
+    @Bean
+    public SavedRequestAwareAuthenticationSuccessHandler savedRequestAwareAuthenticationSuccessHandler() {
+        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+
+        // la URL por defecto si el usuario entra
+        // directamente a /login sin venir de otra página protegida
+        //y no venía de ninguna página protegida
+        // -> después del login lo envío a /movies
+        successHandler.setDefaultTargetUrl("/movies");
+
+        // esto es opcional, parámetro en la URL para forzar redirección
+        successHandler.setTargetUrlParameter("redirectTo");
+
+        return successHandler;
     }
 }
