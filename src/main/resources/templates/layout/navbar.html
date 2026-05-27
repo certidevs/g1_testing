@@ -22,7 +22,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
                     <a class="nav-link" th:href="@{/salas}">
                         <i class="fa-solid fa-tv"></i> Salas
                     </a>

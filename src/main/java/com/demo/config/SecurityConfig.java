@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/movies").hasRole("ADMIN")
 
                 // 3. Control de Salas (RoomController)
-                .requestMatchers(HttpMethod.GET, "/salas", "/salas/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/salas", "/salas/{id}").hasRole("ADMIN")
                 .requestMatchers("/salas/new", "/salas/edit/**", "/salas/deactivate/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/salas").hasRole("ADMIN")
 
