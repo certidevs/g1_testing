@@ -33,7 +33,7 @@ package com.demo.controller;
         // Lista de sesiones
         @GetMapping("/sessions")
         public String listSessions(Model model) {
-            model.addAttribute("proyecciones", sessionRepository.findAll());
+            model.addAttribute("proyecciones", sessionRepository.findAllByOrderByStartTimeDesc());
             model.addAttribute("proyeccionesCount", sessionRepository.count());
             return "sessions/session-list";
         }
@@ -41,8 +41,6 @@ package com.demo.controller;
     // Formulario nueva sesión
     @GetMapping("/sessions/new")
     public String newSession(Model model) {
-        // TODO cambiar proyecciones a proyeccion porque es solo una
-
         model.addAttribute("proyeccion", new Session());
         model.addAttribute("movies", movieRepository.findAll()); // Todas las películas
         model.addAttribute("rooms", roomRepository.findAll()); // Todas las salas
