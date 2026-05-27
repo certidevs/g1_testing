@@ -7,6 +7,7 @@ import com.demo.model.enums.Role;
 import com.demo.repository.SessionRepository;
 import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
+import com.demo.service.TicketService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,9 @@ import java.util.List;
 @AllArgsConstructor
 public class TicketController {
 
-    private final TicketRepository ticketRepository;
+    //private final TicketRepository ticketRepository;
+    private final TicketService ticketService;
+
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
 
@@ -30,10 +33,10 @@ public class TicketController {
     public String getTickets(Model model, @AuthenticationPrincipal User user){
         List<Ticket> tickets = null;
         if (user.getRole()== Role.ROLE_ADMIN){
-            tickets = ticketRepository.findAll();
+            tickets = ticketService.findAll();
 
         } else if (user.getRole()== Role.ROLE_USER){
-            tickets = ticketRepository.findByUser_Id(user.getId());
+            tickets = ticketService.getByUserId(user.getId());
 
         }
         model.addAttribute("tickets", tickets);
@@ -47,13 +50,13 @@ public class TicketController {
 
     @GetMapping("tickets/{id}")
     public String ticketDetail(@PathVariable Long id, Model model){
-        model.addAttribute("ticket", ticketRepository.findById(id).orElseThrow());
+        model.addAttribute("ticket", ticketService.findById(id).orElseThrow());
         return "tickets/ticket-detail";
     }
 
     @GetMapping("tickets/edit/{id}")
     public String editTicket(@PathVariable Long id, Model model){
-        model.addAttribute("ticket", ticketRepository.findById(id).orElseThrow());
+        model.addAttribute("ticket", ticketService.findById(id).orElseThrow());
         model.addAttribute("users",userRepository.findAll());
         model.addAttribute("sessions",sessionRepository.findAll());
         return"tickets/ticket-form";
@@ -64,7 +67,7 @@ public class TicketController {
     @GetMapping("tickets/buy/{id}")
     public String buyTicket(@PathVariable Long id, Model model, @AuthenticationPrincipal User user){
 
-        Ticket ticket = ticketRepository.findById(id).orElseThrow();
+        Ticket ticket = ticketService.findById(id).orElseThrow();
         ticket.setBuyDateTime(LocalDateTime.now());
         ticket.setStatus(BuyStatus.PAGADO);
 
@@ -83,7 +86,7 @@ public class TicketController {
         ticket.setPrice(totalPrice);
         // TODO sumar precios de comida
 
-        ticketRepository.save(ticket);
+        ticketService.save(ticket);
         return "redirect:/tickets/" + ticket.getId();
 
     }

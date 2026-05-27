@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +20,27 @@ public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final RoomRepository roomRepository;
+
+    public List <Ticket> getBySessionId(Long id){
+        return ticketRepository.findBySession_Id(id);
+    }
+    public List <Ticket> getByMovieId(Long id){
+        return ticketRepository.findBySession_Movie_Id(id);
+    }
+    public List <Ticket> getByUserId(Long id){
+        return ticketRepository.findByUser_Id(id);
+    }
+    public List <Ticket> findAll(){
+        return ticketRepository.findAll();
+    }
+
+    public Optional<Ticket> findById(Long id){
+        return ticketRepository.findById(id);
+    }
+
+    public Ticket save(Ticket ticket){
+        return ticketRepository.save(ticket);
+    }
 
     public void generarTickets(Session session) {
 
