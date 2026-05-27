@@ -16,6 +16,6 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     List<Session> findByAdMinutesLessThanEqual(int i);
     List<Session> findAllByOrderByStartTimeDesc();
 
-    @Query("SELECT s FROM Session s ORDER BY s.startTime DESC")
-    List<Session> findAllOrderByStartTimeDesc();
+    @Query("SELECT s FROM Session s ORDER BY s.startTime DESC NULLS LAST")
+    List<Session> findAllOrderByStartTimeDescNullsLast();
 }

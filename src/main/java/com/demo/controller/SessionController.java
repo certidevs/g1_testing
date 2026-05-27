@@ -32,12 +32,11 @@ package com.demo.controller;
 
         // Lista de sesiones
         @GetMapping("/sessions")
-        public String listSessions(Model model) {
-            model.addAttribute("proyecciones", sessionRepository.findAllByOrderByStartTimeDesc());
-            model.addAttribute("proyeccionesCount", sessionRepository.count());
-            return "sessions/session-list";
-        }
-
+public String listSessions(Model model) {
+    model.addAttribute("proyecciones", sessionRepository.findAllOrderByStartTimeDescNullsLast());
+    model.addAttribute("proyeccionesCount", sessionRepository.count());
+    return "sessions/session-list";
+}
     // Formulario nueva sesión
     @GetMapping("/sessions/new")
     public String newSession(Model model) {
