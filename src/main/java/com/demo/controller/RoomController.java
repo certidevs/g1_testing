@@ -31,16 +31,15 @@ public class RoomController {
     public String roomDetail(Model model, @PathVariable Long id) {
         Optional<Room> roomOptional = roomRepository.findByIdAndActiveTrue(id);
 
-        boolean existe = roomOptional.isPresent();
-
-        if (existe) {
-            Room room = roomOptional.get();
-            model.addAttribute("room", room);
+        if (roomOptional.isPresent()) {
+            model.addAttribute("room", roomOptional.get());
             return "rooms/room-detail";
-        }else{
-            return "rooms/room-list";
+        } else {
+            // Redirect para que /salas cargue correctamente el modelo con "rooms"
+            // Si devolviéramos "rooms/room-list" directamente sin añadir "rooms" al modelo,
+            // Thymeleaf lanzaría un error al intentar hacer #lists.size(rooms) con null
+            return "redirect:/salas";
         }
-
     }
 
     @GetMapping("salas/deactivate/{id}")
@@ -75,7 +74,8 @@ public class RoomController {
         roomRepository.save(room);
         return "redirect:/salas";
     }
-        @GetMapping ("salas/edit/{id}")
+
+    @GetMapping ("salas/edit/{id}")
     public String edit(Model model, @PathVariable Long id){
         model.addAttribute("room", roomRepository.findById(id).orElseThrow());
         return "rooms/room-form";

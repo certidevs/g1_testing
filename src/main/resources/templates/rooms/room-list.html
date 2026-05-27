@@ -81,11 +81,10 @@
         </tr>
         </tbody>
     </table>
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div th:if="${#lists.size(rooms)!=null}" class="d-flex justify-content-between align-items-center mb-4">
         <span class="badge bg-secondary fs-6"
               th:text="|${#lists.size(rooms)} resultados|">0 resultados</span>
     </div>
-
 </main>
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
