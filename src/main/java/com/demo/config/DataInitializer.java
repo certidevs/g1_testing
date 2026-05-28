@@ -1,20 +1,19 @@
 package com.demo.config;
 
-
 import com.demo.model.*;
 import com.demo.model.enums.BuyStatus;
 import com.demo.model.enums.Role;
 import com.demo.model.enums.ScreenType;
 import com.demo.repository.*;
 import com.demo.service.TicketService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -33,7 +32,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("INICIALIZANDO INITIALIZER");
+        System.out.println("-> Inicializando datos de prueba...");
 
         //Datos de prueba de las PELICULAS
         Movie m0 = movieRepo.save(Movie.builder().title("Top Gun: Ídolos del aire - (40 Aniversario)").director("Tony Scott").active(true).releaseYear(1986)
@@ -88,180 +87,235 @@ public class DataInitializer implements CommandLineRunner {
                 .imageUrl("https://m.media-amazon.com/images/M/MV5BYjZhNTE0ZTktYThlZC00OWUwLTlhMDItNzlkMjJkOGJhZTc5XkEyXkFqcGc@._V1_.jpg")
                 .sinopsis("Casi veinte años después de interpretar a los icónicos personajes de Miranda, Andy, Emily y Nigel, Meryl Streep, Anne Hathaway, Emily Blunt y Stanley Tucci regresan a las calles de Nueva York y a las oficinas de la revista Runway en la secuela del fenómeno de 2006 que definió a toda una generación.").build());
 
-        movieRepo.saveAll(List.of(m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11));
 
         //Datos de prueba de las salas (Room)
+        // Precios por tipo de sala (aplicados en sesiones):
+        //   D4X  (Sala 1) → 13,00 €
+        //   IMAX (Sala 2) → 14,00 €
+        //   D3   (Sala 4) → 11,00 €
+        // ══════════════════════════════════════════════════════════════════════
         var room1 = Room.builder().name("Sala 1").active(true).screenType(ScreenType.D4X).capacity(100).build();
         var room2 = Room.builder().name("Sala 2").active(true).screenType(ScreenType.IMAX).capacity(150).build();
         var room3 = Room.builder().name("Sala 3").active(false).screenType(ScreenType.D3).capacity(80).build();
-        var room4 = Room.builder().name("Sala 4").screenType(ScreenType.D3).active(true).capacity(120).build();
+        var room4 = Room.builder().name("Sala 4").screenType(ScreenType.D3).active(true).capacity(60).build();
         var room5 = Room.builder().name("Sala 5").screenType(ScreenType.STANDARD).active(true).capacity(100).build();
         var room6 = Room.builder().name("Sala 6").screenType(ScreenType.STANDARD).active(true).capacity(125).build();
-        roomRepo.saveAll(List.of(
-                room1, room2, room3, room4
-        ));
-
-                //Datos de prueba de las sesiones (Sessions)
-                        sessionRepo.saveAll(List.of(
-                                //Sesiones para la movie(m0)
-                                sessionRepo.save(Session.builder().movie(m0).room(room1).price(12.50).language("VO").adMinutes(15).startTime(java.time.LocalDateTime.of(2026, 5, 20, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m0).room(room2).price(22.60).language("doblada").adMinutes(20).startTime(java.time.LocalDateTime.of(2026, 6, 30, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m0).room(room3).price(10.00).language("VOSE").adMinutes(25).startTime(java.time.LocalDateTime.of(2026, 5, 10, 19, 10)).build()),
-                                sessionRepo.save(Session.builder().movie(m0).room(room4).price(50.00).language("VO").adMinutes(52).startTime(java.time.LocalDateTime.of(2026, 5, 30, 21, 15)).build()),
-
-                                //Sesiones para la movie(m1)
-                                sessionRepo.save(Session.builder().movie(m1).room(room1).price(32.50).language("VO").adMinutes(25).startTime(java.time.LocalDateTime.of(2026, 5, 21, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m1).room(room2).price(55.00).language("doblada").adMinutes(30).startTime(java.time.LocalDateTime.of(2026, 6, 11, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m1).room(room3).price(60.00).language("VOSE").adMinutes(40).startTime(java.time.LocalDateTime.of(2026, 5, 30, 19, 10)).build()),
-                                sessionRepo.save(Session.builder().movie(m1).room(room4).price(19.50).language("doblada").adMinutes(19).startTime(java.time.LocalDateTime.of(2026, 5, 16, 21, 15)).build()),
-
-                                //Sesiones para la movie(m2)
-                                sessionRepo.save(Session.builder().movie(m2).room(room1).price(12.50).language("VO").adMinutes(35).startTime(java.time.LocalDateTime.of(2026, 5, 22, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m2).room(room2).price(24.10).language("doblada").adMinutes(20).startTime(java.time.LocalDateTime.of(2026, 6, 12, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m2).room(room3).price(30.20).language("VOSE").adMinutes(40).startTime(java.time.LocalDateTime.of(2026, 5, 22, 19, 7)).build()),
-                                sessionRepo.save(Session.builder().movie(m2).room(room4).price(60.50).language("VO").adMinutes(10).startTime(java.time.LocalDateTime.of(2026, 5, 12, 21, 15)).build()),
-
-                                //Sesiones para la movie(m3)
-                                sessionRepo.save(Session.builder().movie(m3).room(room1).price(15.00).language("VO").adMinutes(20).startTime(java.time.LocalDateTime.of(2026, 5, 23, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m3).room(room2).price(20.20).language("doblada").adMinutes(17).startTime(java.time.LocalDateTime.of(2026, 5, 23, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m3).room(room3).price(30.50).language("VOSE").adMinutes(45).startTime(java.time.LocalDateTime.of(2026, 6, 13, 19, 20)).build()),
-                                sessionRepo.save(Session.builder().movie(m3).room(room4).price(77.00).language("VO").adMinutes(20).startTime(java.time.LocalDateTime.of(2026, 5, 25, 21, 15)).build()),
-
-                                //Sesiones para la movie(m4)
-                                sessionRepo.save(Session.builder().movie(m4).room(room1).price(15.00).language("VO").adMinutes(30).startTime(java.time.LocalDateTime.of(2026, 5, 24, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m4).room(room2).price(7.00).language("doblada").adMinutes(5).startTime(java.time.LocalDateTime.of(2026, 5, 24, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m4).room(room3).price(10.99).language("VOSE").adMinutes(9).startTime(java.time.LocalDateTime.of(2026, 6, 14, 19, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m4).room(room4).price(5.50).language("VO").adMinutes(2).startTime(java.time.LocalDateTime.of(2026, 5, 22, 21, 15)).build()),
-
-                                //Sesiones para la movie(m5)
-                                sessionRepo.save(Session.builder().movie(m5).room(room1).price(5.00).language("VO").adMinutes(6).startTime(java.time.LocalDateTime.of(2026, 5, 25, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m5).room(room2).price(10.20).language("doblada").adMinutes(10).startTime(java.time.LocalDateTime.of(2026, 5, 25, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m5).room(room3).price(2.32).language("VOSE").adMinutes(4).startTime(java.time.LocalDateTime.of(2026, 5, 25, 19, 20)).build()),
-                                sessionRepo.save(Session.builder().movie(m5).room(room4).price(8.88).language("VO").adMinutes(29).startTime(java.time.LocalDateTime.of(2026, 5, 25, 21, 15)).build()),
-
-                                //Sesiones para la movie(m6)
-                                sessionRepo.save(Session.builder().movie(m6).room(room1).price(10.05).language("VO").adMinutes(10).startTime(java.time.LocalDateTime.of(2026, 5, 26, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m6).room(room2).price(15.15).language("doblada").adMinutes(40).startTime(java.time.LocalDateTime.of(2026, 5, 26, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m6).room(room3).price(9.4).language("VOSE").adMinutes(5).startTime(java.time.LocalDateTime.of(2026, 5, 30, 19, 10)).build()),
-                                sessionRepo.save(Session.builder().movie(m6).room(room4).price(25.19).language("VO").adMinutes(17).startTime(java.time.LocalDateTime.of(2026, 5, 16, 21, 15)).build()),
-
-                                //Sesiones para la movie(m7)
-                                sessionRepo.save(Session.builder().movie(m7).room(room1).price(10.00).language("VO").adMinutes(10).startTime(java.time.LocalDateTime.of(2026, 5, 27, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m7).room(room2).price(35.90).language("doblada").adMinutes(90).startTime(java.time.LocalDateTime.of(2026, 5, 27, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m7).room(room3).price(55.10).language("VOSE").adMinutes(8).startTime(java.time.LocalDateTime.of(2026, 5, 13, 19, 20)).build()),
-                                sessionRepo.save(Session.builder().movie(m7).room(room4).price(5.50).language("VO").adMinutes(5).startTime(java.time.LocalDateTime.of(2026, 5, 25, 21, 15)).build()),
-
-                                //Sesiones para la movie(m8)
-                                sessionRepo.save(Session.builder().movie(m8).room(room1).price(10.00).language("VOSE").adMinutes(10).startTime(java.time.LocalDateTime.of(2026, 5, 28, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m8).room(room2).price(15.00).language("VO").adMinutes(20).startTime(java.time.LocalDateTime.of(2026, 5, 28, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m8).room(room3).price(20.00).language("VO").adMinutes(30).startTime(java.time.LocalDateTime.of(2026, 5, 28, 19, 20)).build()),
-                                sessionRepo.save(Session.builder().movie(m8).room(room4).price(25.00).language("doblada").adMinutes(40).startTime(java.time.LocalDateTime.of(2026, 5, 28, 21, 15)).build()),
-
-                                //Sesiones para la movie(m9)
-                                sessionRepo.save(Session.builder().movie(m9).room(room1).price(11.00).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 29, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m9).room(room2).price(20.11).language("VOSE").adMinutes(97).startTime(java.time.LocalDateTime.of(2026, 5, 25, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m9).room(room3).price(5.60).language("doblada").adMinutes(55).startTime(java.time.LocalDateTime.of(2026, 5, 19, 19, 6)).build()),
-                                sessionRepo.save(Session.builder().movie(m9).room(room4).price(15.30).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 29, 21, 15)).build()),
-
-                                //Sesiones para la movie(m10)
-                                sessionRepo.save(Session.builder().movie(m10).room(room1).price(11.00).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 10, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m10).room(room2).price(10.00).language("VOSE").adMinutes(97).startTime(java.time.LocalDateTime.of(2026, 5, 25, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m10).room(room3).price(9.00).language("doblada").adMinutes(55).startTime(java.time.LocalDateTime.of(2026, 5, 30, 19, 5)).build()),
-                                sessionRepo.save(Session.builder().movie(m10).room(room4).price(8.00).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 20, 21, 15)).build()),
-
-                                //Sesiones para la movie(m11)
-                                sessionRepo.save(Session.builder().movie(m11).room(room1).price(11.00).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 31, 14, 30)).build()),
-                                sessionRepo.save(Session.builder().movie(m11).room(room2).price(9.10).language("VOSE").adMinutes(21).startTime(java.time.LocalDateTime.of(2026, 5, 31, 16, 45)).build()),
-                                sessionRepo.save(Session.builder().movie(m11).room(room3).price(7.50).language("doblada").adMinutes(55).startTime(java.time.LocalDateTime.of(2026, 5, 31, 19, 8)).build()),
-                                sessionRepo.save(Session.builder().movie(m11).room(room4).price(11.00).language("VO").adMinutes(12).startTime(java.time.LocalDateTime.of(2026, 5, 31, 21, 15)).build())
-                                ));
-
-
+        roomRepo.saveAll(List.of(room1, room2, room3, room4));
 
         // ==========================================
         // Datos de prueba de los USUARIOS (Users)
         // ==========================================
-        var user1 = User.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .username("user1")
-                .email("john.doe@example.com")
-                .role(Role.ROLE_USER)
-                .password(passwordEncoder.encode("user1")) // Idealmente usarías BCryptPasswordEncoder aquí si tienes seguridad configurada
-                .build();
+        var user1 = userRepo.save(User.builder()
+                .firstName("Alejandro").lastName("Mendoza").username("user1")
+                .email("alex_m98@gmail.com").role(Role.ROLE_USER)
+                .password(passwordEncoder.encode("user1")).build());
 
-        var user2 = User.builder()
-                .firstName("Jane")
-                .lastName("Smith")
-                .username("user2")
-                .email("jane.smith@example.com")
-                .role(Role.ROLE_USER)
-                .password(passwordEncoder.encode("user2"))
-                .build();
+        var user2 = userRepo.save(User.builder()
+                .firstName("Maria").lastName("Fernandez").username("user2")
+                .email("maria.fernandez@gmail.com").role(Role.ROLE_USER)
+                .password(passwordEncoder.encode("user2")).build());
 
-        var admin = User.builder()
-                .firstName("Jane")
-                .lastName("Smith")
-                .username("admin")
-                .email("admin@example.com")
-                .role(Role.ROLE_ADMIN)
-                .password(passwordEncoder.encode("admin"))
-                .build();
+        userRepo.save(User.builder()
+                .firstName("Admin").lastName("Cinema").username("admin")
+                .email("admin@cinema.com").role(Role.ROLE_ADMIN)
+                .password(passwordEncoder.encode("admin")).build());
 
-        userRepo.saveAll(List.of(user1, user2, admin));
+        // ==========================================
+        // SESIONES PASADAS (para historial de tickets de user1)
+        //
+        //  pasada1     → hace 7 días → La odisea        (4DX,  13€) → user1 compró 2
+        //  pasada2     → hace 5 días → Proyecto salv.   (IMAX, 14€) → user1 compró 1
+        //  pasada3     → hace 3 días → The Mandalorian  (3D,   11€) → user1 compró 3
+        //  sesAgotada  → hace 1 día  → Toy Story 5      (IMAX, 14€) → todos PAGADO
+        // ==========================================
+        LocalDate hoy = LocalDate.now();
 
-        List<Session> creadas = sessionRepo.findAll();
+        Session pasada1 = sessionRepo.save(Session.builder()
+                .movie(m5).room(room1).price(13.00)
+                .language("doblada").adMinutes(15)
+                .startTime(hoy.minusDays(7).atTime(19, 0)).build());
 
-        if (!creadas.isEmpty()) {
-            Session sesionSala1 = creadas.get(0); // Primera sesión de la Sala 1 (Top Gun)
-            Session sesionSala2 = creadas.get(3); // Primera sesión de la Sala 2 (El drama)
+        Session pasada2 = sessionRepo.save(Session.builder()
+                .movie(m4).room(room2).price(14.00)
+                .language("VO").adMinutes(20)
+                .startTime(hoy.minusDays(5).atTime(21, 0)).build());
 
+        Session pasada3 = sessionRepo.save(Session.builder()
+                .movie(m2).room(room4).price(11.00)
+                .language("VOSE").adMinutes(15)
+                .startTime(hoy.minusDays(3).atTime(18, 30)).build());
 
-            ticketService.generarTickets(sesionSala1);
- /*
- var ticket1 = Ticket.builder()
- .row("A")
- .seat("05")
- .price(sesionSala1.getPrice())
- .discount(0.0)
- .status(com.demo.model.enums.BuyStatus.PAGADO) // Usamos el estado PAGADO para que se renderice bien en tu vista
- .QRCode("QR_CODE_DATA_MOCK_1")
- .user(user1) // Asociamos al usuario 1
- .session(sesionSala1) // Asociamos a la sesión de Top Gun
- .buyDateTime(java.time.LocalDateTime.now())
- .build();
+        Session sesAgotada = sessionRepo.save(Session.builder()
+                .movie(m7).room(room2).price(14.00)
+                .language("doblada").adMinutes(10)
+                .startTime(hoy.minusDays(1).atTime(16, 0)).build());
 
- var ticket2 = Ticket.builder()
- .row("B")
- .seat("12")
- .price(sesionSala1.getPrice())
- .discount(2.0) // Un pequeño descuento de ejemplo
- .status(com.demo.model.enums.BuyStatus.PAGADO)
- .QRCode("QR_CODE_DATA_MOCK_2")
- .user(user1) // Mismo usuario, otra entrada
- .session(sesionSala1)
- .buyDateTime(java.time.LocalDateTime.now())
- .build();
+        // SESIONES FUTURAS que se crean dinamicamente con respecto a hoy - próximos 8 días(vamos, relativas a hoy)
+        //
+        //  Sala 1 · 4DX  · 13€ → La odisea / Mandalorian / Proyecto salvación
+        //  Sala 2 · IMAX · 14€ → Super Mario / La odisea / Top Gun
+        //                        + Toy Story en pase de mañana solo fines de semana
+        //  Sala 4 · 3D   · 11€ → Devil Wears Prada / Playa de lobos / El drama
+        //                        + matinal alternando Las ovejas y tod lo que nunca fuimos
+        //  Sala 4 pases únicos → El ser querido (días 2 y 5)
+        List<Session> sesionesFuturas = new ArrayList<>();
 
- var ticket3 = Ticket.builder()
- .row("F")
- .seat("22")
- .price(sesionSala2.getPrice())
- .discount(0.0)
- .status(com.demo.model.enums.BuyStatus.INICIADO)
- .QRCode("QR_CODE_DATA_MOCK_3")
- .user(user2) // Asociamos al usuario 2
- .session(sesionSala2) // Otra película
- .buyDateTime(java.time.LocalDateTime.now())
- .build();
+        for (int dia = 0; dia <= 7; dia++) {
+            LocalDate fecha = hoy.plusDays(dia);
 
-            ticketRepo.saveAll(List.of(ticket1, ticket2, ticket3));
-            System.out.println("TICKETS E HILOS DE PRUEBA INICIALIZADOS CORRECTAMENTE");
-*/
-            reviewRepo.save(Review.builder().title("ok").rating(4).movie(m1).build());
-            reviewRepo.save(Review.builder().title("bad").rating(1).movie(m2).build());
-            reviewRepo.save(Review.builder().title("okk").rating(2).movie(m3).build());
+            // Sesiones de la sala 1 · 4DX · 13 € -----------------------------------------
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m5).room(room1).price(13.00)
+                    .language("doblada").adMinutes(15)
+                    .startTime(fecha.atTime(16, 30)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m2).room(room1).price(13.00)
+                    .language("VO").adMinutes(20)
+                    .startTime(fecha.atTime(19, 0)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m4).room(room1).price(13.00)
+                    .language("VOSE").adMinutes(15)
+                    .startTime(fecha.atTime(21, 30)).build()));
+
+            // Sesiones de la sala 2 · IMAX · 14 € -----------------------------------------
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m10).room(room2).price(14.00)
+                    .language("doblada").adMinutes(15)
+                    .startTime(fecha.atTime(16, 0)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m5).room(room2).price(14.00)
+                    .language("VO").adMinutes(15)
+                    .startTime(fecha.atTime(18, 30)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m0).room(room2).price(14.00)
+                    .language("VOSE").adMinutes(15)
+                    .startTime(fecha.atTime(21, 0)).build()));
+
+            // Toy Story en IMAX: pase matinal solo sábados y domingos
+            int diaSemana = fecha.getDayOfWeek().getValue(); // 1=lun … 7=dom
+            if (diaSemana == 6 || diaSemana == 7) {
+                sesionesFuturas.add(sessionRepo.save(Session.builder()
+                        .movie(m7).room(room2).price(14.00)
+                        .language("doblada").adMinutes(10)
+                        .startTime(fecha.atTime(11, 0)).build()));
+            }
+
+            // Sesiones de la sala 4 · 3D · 11 € -----------------------------------------
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m11).room(room4).price(11.00)
+                    .language("VO").adMinutes(15)
+                    .startTime(fecha.atTime(16, 30)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m8).room(room4).price(11.00)
+                    .language("VO").adMinutes(12)
+                    .startTime(fecha.atTime(19, 0)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m3).room(room4).price(11.00)
+                    .language("VOSE").adMinutes(12)
+                    .startTime(fecha.atTime(21, 15)).build()));
+
+            // Matinal sala 4: alternando película según día par/impar
+            if (dia % 2 == 0) {
+                sesionesFuturas.add(sessionRepo.save(Session.builder()
+                        .movie(m1).room(room4).price(11.00)
+                        .language("doblada").adMinutes(10)
+                        .startTime(fecha.atTime(11, 0)).build()));
+            } else {
+                sesionesFuturas.add(sessionRepo.save(Session.builder()
+                        .movie(m6).room(room4).price(11.00)
+                        .language("VO").adMinutes(13)
+                        .startTime(fecha.atTime(11, 0)).build()));
+            }
         }
+
+        // El ser querido: pase único los días 2 y 5
+        sesionesFuturas.add(sessionRepo.save(Session.builder()
+                .movie(m9).room(room4).price(11.00)
+                .language("VO").adMinutes(18)
+                .startTime(hoy.plusDays(2).atTime(11, 30)).build()));
+
+        sesionesFuturas.add(sessionRepo.save(Session.builder()
+                .movie(m9).room(room4).price(11.00)
+                .language("VOSE").adMinutes(18)
+                .startTime(hoy.plusDays(5).atTime(11, 30)).build()));
+
+        // GENERAR TICKETS para todas las sesiones
+        ticketService.generarTickets(pasada1);
+        ticketService.generarTickets(pasada2);
+        ticketService.generarTickets(pasada3);
+        ticketService.generarTickets(sesAgotada);
+
+        for (Session s : sesionesFuturas) {
+            ticketService.generarTickets(s);
+        }
+
+        // MARCAR TICKETS COMPRADOS (historial de user1)
+        // pasada1 → user1 compró 1 entradas (La odisea, hace 7 días)
+        List<Ticket> tPasada1 = ticketRepo.findBySession_Id(pasada1.getId());
+        if (tPasada1.size() >= 2) {
+            tPasada1.get(0).setStatus(BuyStatus.PAGADO);
+            tPasada1.get(0).setUser(user1);
+            tPasada1.get(0).setBuyDateTime(pasada1.getStartTime().minusHours(2));
+            //tPasada1.get(1).setStatus(BuyStatus.PAGADO);
+            //tPasada1.get(1).setUser(user1);
+           //tPasada1.get(1).setBuyDateTime(pasada1.getStartTime().minusHours(2));
+            //ticketRepo.saveAll(List.of(tPasada1.get(0), tPasada1.get(1)));
+            ticketRepo.save(tPasada1.get(0));
+        }
+
+        // pasada2 → user1 compró 1 entrada (Proyecto salvación, hace 5 días)
+        List<Ticket> tPasada2 = ticketRepo.findBySession_Id(pasada2.getId());
+        if (!tPasada2.isEmpty()) {
+            tPasada2.get(0).setStatus(BuyStatus.PAGADO);
+            tPasada2.get(0).setUser(user1);
+            tPasada2.get(0).setBuyDateTime(pasada2.getStartTime().minusDays(1));
+            ticketRepo.save(tPasada2.get(0));
+        }
+
+        // pasada3 → user1 compró 3 entradas (The Mandalorian, hace 3 días)
+        List<Ticket> tPasada3 = ticketRepo.findBySession_Id(pasada3.getId());
+        if (!tPasada3.isEmpty()) {
+            tPasada3.get(0).setStatus(BuyStatus.PAGADO);
+            tPasada3.get(0).setUser(user1);
+            tPasada3.get(0).setBuyDateTime(pasada2.getStartTime().minusDays(1));
+            ticketRepo.save(tPasada3.get(0));
+        }
+        /*
+        if (tPasada3.size() >= 3) {
+            for (int i = 0; i < 3; i++) {
+                tPasada3.get(i).setStatus(BuyStatus.PAGADO);
+                tPasada3.get(i).setUser(user1);
+                tPasada3.get(i).setBuyDateTime(pasada3.getStartTime().minusHours(6));
+            }
+            ticketRepo.saveAll(tPasada3.subList(0, 3));
+        }*/
+
+        // sesAgotada → TODOS los tickets PAGADO (demuestra el futuro badge "Agotada")
+        List<Ticket> tAgotados = ticketRepo.findBySession_Id(sesAgotada.getId());
+        tAgotados.forEach(t -> t.setStatus(BuyStatus.PAGADO));
+        ticketRepo.saveAll(tAgotados);
+
+        // REVIEWS - description omitido a propósito (bug #20: campo es Integer)
+        reviewRepo.save(Review.builder().title("Nolan lo vuelve a hacer").rating(5).movie(m5).build());
+        reviewRepo.save(Review.builder().title("Espectacular en IMAX, obligatoria").rating(5).movie(m5).build());
+        reviewRepo.save(Review.builder().title("Grogu para siempre").rating(4).movie(m2).build());
+        reviewRepo.save(Review.builder().title("Muy emotiva y divertida").rating(4).movie(m7).build());
+        reviewRepo.save(Review.builder().title("Entretenida aunque algo lenta").rating(3).movie(m4).build());
+        reviewRepo.save(Review.builder().title("Me ha encantado").rating(5).movie(m1).build());
+        reviewRepo.save(Review.builder().title("No es para mí, demasiado lenta").rating(2).movie(m3).build());
+        reviewRepo.save(Review.builder().title("Muy buena para toda la familia").rating(5).movie(m10).build());
+        reviewRepo.save(Review.builder().title("Meryl Streep insuperable").rating(4).movie(m11).build());
+
+        System.out.println("DataInitializer completado - " +
+                movieRepo.count() + " películas, " +
+                roomRepo.count() + " salas, " +
+                sessionRepo.count() + " sesiones, " +
+                ticketRepo.count() + " tickets.");
     }
 }
-
