@@ -3,10 +3,12 @@ package com.demo.controller;
 import com.demo.model.Movie;
 import com.demo.repository.MovieRepository;
 import com.demo.repository.SessionRepository;
+import com.demo.service.FileService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class MovieController {
     //Inyectar el repositorio de movie
     private final MovieRepository movieRepository;
+    private final FileService fileService;
     private final SessionRepository sessionRepository;
 
     //GetMapping de peliculas
@@ -76,7 +79,13 @@ public class MovieController {
     }
 
     @PostMapping("movies")
-    public String createMovie(@ModelAttribute Movie movie){
+    public String createMovie(@ModelAttribute Movie movie,
+                              @RequestParam("imageFile") MultipartFile imageFile){
+        String imageUrl = fileService.store(imageFile);
+        if (imageUrl != null) {
+            movie.setImageUrl(imageUrl);
+        }
+
         movieRepository.save(movie);
         return "redirect:/movies/" + movie.getId();
     }

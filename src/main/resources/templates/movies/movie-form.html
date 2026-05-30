@@ -14,7 +14,7 @@
     </h1>
 
     <!-- Formulario para crear una PELICULA-->
-   <form th:action="@{/movies}" method="post" th:object="${movie}">
+   <form th:action="@{/movies}" method="post" th:object="${movie}" enctype="multipart/form-data">
 
        <div class="mb-3" th:if="${isEdit}">
            <label class="form-label" for="id">Identificador</label>
@@ -35,11 +35,11 @@
                   th:field="*{director}" placeholder="Chris Columbus" required>
        </div>
 
-       <div class="mb-3">
-           <label for="imageUrl" class="form-label">URL imagen</label>
-           <input type="text" class="form-control" id="imageUrl"
-                  th:field="*{imageUrl}" placeholder="https://m.media-amazon.com/......">
-       </div>
+<!--       <div class="mb-3">-->
+<!--           <label for="imageUrl" class="form-label">URL imagen</label>-->
+<!--           <input type="text" class="form-control" id="imageUrl"-->
+<!--                  th:field="*{imageUrl}" placeholder="https://m.media-amazon.com/......">-->
+<!--       </div>-->
 
        <div class="d-flex flex-column container mb-3">
 
@@ -82,6 +82,22 @@
 <!--           <input type="text" class="form-control" id="sinopsis"-->
 <!--                  th:field="*{sinopsis}" placeholder="Érase una vez...">-->
        </div>
+
+       <div class="mb-3">
+           <label for="imageFile" class="form-label">Imagen</label>
+
+           <!-- conserva la imagen guardada al editar si no subes una nueva -->
+           <input type="hidden" th:field="*{imageUrl}">
+
+           <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*">
+
+           <!-- EDITAR: muestra la guardada. ELEGIR archivo: el JS la sustituye -->
+           <img id="preview" alt="Previsualización" class="mt-2 rounded"
+                style="max-height:150px; display:none"
+                th:src="${movie != null and movie.imageUrl != null ? movie.imageUrl : null}">
+       </div>
+
+
        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
            <button sec:authorize="hasRole('ADMIN')" type="submit" class="btn btn-success" th:text="${isEdit ? 'Actualizar' : 'Guardar'}">
                <i class="fa-solid fa-check me-1"></i> Guardar
