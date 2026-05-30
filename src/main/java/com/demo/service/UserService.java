@@ -1,6 +1,7 @@
 package com.demo.service;
 
 import com.demo.dto.UserStatsDTO;
+import com.demo.model.Review;
 import com.demo.model.User;
 import com.demo.model.enums.Role;
 import com.demo.repository.ReviewRepository;
@@ -64,6 +65,22 @@ public class UserService implements UserDetailsService {
     public User findById(Long id){
         return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
     }
+
+
+
+//    TODO se debe terminar con REVIEW para avanzar con esto
+
+//    En reviewRepository agregar esto
+//long countByUser_Id(Long id);
+//    List<Review> findByUser_Id(Long id);
+
+
+//    public UserStatsDTO findStatsById(Long id) {
+//        return new UserStatsDTO(
+//                reviewRepository.countByUser_Id(id),
+//                reviewRepository.findByUSer_Id(id)
+//        );
+//    }
 
 
 }

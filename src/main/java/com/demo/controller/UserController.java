@@ -30,8 +30,11 @@ public class UserController {
     @GetMapping("admin/users/{id}")
     public String detail(Model model, @PathVariable Long id){
         model.addAttribute("user", userService.findById(id));
-        return "";
+//        TODO se debe temrinar con REVIEW para avanzar con esto
+// model.addAttribute("userStats", userService.findStatsById(id));
+        return "users/user-detail";
     }
+
 
 
 }
