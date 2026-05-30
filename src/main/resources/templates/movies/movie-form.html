@@ -93,7 +93,7 @@
 
            <!-- EDITAR: muestra la guardada. ELEGIR archivo: el JS la sustituye -->
            <img id="preview" alt="Previsualización" class="mt-2 rounded"
-                style="max-height:150px; display:none"
+                th:style="${movie.imageUrl != null ? 'max-height:150px;' : 'max-height:150px; display:none'}"
                 th:src="${movie != null and movie.imageUrl != null ? movie.imageUrl : null}">
        </div>
 
@@ -115,6 +115,7 @@
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
+<script th:src="@{/js/img-preview.js}"></script>
 
 </body>
 </html>
