@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layout/head :: head('Formulario usuario')}"></head>
 <body class="d-flex flex-column min-vh-100 bg-light">
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 <main class="container flex-grow-1 my-4">
 
     <h1 class="mb-0">
-        <i class="fa-solid fa-user text-primary me-2"></i>
+        <i class="fa-solid fa-user text-primary"></i>
         <span th:text="${edit} ? 'Editar usuario' : 'Crear usuario'"></span>
     </h1>
 
@@ -69,10 +69,13 @@
                  th:src="${user != null and user.imageUrl != null ? user.imageUrl : null}">
         </div>
 
-        <button type="submit" class="btn btn-success">
-            <i class="fa-solid fa-floppy-disk"></i> Guardar
-        </button>
-        <a th:href="@{/admin/users}" class="btn btn-secondary">Cancelar</a>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+            <button sec:authorize="hasRole('ADMIN')" type="submit" class="btn btn-success">
+                <i class="fa-solid fa-check me-1"></i> Guardar
+            </button>
+            <a th:href="@{/admin/users}" class="btn btn-secondary"><i class="fa-solid fa-xmark me-1"></i>Cancelar</a>
+        </div>
+
     </form>
 
 </main>
