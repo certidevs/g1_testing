@@ -27,7 +27,7 @@ public class SecurityConfig {
         //protección de rutas
         http.authorizeHttpRequests(auth -> auth
                 // 1. Recursos Públicos y Autenticación
-                .requestMatchers("/register", "/login", "/css/**", "/webjars/**", "/images/**", "/uploads/**").permitAll()
+                .requestMatchers("/register", "/login",  "/error", "/css/**", "/webjars/**", "/images/**", "/uploads/**", "/.well-known/**").permitAll()
 
                 // 2. Control de Películas (MovieController)
                 .requestMatchers(HttpMethod.GET, "/movies", "/movies/{id}").permitAll()
