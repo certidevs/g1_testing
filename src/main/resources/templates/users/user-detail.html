@@ -16,12 +16,8 @@
 
     <div class="card shadow-sm mb-4">
 
-        <div class="card-body">
-            <div class="text-center mb-3">
-                <img th:if="${user.imageUrl != null}" th:src="${user.imageUrl}"
-                     class="rounded-circle object-fit-cover"
-                     width="150" height="150" alt="Foto perfil">
-            </div>
+        <div class="card-body d-flex align-items-center gap-4">
+
             <dl class="row mb-0">
                 <dt class="col-sm-3">ID</dt>
                 <dd class="col-sm-9" th:text="${user.id}"></dd>
@@ -32,6 +28,12 @@
                 <dt class="col-sm-3">Rol</dt>
                 <dd class="col-sm-9" th:text="${user.role}"></dd>
             </dl>
+<!--El style objetc-fit:cover hace que la imagen se recorte en circulo-->
+            <img th:if="${user.imageUrl != null}" th:src="${user.imageUrl}"
+                 class="rounded-circle ms-auto"
+                 style="width:150px; height:150px; object-fit:cover;"
+                 alt="Foto perfil">
+
         </div>
         <div class="card-footer text-end">
             <a th:href="@{/admin/users}" class="btn btn-sm btn-outline-secondary">
