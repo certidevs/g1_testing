@@ -69,7 +69,7 @@
                 <i class="fa-solid fa-user-plus"></i> Registrate aquí
             </a>
 
-            <div>
+            <div sec:authorize="isAuthenticated()">
                 <a class="d-flex align-items-center text-light text-decoration-none me-3" th:href="@{/profile}">
                     <img
                             th:src="${#authentication.principal.imageUrl != null ?
