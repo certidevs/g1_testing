@@ -1,7 +1,9 @@
 package com.demo.service;
 
+import com.demo.dto.UserStatsDTO;
 import com.demo.model.User;
 import com.demo.model.enums.Role;
+import com.demo.repository.ReviewRepository;
 import com.demo.repository.UserRepository;
 import com.demo.dto.RegisterForm;
 import lombok.AllArgsConstructor;
@@ -10,6 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -17,6 +23,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -46,4 +53,17 @@ public class UserService implements UserDetailsService {
         user.setPassword(encodedPassword); // $2a$10$u7/W/ivh4XDB40YBjdE9o.wTRaXFitlUrXSUorudG1IdZs/mL2DHu
         return userRepository.save(user);
     }
+    //Utilizamos el Service para llamar desde aqui el repository que antes lo haciamos desde el controller
+    public List<User> findAll(){
+        return userRepository.findAll();
+    }
+
+    //En el metodo anterior indicamos que ese metodo nos devuelve algo de TIPO lista User
+    //En este metodo como es 1 usuario en particular, el metodo devuelve algo de TIPO user.
+    //Es lo mismo que haciamos antes en el controller, pedirle al Repository que nos de el user por id y si no que nos de una excepcion
+    public User findById(Long id){
+        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+    }
+
+
 }

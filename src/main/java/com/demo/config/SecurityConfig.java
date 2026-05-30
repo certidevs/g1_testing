@@ -55,6 +55,9 @@ public class SecurityConfig {
                 .requestMatchers("/tickets/edit/**").hasRole("ADMIN")
                 .requestMatchers("/tickets/buy/**").authenticated() // Comprar requiere estar logueado
 
+                // (paso 6.5) panel de usuarios para admins
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+
                 // 7. Cualquier otra ruta no especificada requerirá estar autenticado
                 .anyRequest().authenticated()
         );
