@@ -66,6 +66,23 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
     }
 
+    public User create(User user){
+        if (userRepository.existsByUsername(user.getUsername())){
+            throw new IllegalArgumentException("Este username ya está ocupado");
+        }
+        if (userRepository.existsByEmail(user.getEmail())){
+            throw new IllegalArgumentException("Este email ya está ocupado");
+        }
+//        if (user.getPassword() == null || user.getPassword().isBlank())
+//            throw new IllegalArgumentException("La contraseña es obligatoria");
+
+        //Si usamos Spring
+        if (!StringUtils.hasText(user.getPassword()))
+            throw new IllegalArgumentException("Password no puede estar vacía");
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
 
 
 //    TODO se debe terminar con REVIEW para avanzar con esto
