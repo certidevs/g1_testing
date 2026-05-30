@@ -117,7 +117,7 @@ public class DataInitializer implements CommandLineRunner {
 
         userRepo.save(User.builder()
                 .firstName("Admin").lastName("Cinema").username("admin")
-                .email("admin@cinema.com").role(Role.ROLE_ADMIN).active(true)
+                .email("admin@cinema.com").role(Role.ROLE_ADMIN).active(true).imageUrl("/uploads/ollama.png")
                 .password(passwordEncoder.encode("admin")).build());
 
         // ==========================================

@@ -55,7 +55,7 @@ public class User implements UserDetails {
 
     private Boolean active;
 
-//    private String imageUrl;
+    private String imageUrl;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
