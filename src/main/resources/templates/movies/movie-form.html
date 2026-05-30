@@ -84,10 +84,10 @@
        </div>
        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
            <button sec:authorize="hasRole('ADMIN')" type="submit" class="btn btn-success" th:text="${isEdit ? 'Actualizar' : 'Guardar'}">
-               <i class="fa-solid fa-floppy-disk"></i> Guardar
+               <i class="fa-solid fa-check me-1"></i> Guardar
            </button>
 
-           <a th:href="@{/movies}" class="btn btn-secondary">Cancelar</a>
+           <a th:href="@{/movies}" class="btn btn-secondary"><i class="fa-solid fa-xmark me-1"></i>Cancelar</a>
        </div>
 
    </form>
