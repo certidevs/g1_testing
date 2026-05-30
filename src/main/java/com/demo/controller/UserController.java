@@ -35,6 +35,28 @@ public class UserController {
         return "users/user-detail";
     }
 
+    //GetMapping admin/users/new
+    @GetMapping("admin/users/new")
+    public String newUser(Model model){
+        model.addAttribute("user", new User());
+        model.addAttribute("roles", Role.values());
+        model.addAttribute("edit", false);
 
+        return "users/user-form";
+    }
+
+
+
+    //En progreso PROFILE GETMAPPING
+    //TODO terminar con REVIEW para avanzar con est0
+//    @GetMapping("profile")
+//    public String profile(Model model, @AuthenticationPrincipal User user) {
+//        model.addAttribute("user", userService.findById(user.getId()));
+//        model.addAttribute("userStats", userService.findStatsById(user.getId()));
+//
+//        return "users/user-detail";
+//    }
+
+    //En progreso PROFILE POSTMAPPING
 
 }
