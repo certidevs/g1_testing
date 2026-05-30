@@ -45,7 +45,58 @@ public class UserController {
         return "users/user-form";
     }
 
+    //GetMapping admin/users/edit/{id}
+    @GetMapping("admin/users/edit/{id}")
+    public String editUser(
+            Model model,
+            @PathVariable Long id){
 
+        User user = userService.findById(id);
+        user.setPassword(null); //Se setea en null para no exponerla
+
+        model.addAttribute("user", user);
+        model.addAttribute("roles", Role.values());
+        model.addAttribute("edit", true);
+
+        return "users/user-form";
+    }
+    //PostMapping admin/users
+    @PostMapping("admin/users")
+    public String save(
+            @ModelAttribute User user,
+            RedirectAttributes redirectAttributes,
+            @RequestParam("imageFile") MultipartFile imageFile
+    ){
+        //Lo bueno de los logs es que que nos indica la fecha exacta en la que se crea el usuario
+        // el PID y dónde esta ocurriendo esto "UserController" y linea de codigo
+        //Debe estar la anotacion @Slf4j
+        log.info("Guardando user {}", user.getUsername());
+
+        String imageUrl = fileService.store(imageFile);
+
+        if(imageUrl != null){
+            user.setImageUrl(imageUrl);
+        }
+        try{
+            if (user.getId() == null){
+                user = userService.create(user);
+                redirectAttributes.addFlashAttribute("message", "Usuario creado correctamente");
+                log.info("Usuario creado correctamente {}", user);
+            } else {
+                user = userService.update(user);
+                redirectAttributes.addFlashAttribute("message", "Usuario actualizado correctamente");
+                log.info("Usuario actualizado correctamente {}", user);
+            }
+            //Tanto para CREAR como ACTUALIZAR lo redirecciona a los users
+            return "redirect:/admin/users";
+        } catch (Exception e){
+            redirectAttributes.addFlashAttribute("error", "Error al crear el usuario");
+            log.error("Error al crear el usuario {}", e.getMessage());
+
+            return user.getId() == null ?
+                    "redirect:/admin/users/new" : "redirect:/admin/users/edit/" + user.getId();
+        }
+    }
 
     //En progreso PROFILE GETMAPPING
     //TODO terminar con REVIEW para avanzar con est0
