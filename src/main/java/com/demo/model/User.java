@@ -53,8 +53,19 @@ public class User implements UserDetails {
     @Column(nullable=false)
     private Role role;
 
+    private Boolean active;
+
+//    private String imageUrl;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
+
+    //Spring security llama a este metodo para que si ACTIVE es false no lo deje loguearse
+    @Override
+    public boolean isEnabled(){
+        return active != null && active; //TRUE o FALSE
+    }
+
 }
