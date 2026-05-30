@@ -105,10 +105,10 @@ public class DataInitializer implements CommandLineRunner {
         // ==========================================
         // Datos de prueba de los USUARIOS (Users)
         // ==========================================
-        var user1 = userRepo.save(User.builder()
-                .firstName("Alejandro").lastName("Mendoza").username("user1")
-                .email("alex_m98@gmail.com").role(Role.ROLE_USER)
-                .password(passwordEncoder.encode("user1")).build());
+        var user = userRepo.save(User.builder()
+                .firstName("Alejandro").lastName("Mendoza").username("user")
+                .email("alex_m98@gmail.com").role(Role.ROLE_USER).active(true)
+                .password(passwordEncoder.encode("user")).build());
 
         var user2 = userRepo.save(User.builder()
                 .firstName("Maria").lastName("Fernandez").username("user2")
@@ -260,7 +260,7 @@ public class DataInitializer implements CommandLineRunner {
         List<Ticket> tPasada1 = ticketRepo.findBySession_Id(pasada1.getId());
         if (tPasada1.size() >= 2) {
             tPasada1.get(0).setStatus(BuyStatus.PAGADO);
-            tPasada1.get(0).setUser(user1);
+            tPasada1.get(0).setUser(user);
             tPasada1.get(0).setBuyDateTime(pasada1.getStartTime().minusHours(2));
             //tPasada1.get(1).setStatus(BuyStatus.PAGADO);
             //tPasada1.get(1).setUser(user1);
@@ -273,7 +273,7 @@ public class DataInitializer implements CommandLineRunner {
         List<Ticket> tPasada2 = ticketRepo.findBySession_Id(pasada2.getId());
         if (!tPasada2.isEmpty()) {
             tPasada2.get(0).setStatus(BuyStatus.PAGADO);
-            tPasada2.get(0).setUser(user1);
+            tPasada2.get(0).setUser(user);
             tPasada2.get(0).setBuyDateTime(pasada2.getStartTime().minusDays(1));
             ticketRepo.save(tPasada2.get(0));
         }
@@ -282,7 +282,7 @@ public class DataInitializer implements CommandLineRunner {
         List<Ticket> tPasada3 = ticketRepo.findBySession_Id(pasada3.getId());
         if (!tPasada3.isEmpty()) {
             tPasada3.get(0).setStatus(BuyStatus.PAGADO);
-            tPasada3.get(0).setUser(user1);
+            tPasada3.get(0).setUser(user);
             tPasada3.get(0).setBuyDateTime(pasada2.getStartTime().minusDays(1));
             ticketRepo.save(tPasada3.get(0));
         }
