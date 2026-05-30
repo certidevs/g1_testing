@@ -84,6 +84,40 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public User update(User userForm) {
+        //Obtenemos de BD el usuario
+        User userDB = findById(userForm.getId());
+
+        //Comprobamos si el username esta ocupado por un usuario distinto a este usuario.
+        //Si lo está lanzamos un throw IllegalArgumentException
+
+        Optional<User> userOptional = userRepository.findByUsername(userForm.getUsername());
+
+        if(userOptional.isPresent() && !userOptional.get().getId().equals(userForm.getId())){
+            throw new IllegalArgumentException("Este username ya existe");
+        }
+
+        //Con el email se hace lo mismo, lo vemos con PROGRAMACION FUNCIONAL para tener las 2 opciones
+        userRepository.findByEmail(userForm.getEmail())
+                .filter(user -> !user.getId().equals(userForm.getId()))
+                .ifPresent(user -> {
+                    throw new IllegalArgumentException("El email de usuario ya existe");
+                });
+
+        userDB.setUsername(userForm.getUsername());
+        userDB.setEmail(userForm.getEmail());
+        userDB.setRole(userForm.getRole());
+        userDB.setImageUrl(userForm.getImageUrl());
+        // TODO un admin podría desactivarse a sí mismo, hay que impedirlo lanzando Illegal....
+        userDB.setActive(userForm.getActive());
+
+        // Si se introduce una nueva contraseña se cifra y actualizamos,
+        // sino la contraseña actual queda sin cambios
+        if(StringUtils.hasText(userForm.getPassword()))
+            userDB.setPassword(passwordEncoder.encode(userForm.getPassword()));
+
+        return userRepository.save(userDB); // guardamos el usuario ACTUALIZADO en BD
+    }
 
 //    TODO se debe terminar con REVIEW para avanzar con esto
 
