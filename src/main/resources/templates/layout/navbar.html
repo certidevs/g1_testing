@@ -69,10 +69,17 @@
                 <i class="fa-solid fa-user-plus"></i> Registrate aquí
             </a>
 
-            <span class="text-light me-2" sec:authorize="isAuthenticated()">
-                <i class="fa-solid fa-user"></i>
-                <span sec:authentication="name"></span>
-            </span>
+            <div>
+                <a class="d-flex align-items-center text-light text-decoration-none me-3" th:href="@{/profile}">
+                    <img
+                            th:src="${#authentication.principal.imageUrl != null ?
+                        #authentication.principal.imageUrl : '/images/avatar.svg'}"
+                            alt="avatar" width="32" height="32"
+                            class="rounded-circle object-fit-cover me-2 border border-2 border-light bg-white">
+
+                    <span>Hola <span sec:authentication="name"></span></span>
+                </a>
+            </div>
 
             <form th:action="@{/logout}" method="post" class="d-inline" sec:authorize="isAuthenticated()">
                 <button class="btn btn-danger">
