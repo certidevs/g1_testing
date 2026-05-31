@@ -8,17 +8,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -46,14 +46,14 @@ public class MovieControllerTest {
         Movie.builder().active(true).title("El bar de Moe").build()
         );
     }
-
+//Este no falla porque agregamos el imageFile en el Controller, solucionar
     @Test
     void createNewMovie() throws Exception{
         //Contamos la cantidad de peliculas ACTUAL
         long now = movieRepository.count();
 
         //Con mockMvc enviamos la pelicula nueva al controller
-        mockMvc.perform(post("/movies")
+        mockMvc.perform(multipart("/movies").file("imageFile", new byte[0])
                 .param("title", "TitleMovie Test")
                 .param("director","DirectorMovie Test"))
                 .andExpect(status().is3xxRedirection())
@@ -66,7 +66,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    void deactivateRestaurant() throws Exception{
+    void deactivateMovie() throws Exception{
         assertTrue(movieToDeactivate.getActive());
 
         Long id = movieToDeactivate.getId();
@@ -145,5 +145,38 @@ public class MovieControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/movies"));
     }
+
+    @Test
+    void newMovieForm() throws Exception {
+        mockMvc.perform(get("/movies/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("movies/movie-form"))
+                .andExpect(model().attributeExists("movie"));
+    }
+
+//El enpoint /movies/edit necesita admin
+    @Test
+    void editMovieForm() throws Exception {
+        // Verificamos que GET /movies/edit/{id} devuelve el formulario con la película CARGADA
+        Movie movie = movieRepository.findAll().getFirst();
+        Long movieId = movie.getId();
+
+        mockMvc.perform(get("/movies/edit/" + movieId)
+                        .with(user("admin").roles("ADMIN")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("movies/movie-form"))
+                .andExpect(model().attributeExists("movie"))
+                .andExpect(model().attribute("movie", hasProperty("id", is(movieId))))
+                .andExpect(model().attribute("movie", hasProperty("title", is(movie.getTitle()))));
+    }
+
+    @Test
+    void deactivateMovieNotFound() throws Exception {
+        // Verificamos la rama del if cuando la película NO EXISTE, redirigimos a /movies
+        mockMvc.perform(get("/movies/deactivate/99999"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/movies"));
+    }
+
 
 }

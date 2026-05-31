@@ -21,8 +21,8 @@
                         <i class="fa-solid fa-film"></i> Cartelera
                     </a>
                 </li>
-
-                <li class="nav-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+<!--Tal cual esta hecho ahora el th:if #authprization me falla en los test, lo reemplazo pero dejo comentado como estaba antes th:if="${#authorization.expression('hasRole(''ADMIN'')')}"-->
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:href="@{/salas}">
                         <i class="fa-solid fa-tv"></i> Salas
                     </a>
@@ -71,11 +71,16 @@
 
             <div sec:authorize="isAuthenticated()">
                 <a class="d-flex align-items-center text-light text-decoration-none me-3" th:href="@{/profile}">
+<!--                    Esto me estaba generando problema en el test , si instanceof es false no se evalua  imageUrl-->
+                    <!--                            th:src="${#authentication.principal.imageUrl != null ?-->
+                    <!--                        #authentication.principal.imageUrl : '/images/avatar.svg'}"-->
                     <img
-                            th:src="${#authentication.principal.imageUrl != null ?
-                        #authentication.principal.imageUrl : '/images/avatar.svg'}"
-                            alt="avatar" width="32" height="32"
-                            class="rounded-circle object-fit-cover me-2 border border-2 border-light bg-white">
+                        th:src="${#authentication.principal instanceof T(com.demo.model.User)
+                         and #authentication.principal.imageUrl != null ?
+                         #authentication.principal.imageUrl : '/images/avatar.svg'}"
+
+                         alt="avatar" width="32" height="32"
+                         class="rounded-circle object-fit-cover me-2 border border-2 border-light bg-white">
 
                     <span>Hola <span sec:authentication="name"></span></span>
                 </a>
