@@ -37,5 +37,8 @@ public class Review {
     //película
     @ManyToOne
     private Movie movie;
-}
 
+    // Usuario que escribió la reseña
+    @ManyToOne
+    private User user;
+}
