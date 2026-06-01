@@ -2,6 +2,7 @@ package com.demo.controller;
 
 import com.demo.model.Movie;
 import com.demo.repository.MovieRepository;
+import com.demo.repository.ReviewRepository;
 import com.demo.repository.SessionRepository;
 import com.demo.service.FileService;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class MovieController {
     private final MovieRepository movieRepository;
     private final FileService fileService;
     private final SessionRepository sessionRepository;
+    private final ReviewRepository reviewRepository;
 
     //GetMapping de peliculas
     @GetMapping("movies")
@@ -45,6 +47,7 @@ public class MovieController {
             Movie movie = movieOptional.get();
             model.addAttribute("movie", movie);
             model.addAttribute("sessions", sessionRepository.findByMovie_Id(id));
+            model.addAttribute("reviews", reviewRepository.findByMovieId(id));
             return "movies/movie-detail";
         }
         return"redirect:/movies";
@@ -75,7 +78,7 @@ public class MovieController {
     public String editMovie(@PathVariable Long id, Model model){
         //Se pude hacer tambien con el Optional
         model.addAttribute("movie", movieRepository.findById(id).orElseThrow());
-        return"movies/movie-form";
+        return "movies/movie-form";
     }
 
     @PostMapping("movies")

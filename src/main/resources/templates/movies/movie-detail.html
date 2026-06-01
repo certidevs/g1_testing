@@ -5,12 +5,11 @@
 
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
-<main class="container flex-grow-1">
-    <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title"><span th:text="${movie.title}"></span></h5>
-                </div>
+<main class="container flex-grow-1 my-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0" th:text="${movie.title}"></h5>
+        </div>
 
                 <div class="card-body">
                     <div class="d-flex flex-row">
@@ -51,24 +50,65 @@
                                 </ul>
                             </div>
 
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
-                                <a href="#" class="btn btn-info">Ver trailer</a>
-                                <a th:href="@{/movies}" class="btn btn-secondary">
-                                <i class="fa-solid fa-angle-left"></i>Volver</a>
-                            </div>
-
-                        </div>
-
+                    <div class="d-flex gap-2 mt-4">
+                        <a href="#" class="btn btn-info">Ver trailer</a>
+                        <a th:href="@{/movies}" class="btn btn-secondary">
+                            <i class="fa-solid fa-angle-left me-1"></i>Volver
+                        </a>
+                        <a th:href="@{/reviews/new(movieId=${movie.id})}"
+                           class="btn btn-outline-primary ms-auto">
+                            <i class="fa-regular fa-comment me-1"></i> Escribir reseña
+                        </a>
                     </div>
+                </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!--RESEÑAS-->
+    <div class="mb-4">
+        <h5 class="mb-3">
+            <i class="fa-regular fa-comments text-primary me-2"></i>
+            Reseñas
+            <span class="badge bg-secondary ms-1" th:text="${#lists.size(reviews)}"></span>
+        </h5>
+
+        <div th:if="${#lists.isEmpty(reviews)}" class="alert alert-light border">
+            Todavía no hay reseñas para esta película.
+            <a th:href="@{/reviews/new(movieId=${movie.id})}">¡Sé el primero en escribir una!</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 g-3" th:if="${!#lists.isEmpty(reviews)}">
+            <div class="col" th:each="review : ${reviews}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="card-title mb-0" th:text="${review.title}">Título</h6>
+                            <span class="badge bg-warning text-dark">
+                                <i class="fa-solid fa-star me-1"></i>
+                                <span th:text="${review.rating + ' / 5'}"></span>
+                            </span>
+                        </div>
+                        <p class="card-text small" th:text="${review.description}">Descripción</p>
+                    </div>
+                    <div class="card-footer bg-transparent small d-flex justify-content-between align-items-center">
+                        <span class="text-muted">
+                            <i class="fa-regular fa-calendar me-1"></i>
+                            <span th:text="${#temporals.format(review.creationDate, 'dd/MM/yyyy')}"></span>
+                        </span>
+                        <a class="btn btn-sm btn-outline-secondary"
+                           th:href="@{/reviews/{id}(id=${review.id})}">
+                            <i class="fa-solid fa-eye me-1"></i> Ver
+                        </a>
+                    </div>
                 </div>
             </div>
-
+        </div>
     </div>
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
-
 </body>
 </html>

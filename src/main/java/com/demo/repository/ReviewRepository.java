@@ -3,8 +3,11 @@ package com.demo.repository;
 import com.demo.model.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
+    List<Review> findByMovieId(Long movieId);
 
-    // TODO   findByMovieId  para mostrar en movie-detail.html
+    List<Review> findByRatingGreaterThanEqual(Integer rating);
 }

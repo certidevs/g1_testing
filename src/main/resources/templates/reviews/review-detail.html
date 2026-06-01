@@ -1,67 +1,51 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/head :: head('Reseñas')}"></head>
+<head th:replace="~{layout/head :: head('Detalle de reseña')}"></head>
 <body class="d-flex flex-column min-vh-100">
 
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
-<main class="container flex-grow-1">
+<main class="container flex-grow-1 my-4">
 
-    <h1 class="mb-4">
-        <i class="fa-regular fa-comments text-primary me-2"></i> Opiniones de clientes
-    </h1>
+    <a th:href="@{/reviews}" class="text-decoration-none mb-3 d-inline-block">
+        &larr; Volver a reseñas
+    </a>
 
-    <div th:if="${reviews.isEmpty()}" class="alert alert-light border">
-        Aún no hay reseñas.
-    </div>
-    <div th:if="${message}" class="alert alert-success fade show alert-dismissible" role="alert">
-        <i class="fa-solid fa-check-circle"></i>
-        <span th:text="${message}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
-    </div>
-
-    <div class="row row-cols-1 row-cols-md-2 g-3">
-        <div class="col" th:each="review : ${reviews}">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h5 class="card-title mb-0" th:text="${review.title}">Título</h5>
-                        <span class="badge bg-warning text-dark">
-                            <i class="fa-solid fa-star me-1"></i>
-                            <span th:text="${review.rating + ' / 5'}"></span>
-                        </span>
-                    </div>
-                    <p class="card-text" th:text="${review.description}">Descripción</p>
-                    <p class="text-muted small mb-0">
-                        <i class="fa-regular fa-calendar me-1"></i>
-                        <span th:text="${review.creationDate}"></span>
-                    </p>
-                </div>
-                <div class="card-footer bg-transparent small">
-                    <div th:if="${review.movie != null}">
-                        <i class="fa-solid fa-store text-primary me-1"></i>
-                        <a th:href="@{/movies/{id}(id=${review.movie.id})}"
-                           th:text="${review.movie.title}">Pelicula</a>
-                    </div>
-                    <div class="my-3">
-                        <!-- Botón de borrar -->
-                        <a class="btn btn-secondary" th:href="@{/reviews/{id}(id=${review.id})}">
-                            <i class="fa-solid fa-eye mr-2"></i> Ver
-                        </a>
-
-                        <a class="btn btn-success" th:href="@{/reviews/edit/{id}(id=${review.id})}">
-                            <i class="fa-solid fa-pencil mr-2"></i> Editar
-                        </a>
-
-                        <a class="btn btn-danger" th:href="@{/reviews/delete/{id}(id=${review.id})}"
-                           onclick="return confirm('Esta acción borra, ¿quiere borrar esta reseña?')">
-                            <i class="fa-solid fa-trash mr-2"></i> Borrar
-                        </a>
-
-                    </div>
-                </div>
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0" th:text="${review.title}">Título</h5>
+            <span class="badge bg-warning text-dark fs-6">
+                <i class="fa-solid fa-star me-1"></i>
+                <span th:text="${review.rating + ' / 5'}"></span>
+            </span>
+        </div>
+        <div class="card-body">
+            <p class="card-text" th:text="${review.description}">Descripción de la reseña.</p>
+            <p class="text-muted small mb-2">
+                <i class="fa-regular fa-calendar me-1"></i>
+                <span th:text="${#temporals.format(review.creationDate, 'dd/MM/yyyy HH:mm')}"></span>
+            </p>
+            <div th:if="${review.movie != null}">
+                <i class="fa-solid fa-film text-primary me-1"></i>
+                Película:
+                <a th:href="@{/movies/{id}(id=${review.movie.id})}"
+                   th:text="${review.movie.title}">Nombre película</a>
             </div>
+        </div>
+        <div class="card-footer bg-transparent d-flex gap-2">
+            <a class="btn btn-success" th:href="@{/reviews/edit/{id}(id=${review.id})}">
+                <i class="fa-solid fa-pencil me-1"></i> Editar
+            </a>
+            <a class="btn btn-danger"
+               th:href="@{/reviews/delete/{id}(id=${review.id})}"
+               onclick="return confirm('¿Seguro que quieres eliminar esta reseña?')">
+                <i class="fa-solid fa-trash me-1"></i> Eliminar
+            </a>
+            <a th:if="${review.movie != null}"
+               class="btn btn-outline-primary ms-auto"
+               th:href="@{/movies/{id}(id=${review.movie.id})}">
+                <i class="fa-solid fa-film me-1"></i> Ver película
+            </a>
         </div>
     </div>
 
@@ -69,6 +53,5 @@
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
-
 </body>
 </html>
