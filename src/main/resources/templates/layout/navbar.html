@@ -75,12 +75,10 @@
                     <!--                            th:src="${#authentication.principal.imageUrl != null ?-->
                     <!--                        #authentication.principal.imageUrl : '/images/avatar.svg'}"-->
                     <img
-                        th:src="${#authentication.principal instanceof T(com.demo.model.User)
-                         and #authentication.principal.imageUrl != null ?
-                         #authentication.principal.imageUrl : '/images/avatar.svg'}"
-
-                         alt="avatar" width="32" height="32"
-                         class="rounded-circle object-fit-cover me-2 border border-2 border-light bg-white">
+                            th:src="${#authentication.principal.imageUrl != null ?
+                            #authentication.principal.imageUrl : '/images/avatar.svg'}"
+                            alt="avatar" width="32" height="32"
+                            class="rounded-circle object-fit-cover me-2 border border-2 border-light bg-white">
 
                     <span>Hola <span sec:authentication="name"></span></span>
                 </a>
