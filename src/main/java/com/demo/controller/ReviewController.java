@@ -1,9 +1,12 @@
 package com.demo.controller;
 
 import com.demo.model.Review;
+import com.demo.model.User;
+import com.demo.model.enums.Role;
 import com.demo.repository.MovieRepository;
 import com.demo.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,17 +43,38 @@ public class ReviewController {
     }
 
     @GetMapping("reviews/edit/{id}")
-    public String editReview(Model model, @PathVariable Long id) {
-        model.addAttribute("review", reviewRepository.findById(id).orElseThrow());
+    public String editReview(Model model, @PathVariable Long id,
+                             @AuthenticationPrincipal User userActual) {
+        Review review = reviewRepository.findById(id).orElseThrow();
+
+        // Solo el autor o un admin puede editar
+        boolean isAdmin = userActual.getRole().equals(Role.ROLE_ADMIN);
+        boolean isOwner = review.getUser() != null
+                && review.getUser().getUsername().equals(userActual.getUsername());
+
+        if (!isAdmin && !isOwner)
+            return "redirect:/reviews/" + id;
+
+        model.addAttribute("review", review);
         return "reviews/review-form";
     }
 
     //movieId viene del campo hidden del formulario para asociar la película correctamente
     @PostMapping("reviews")
     public String saveReview(@ModelAttribute Review review,
-                             @RequestParam(required = false) Long movieId) {
+                             @RequestParam(required = false) Long movieId,
+                             @AuthenticationPrincipal User currentUser) {
         if (movieId != null)
             review.setMovie(movieRepository.findById(movieId).orElse(null));
+
+        if (review.getId() != null) {
+            // Edición: conservar el autor original, no sobreescribirlo
+            reviewRepository.findById(review.getId())
+                    .ifPresent(existing -> review.setUser(existing.getUser()));
+        } else {
+            // Nueva reseña: asignar el usuario autenticado como autor
+            review.setUser(currentUser);
+        }
 
         reviewRepository.save(review);
 
@@ -62,6 +86,7 @@ public class ReviewController {
 
     @GetMapping("reviews/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        // Solo ADMIN pasa por aqui, comprobado con debug, SecurityConfig ya lo garantiza a nivel de ruta
         reviewRepository.deleteById(id);
         redirectAttributes.addFlashAttribute("message", "Reseña eliminada correctamente.");
         return "redirect:/reviews";
