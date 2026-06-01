@@ -25,7 +25,7 @@ public class Review {
 
     //texto de la review
     @Column(length = 1000)
-    private Integer description;
+    private String description;
 
     //rating, de cinco
     private Integer rating;
