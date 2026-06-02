@@ -2,12 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg mb-4">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center" th:href="@{/index.html}">
-            <img th:src="@{/images/img_2.png}" alt="Cines"
-                 height="32" class="me-2 rounded-3">
-            <!--            <span>Restaurantes</span>-->
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/images/img_2.png}" alt="Only Film"
+                 height="56" class="me-2">
         </a>
         <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#mainNav"
@@ -21,77 +20,89 @@
                         <i class="fa-solid fa-film"></i> Cartelera
                     </a>
                 </li>
-<!--Tal cual esta hecho ahora el th:if #authprization me falla en los test, lo reemplazo pero dejo comentado como estaba antes th:if="${#authorization.expression('hasRole(''ADMIN'')')}"-->
-                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link" th:href="@{/salas}">
-                        <i class="fa-solid fa-tv"></i> Salas
-                    </a>
-                </li>
 
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/sessions}">
-                        <i class="fa-solid fa-video"></i> Funciones
+                        <i class="fa-solid fa-video"></i> Próximamente
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/tickets}">
-                        <i class="fa-solid fa-ticket"></i> Tickets
+                        <i class="fa-solid fa-ticket"></i> Entradas
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/reviews}">
-                        <i class="fa-regular fa-comments"></i> Opiniones
+                        <i class="fa-regular fa-comments"></i> Experiencias
+                    </a>
+                </li>
+
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/salas}">
+                        <i class="fa-solid fa-tv"></i> Cines
                     </a>
                 </li>
 
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:href="@{/admin/users}">
-                        <i class="fa-solid fa-users me-1"></i> Usuarios
+                        <i class="fa-solid fa-users"></i> Usuarios
                     </a>
                 </li>
 
             </ul>
-<!--            <a class="btn btn-outline-light btn-sm" th:href="@{/movies/create}">-->
-<!--                <i class="fa-solid fa-plus"></i> Nueva pelicula-->
-<!--            </a>-->
 
-
-            <!-- TODO is authenticated mostrar nombre username -->
-
-
-            <a sec:authorize="!isAuthenticated()" class="btn btn-outline-light btn-sm" th:href="@{/login}">
-                <i class="fa-solid fa-user"></i>
-            </a>
-
-            <a sec:authorize="!isAuthenticated()" class="btn btn-light btn-sm ms-2" th:href="@{/register}">
-                <i class="fa-solid fa-user-plus"></i> Registrate aquí
-            </a>
-
-            <div sec:authorize="isAuthenticated()">
-                <a class="d-flex align-items-center text-light text-decoration-none me-3" th:href="@{/profile}">
-<!--                    Esto me estaba generando problema en el test , si instanceof es false no se evalua  imageUrl-->
-                    <!--                            th:src="${#authentication.principal.imageUrl != null ?-->
-                    <!--                        #authentication.principal.imageUrl : '/images/avatar.svg'}"-->
-                    <img
-                            th:src="${#authentication.principal.imageUrl != null ?
-                            #authentication.principal.imageUrl : '/images/avatar.svg'}"
-                            alt="avatar" width="32" height="32"
-                            class="rounded-circle object-fit-cover me-2 border border-2 border-light bg-white">
-
-                    <span>Hola <span sec:authentication="name"></span></span>
+            <!-- Autenticación -->
+            <div class="d-flex align-items-center gap-2">
+                <a sec:authorize="!isAuthenticated()" class="btn btn-outline-light btn-sm" th:href="@{/login}" title="Iniciar sesión">
+                    <i class="fa-solid fa-user"></i> Entrar
                 </a>
-            </div>
 
-            <form th:action="@{/logout}" method="post" class="d-inline" sec:authorize="isAuthenticated()">
-                <button class="btn btn-danger">
-                    <i class="fa-solid fa-sign-out"></i>
-                </button>
-            </form>
+                <a sec:authorize="!isAuthenticated()" class="btn btn-light btn-sm" th:href="@{/register}">
+                    <i class="fa-solid fa-user-plus"></i> Registrarse
+                </a>
+
+                <div sec:authorize="isAuthenticated()" class="dropdown">
+                    <button class="btn btn-link text-decoration-none d-flex align-items-center gap-2"
+                            type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img
+                                th:src="${#authentication.principal.imageUrl != null ? #authentication.principal.imageUrl : '/images/avatar.svg'}"
+                                alt="avatar" width="36" height="36"
+                                class="rounded-circle object-fit-cover border border-2 border-light bg-white">
+                        <span class="d-none d-sm-inline text-light">Hola, <span sec:authentication="name"></span></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" th:href="@{/profile}">Mi Perfil</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="fa-solid fa-sign-out"></i> Cerrar Sesión
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
         </div>
     </div>
 </nav>
+
+<!-- Script para efecto scroll en navbar -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbar = document.querySelector('.navbar');
+
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    });
+</script>
 </body>
 </html>

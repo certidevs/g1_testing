@@ -1,18 +1,75 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<footer th:fragment="footer" class="bg-white border-top mt-5 py-4">
-    <div class="container text-center small text-muted">
-        <p class="mb-1">
-            <i class="fa-regular fa-copyright"></i> 2026 Only Film — Adecco
-        </p>
-        <p class="mb-0">
-            <a class="text-decoration-none me-3" href="#"><i class="fa-brands fa-github"></i> GitHub</a>
-            <a class="text-decoration-none me-3" href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
-            <a class="text-decoration-none" href="#"><i class="fa-regular fa-envelope"></i> Contacto</a>
-<!--            <a class="text-decoration-none" href="#"><i class="fa-regular fa-envelope"></i> Ubicacion</a>-->
-        </p>
+<footer th:fragment="footer" class="border-top mt-5 py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-4 mb-4">
+                <h5 class="text-gold mb-3">
+                    <i class="fa-solid fa-film me-2"></i>Only Film
+                </h5>
+                <p class="text-secondary small">La experiencia cinematográfica premium que mereces. Vive el cine como nunca antes.</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5 class="text-gold mb-3">Navegación</h5>
+                <ul class="list-unstyled footer-link-group small">
+                    <li><a th:href="@{/movies}"><i class="fa-solid fa-film me-2"></i>Cartelera</a></li>
+                    <li><a th:href="@{/sessions}"><i class="fa-solid fa-video me-2"></i>Próximamente</a></li>
+                    <li><a th:href="@{/tickets}"><i class="fa-solid fa-ticket me-2"></i>Entradas</a></li>
+                    <li><a th:href="@{/reviews}"><i class="fa-regular fa-comments me-2"></i>Experiencias</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5 class="text-gold mb-3">Conecta</h5>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-secondary" title="GitHub">
+                        <i class="fa-brands fa-github fa-lg"></i>
+                    </a>
+                    <a href="#" class="text-secondary" title="Twitter">
+                        <i class="fa-brands fa-x-twitter fa-lg"></i>
+                    </a>
+                    <a href="#" class="text-secondary" title="Instagram">
+                        <i class="fa-brands fa-instagram fa-lg"></i>
+                    </a>
+                    <a href="#" class="text-secondary" title="Contacto">
+                        <i class="fa-regular fa-envelope fa-lg"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-secondary opacity-25">
+
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="text-secondary small mb-0">
+                    <i class="fa-regular fa-copyright me-1"></i> 2026 Only Film — Adecco. Todos los derechos reservados.
+                </p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <p class="text-secondary small mb-0">
+                    <a href="#" class="text-secondary text-decoration-none me-3">Privacidad</a>
+                    <a href="#" class="text-secondary text-decoration-none">Términos</a>
+                </p>
+            </div>
+        </div>
     </div>
+
+    <!-- Script para efecto scroll en navbar -->
+    <script th:fragment="navbar-scroll">
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar');
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        });
+    </script>
+
 </footer>
 
 <script th:fragment="scripts" th:src="@{/webjars/bootstrap/5.3.8/dist/js/bootstrap.bundle.min.js}"></script>

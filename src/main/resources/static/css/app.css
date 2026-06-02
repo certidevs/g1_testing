@@ -1,14 +1,949 @@
-@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+/* ============================================
+   PREMIUM CINEMA EXPERIENCE - STYLE GUIDE
+   Bootstrap 5.3.8 & Font Awesome 7.2.0 Compatible
+   ============================================ */
 
-body {
-    font-family: 'Urbanist', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap');
+
+/* ============================================
+   1. CSS CUSTOM PROPERTIES (THEME VARIABLES)
+   ============================================ */
+
+:root {
+    /* Colores principales */
+    --cinema-dark: #0B0B0D;
+    --cinema-surface-1: #141417;
+    --cinema-surface-2: #1C1C21;
+    --cinema-text-primary: #F5F4F1;
+    --cinema-text-secondary: #A8A8AD;
+    --cinema-accent-gold: #C8A96B;
+    --cinema-accent-burgundy: #6B1F2A;
+    --cinema-accent-gold-dark: #9B8350;
+
+    /* Tipografía */
+    --font-display: 'Playfair Display', serif;
+    --font-ui: 'Inter', sans-serif;
+
+    /* Espaciado */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+
+    /* Sombras premium */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-gold: 0 0 20px rgba(200, 169, 107, 0.2);
 }
 
+/* ============================================
+   2. RESET & BASE STYLES - FUERZA MÁXIMA
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-ui) !important;
+    background-color: var(--cinema-dark) !important;
+    color: var(--cinema-text-primary) !important;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    background-color: var(--cinema-dark) !important;
+}
+
+/* ============================================
+   3. TIPOGRAFÍA
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display) !important;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--cinema-text-primary) !important;
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem) !important;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-xl);
+}
+
+h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem) !important;
+    margin-bottom: var(--spacing-lg);
+}
+
+h3 {
+    font-size: clamp(1.25rem, 3vw, 1.75rem) !important;
+    margin-bottom: var(--spacing-md);
+}
+
+h4, h5, h6 {
+    font-size: 1.1rem !important;
+    margin-bottom: var(--spacing-md);
+}
+
+p {
+    color: var(--cinema-text-secondary) !important;
+    margin-bottom: var(--spacing-md);
+}
+
+a {
+    color: var(--cinema-accent-gold) !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--cinema-accent-gold-dark) !important;
+}
+
+/* ============================================
+   4. COMPONENTES BASE
+   ============================================ */
+
+/* Botones */
+.btn {
+    font-family: var(--font-ui) !important;
+    font-weight: 600 !important;
+    border-radius: 0.5rem !important;
+    padding: var(--spacing-sm) var(--spacing-lg) !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    font-size: 0.875rem !important;
+}
+
+.btn-primary {
+    background-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-dark) !important;
+    border-color: var(--cinema-accent-gold) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--cinema-accent-gold-dark) !important;
+    border-color: var(--cinema-accent-gold-dark) !important;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gold) !important;
+}
+
+.btn-secondary {
+    background-color: var(--cinema-surface-1) !important;
+    color: var(--cinema-accent-gold) !important;
+    border-color: var(--cinema-accent-gold) !important;
+}
+
+.btn-secondary:hover {
+    background-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-dark) !important;
+    transform: translateY(-2px);
+}
+
+.btn-outline-light {
+    color: var(--cinema-text-primary) !important;
+    border-color: var(--cinema-text-primary) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-light:hover {
+    background-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-dark) !important;
+    border-color: var(--cinema-accent-gold) !important;
+}
+
+.btn-light {
+    background-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-dark) !important;
+    border-color: var(--cinema-accent-gold) !important;
+}
+
+.btn-light:hover {
+    background-color: var(--cinema-accent-gold-dark) !important;
+    border-color: var(--cinema-accent-gold-dark) !important;
+    color: var(--cinema-dark) !important;
+}
+
+.btn-danger {
+    background-color: var(--cinema-accent-burgundy) !important;
+    border-color: var(--cinema-accent-burgundy) !important;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background-color: #8B2F3F !important;
+    border-color: #8B2F3F !important;
+}
+
+.btn:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+.btn-link {
+    color: var(--cinema-text-primary) !important;
+}
+
+.btn-link:hover {
+    color: var(--cinema-accent-gold) !important;
+}
+
+/* Inputs y Formularios */
+.form-control,
+.form-select {
+    background-color: var(--cinema-surface-2) !important;
+    border-color: var(--cinema-surface-1) !important;
+    color: var(--cinema-text-primary) !important;
+    font-family: var(--font-ui) !important;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--cinema-surface-2) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-text-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(200, 169, 107, 0.25) !important;
+}
+
+.form-label {
+    color: var(--cinema-text-secondary) !important;
+    font-weight: 500;
+}
+
+.form-floating > label {
+    color: var(--cinema-text-secondary) !important;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: var(--cinema-accent-gold) !important;
+}
+
+/* Cards */
+.card {
+    background-color: var(--cinema-surface-1) !important;
+    border: 1px solid var(--cinema-surface-2) !important;
+    border-radius: 0.75rem !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: all 0.3s ease;
+    color: var(--cinema-text-primary) !important;
+}
+
+.card:hover {
+    border-color: var(--cinema-accent-gold) !important;
+    box-shadow: var(--shadow-lg) !important;
+    transform: translateY(-4px);
+}
+
+.card-header {
+    background-color: var(--cinema-surface-2) !important;
+    border-bottom-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-text-primary) !important;
+}
+
+.card-body {
+    color: var(--cinema-text-secondary) !important;
+}
+
+.card-title {
+    color: var(--cinema-text-primary) !important;
+}
+
+.card-text {
+    color: var(--cinema-text-secondary) !important;
+}
+
+/* Alertas */
+.alert {
+    border-radius: 0.5rem;
+    border: 1px solid;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: rgba(76, 175, 80, 0.1) !important;
+    border-color: rgba(76, 175, 80, 0.3) !important;
+    color: #7FD77F !important;
+}
+
+.alert-danger {
+    background-color: rgba(211, 47, 47, 0.1) !important;
+    border-color: rgba(211, 47, 47, 0.3) !important;
+    color: #FF7B7B !important;
+}
+
+.alert-warning {
+    background-color: rgba(255, 152, 0, 0.1) !important;
+    border-color: rgba(255, 152, 0, 0.3) !important;
+    color: #FFB74D !important;
+}
+
+.alert-info {
+    background-color: rgba(33, 150, 243, 0.1) !important;
+    border-color: rgba(33, 150, 243, 0.3) !important;
+    color: #64B5F6 !important;
+}
+
+/* ============================================
+   5. NAVBAR - NAVEGACIÓN PREMIUM
+   ============================================ */
+
+.navbar {
+    background: linear-gradient(180deg, rgba(11, 11, 13, 0.98) 0%, rgba(20, 20, 23, 0.95) 100%) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(200, 169, 107, 0.1) !important;
+    padding: 0 !important;
+    min-height: 88px;
+    position: sticky !important;
+    top: 0;
+    z-index: 1030;
+    box-shadow: var(--shadow-md) !important;
+}
+
+.navbar.scrolled {
+    background: linear-gradient(180deg, rgba(11, 11, 13, 0.99) 0%, rgba(20, 20, 23, 0.99) 100%) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+.navbar-brand {
+    font-family: var(--font-display) !important;
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    color: var(--cinema-accent-gold) !important;
+    letter-spacing: -0.02em;
+    transition: all 0.3s ease;
+    padding: var(--spacing-md) var(--spacing-lg) !important;
+}
+
+.navbar-brand:hover {
+    color: var(--cinema-accent-gold-dark) !important;
+    text-shadow: 0 0 10px rgba(200, 169, 107, 0.3) !important;
+}
+
+.navbar-brand img {
+    transition: transform 0.3s ease;
+    max-height: 56px;
+    width: auto;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
+
+.navbar-nav .nav-link {
+    color: var(--cinema-text-primary) !important;
+    font-weight: 500 !important;
+    padding: var(--spacing-md) var(--spacing-lg) !important;
+    position: relative;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--cinema-accent-gold) !important;
+}
+
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: var(--spacing-lg);
+    width: 0;
+    height: 2px;
+    background-color: var(--cinema-accent-gold);
+    transition: width 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: calc(100% - 2 * var(--spacing-lg));
+}
+
+.navbar-toggler {
+    color: var(--cinema-text-primary) !important;
+    border-color: var(--cinema-accent-gold) !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.25rem rgba(200, 169, 107, 0.25) !important;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23C8A96B' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+.dropdown-menu {
+    background-color: var(--cinema-surface-1) !important;
+    border-color: var(--cinema-accent-gold) !important;
+}
+
+.dropdown-item {
+    color: var(--cinema-text-primary) !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--cinema-surface-2) !important;
+    color: var(--cinema-accent-gold) !important;
+}
+
+.dropdown-divider {
+    border-color: var(--cinema-surface-2) !important;
+}
+
+/* ============================================
+   6. HERO SECTION
+   ============================================ */
+
+.hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-attachment: fixed;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(11, 11, 13, 0.7), rgba(107, 31, 42, 0.3));
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    max-width: 900px;
+    padding: var(--spacing-2xl);
+}
+
+.hero-content h1 {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    margin-bottom: var(--spacing-xl);
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero-content p {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    margin-bottom: var(--spacing-2xl);
+    color: var(--cinema-text-secondary);
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.hero-content .btn {
+    animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+/* ============================================
+   7. LOGIN CONTAINER
+   ============================================ */
+
 .login-container {
-    background-image: url('../images/fondo.png');
     background-size: cover;
     background-position: center;
-    /* Asegúrate de que el contenedor tenga altura y ancho definidos */
-    min-height: 100vh;
+    background-attachment: fixed;
+    background-color: var(--cinema-dark) !important;
+    position: relative;
+}
+
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(11, 11, 13, 0.75);
+    z-index: 1;
+}
+
+.login-container main {
+    position: relative;
+    z-index: 2;
+}
+
+.login-container .card {
+    background: linear-gradient(135deg, var(--cinema-surface-1) 0%, var(--cinema-surface-2) 100%) !important;
+    border: 1px solid var(--cinema-accent-gold) !important;
+    box-shadow: var(--shadow-lg), var(--shadow-gold) !important;
+}
+
+.login-container .card h1 {
+    color: var(--cinema-accent-gold) !important;
+    margin-bottom: var(--spacing-lg);
+}
+
+.login-container .btn-primary {
     width: 100%;
+    margin-top: var(--spacing-md);
+}
+
+/* ============================================
+   8. TABLA DE PELÍCULAS / LISTADOS
+   ============================================ */
+
+.table {
+    color: var(--cinema-text-primary) !important;
+}
+
+.table-dark {
+    background-color: var(--cinema-surface-1) !important;
+    color: var(--cinema-text-primary) !important;
+}
+
+.table-dark thead th {
+    background-color: var(--cinema-surface-2) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-accent-gold) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table-dark tbody td {
+    border-color: var(--cinema-surface-2) !important;
+    vertical-align: middle;
+    color: var(--cinema-text-secondary) !important;
+}
+
+.table-dark tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table-dark tbody tr:hover {
+    background-color: rgba(200, 169, 107, 0.1) !important;
+    border-color: var(--cinema-accent-gold) !important;
+}
+
+/* ============================================
+   9. GRID DE PELÍCULAS / TARJETAS
+   ============================================ */
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+    padding: var(--spacing-2xl) 0;
+}
+
+.movie-card {
+    position: relative;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: var(--cinema-surface-1) !important;
+    border: 1px solid var(--cinema-surface-2) !important;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    cursor: pointer;
+}
+
+.movie-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--cinema-accent-gold) !important;
+    box-shadow: var(--shadow-lg), var(--shadow-gold) !important;
+}
+
+.movie-card img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.movie-card:hover img {
+    transform: scale(1.05);
+}
+
+.movie-card-body {
+    padding: var(--spacing-lg);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.movie-card h3 {
+    margin-bottom: var(--spacing-sm);
+    color: var(--cinema-text-primary) !important;
+    font-size: 1.25rem;
+}
+
+.movie-card .rating {
+    color: var(--cinema-accent-gold);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+}
+
+.movie-card p {
+    color: var(--cinema-text-secondary);
+    font-size: 0.9rem;
+    flex: 1;
+    margin-bottom: var(--spacing-md);
+}
+
+.movie-card .btn {
+    align-self: flex-start;
+    margin-top: auto;
+}
+
+/* ============================================
+   10. FOOTER
+   ============================================ */
+
+footer {
+    background: linear-gradient(180deg, var(--cinema-surface-1) 0%, var(--cinema-dark) 100%) !important;
+    border-top: 1px solid var(--cinema-accent-gold) !important;
+    color: var(--cinema-text-secondary) !important;
+    padding: var(--spacing-2xl) 0 var(--spacing-lg) !important;
+    margin-top: auto;
+}
+
+footer h5 {
+    color: var(--cinema-accent-gold) !important;
+    margin-bottom: var(--spacing-lg);
+}
+
+footer a {
+    color: var(--cinema-text-secondary) !important;
+    transition: all 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--cinema-accent-gold) !important;
+}
+
+.footer-link-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* ============================================
+   11. SECCIONES DE CONTENIDO
+   ============================================ */
+
+.section {
+    padding: var(--spacing-2xl) 0;
+    background-color: var(--cinema-dark) !important;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    position: relative;
+    padding-bottom: var(--spacing-xl);
+    color: var(--cinema-text-primary) !important;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--cinema-accent-gold), transparent);
+    border-radius: 2px;
+}
+
+/* ============================================
+   12. MODAL
+   ============================================ */
+
+.modal-content {
+    background-color: var(--cinema-surface-1) !important;
+    border: 1px solid var(--cinema-accent-gold) !important;
+    color: var(--cinema-text-primary) !important;
+}
+
+.modal-header {
+    background-color: var(--cinema-surface-2) !important;
+    border-bottom-color: var(--cinema-accent-gold) !important;
+}
+
+.modal-header .btn-close {
+    background-color: var(--cinema-text-primary) !important;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+/* ============================================
+   13. UTILIDADES Y EFECTOS
+   ============================================ */
+
+.text-gold {
+    color: var(--cinema-accent-gold) !important;
+}
+
+.text-secondary {
+    color: var(--cinema-text-secondary) !important;
+}
+
+.text-light {
+    color: var(--cinema-text-primary) !important;
+}
+
+.text-muted {
+    color: var(--cinema-text-secondary) !important;
+}
+
+.bg-gradient-dark {
+    background: linear-gradient(135deg, var(--cinema-dark) 0%, var(--cinema-surface-1) 100%) !important;
+}
+
+.badge {
+    background-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-dark) !important;
+    font-weight: 600;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 20px;
+}
+
+.badge.badge-secondary {
+    background-color: var(--cinema-surface-2) !important;
+    color: var(--cinema-accent-gold) !important;
+    border: 1px solid var(--cinema-accent-gold) !important;
+}
+
+.badge.bg-dark {
+    background-color: var(--cinema-surface-2) !important;
+    color: var(--cinema-text-secondary) !important;
+}
+
+.border-top {
+    border-top-color: var(--cinema-accent-gold) !important;
+}
+
+.border-bottom {
+    border-bottom-color: var(--cinema-accent-gold) !important;
+}
+
+.border-secondary {
+    border-color: var(--cinema-surface-2) !important;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ============================================
+   14. RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .navbar {
+        min-height: auto;
+    }
+
+    .navbar-nav .nav-link {
+        padding: var(--spacing-md) var(--spacing-md) !important;
+    }
+
+    .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--spacing-lg);
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .section {
+        padding: var(--spacing-xl) 0;
+    }
+
+    .hero-content {
+        padding: var(--spacing-xl);
+    }
+}
+
+@media (max-width: 576px) {
+    .movie-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+
+    .btn {
+        width: 100% !important;
+        margin-bottom: var(--spacing-md);
+    }
+}
+
+/* ============================================
+   15. ACCESIBILIDAD Y CONTRASTE
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   16. PRINT STYLES
+   ============================================ */
+
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .navbar,
+    footer,
+    .btn {
+        display: none;
+    }
+}
+
+/* ============================================
+   17. HERO MOVIES SECTION (Netflix Style)
+   ============================================ */
+
+.hero-movies-container {
+    background: linear-gradient(135deg, var(--cinema-surface-2) 0%, var(--cinema-dark) 100%);
+    border-bottom: 1px solid var(--cinema-accent-gold);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg), var(--shadow-gold);
+}
+
+.hero-image-section {
+    position: relative;
+    overflow: hidden;
+    max-height: 500px;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.hero-movies-container:hover .hero-image {
+    transform: scale(1.05);
+}
+
+.hero-content-section {
+    background: linear-gradient(135deg, var(--cinema-surface-1) 0%, var(--cinema-surface-2) 100%);
+    display: flex;
+    align-items: center;
+    min-height: 400px;
+}
+
+.hero-content-section h1 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    margin-bottom: var(--spacing-lg);
+    color: var(--cinema-text-primary);
+}
+
+.hero-content-section .lead {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--cinema-text-secondary);
+}
+
+@media (max-width: 991px) {
+    .hero-image-section {
+        max-height: 300px;
+    }
+
+    .hero-content-section {
+        min-height: auto;
+        padding: 2rem 1.5rem !important;
+    }
+
+    .hero-content-section h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-movies-container {
+        border-radius: 0;
+    }
+
+    .hero-image-section {
+        max-height: 250px;
+    }
+
+    .hero-content-section {
+        min-height: auto;
+        padding: 1.5rem 1rem !important;
+    }
+
+    .hero-content-section h1 {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-content-section .lead {
+        font-size: 0.95rem;
+    }
 }
