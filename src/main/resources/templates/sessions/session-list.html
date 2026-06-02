@@ -1,90 +1,129 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{layout/head :: head('proyecciones')}"></head>
+<head th:replace="~{layout/head :: head('Proyecciones')}"></head>
+
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
-<div class="container">
-    <h1 class="mt-4">proyecciones</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a th:href="@{/}">Inicio</a></li>
-        <li class="breadcrumb-item active">proyecciones</li>
-    </ol>
-    <div class="card mb-4">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <i class="fa-solid fa-film me-1"></i>
-                    Listado de proyecciones
-                </div>
-                <div>
-                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/sessions/new}" class="btn btn-outline-primary">
-                        <i class="fa-solid fa-plus me-1"></i> Nueva proyección
-                    </a>
-                </div>
-            </div>
+
+<main class="container flex-grow-1 my-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-0">
+                <i class="fa-solid fa-film me-2 text-gold"></i>Proyecciones
+            </h1>
+            <p class="text-secondary mb-0">Gestión de sesiones de cine</p>
         </div>
 
-        <div class="card-body">
+        <div class="d-flex gap-2">
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/sessions/new}" class="btn btn-primary">
+                <i class="fa-solid fa-plus me-1"></i> Nueva proyección
+            </a>
+        </div>
+    </div>
+
+    <div sec:authorize="hasRole('ADMIN')" class="alert alert-info border mb-4">
+        <i class="fa-solid fa-info-circle me-2"></i>
+        <strong>Proyecciones:</strong> Visualiza, crea y edita las sesiones de películas.
+    </div>
+
+    <!-- TABLA -->
+    <div class="card mb-5">
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle table-bordered border-success">
-                    <thead class="table-dark">
-                    <tr>
-                        <th>Id</th>
-                        <th>
-                            <i class="fa-solid fa-calendar"></i>
-                            Fecha y hora
-                        </th>
-                        <th>
-                            <i class="fa-solid fa-euro"></i>
-                            Precio
-                        </th>
-                        <th>Película</th>
-                        <th sec:authorize="hasRole('ADMIN')">Acciones</th>
-                    </tr>
+                <table class="table table-dark mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col" width="8%">
+                                <i class="fa-solid fa-hashtag me-2"></i>ID
+                            </th>
+                            <th scope="col" width="20%">
+                                <i class="fa-solid fa-calendar me-2"></i>Fecha y hora
+                            </th>
+                            <th scope="col" width="15%">
+                                <i class="fa-solid fa-euro me-2"></i>Precio
+                            </th>
+                            <th scope="col" width="30%">
+                                <i class="fa-solid fa-film me-2"></i>Película
+                            </th>
+                            <th scope="col" width="27%" class="text-end">
+                                <i class="fa-solid fa-sliders me-2"></i>Acciones
+                            </th>
+                        </tr>
                     </thead>
-
                     <tbody>
-                    <!-- Fila para el caso "sin proyecciones" -->
-                    <tr th:if="${#lists.isEmpty(proyecciones)}">
-                        <td colspan="5" class="text-center text-muted">No hay proyecciones disponibles.</td>
-                    </tr>
+                        <tr th:if="${#lists.isEmpty(proyecciones)}">
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="fa-solid fa-inbox me-2"></i>
+                                No hay proyecciones disponibles.
+                            </td>
+                        </tr>
 
-                    <!-- Filas normales -->
-                    <tr th:each="proyeccion : ${proyecciones}">
-                        <td th:text="${proyeccion.id}"></td>
-                        <td class="fw-semibold"
-                            th:text="${proyeccion.startTime != null ? #temporals.format(proyeccion.startTime, 'dd/MM/yy HH:mm') : '—'}">
-                        </td>
-                        <td class="text-muted small"
-                            th:text="${proyeccion.price != null ? #numbers.formatDecimal(proyeccion.price, 1, 2) + ' €' : '-'}">
-                        </td>
-                        <td th:text="${proyeccion.movie?.title ?: '—'}"></td>
+                        <tr th:each="proyeccion : ${proyecciones}">
+                            <th scope="row" class="align-middle">
+                                <span class="badge bg-primary" th:text="${proyeccion.id}">1</span>
+                            </th>
+                            <td class="align-middle fw-semibold"
+                                th:text="${proyeccion.startTime != null ? #temporals.format(proyeccion.startTime, 'dd/MM/yy HH:mm') : '—'}">
+                                01/06/26 20:00
+                            </td>
+                            <td class="align-middle">
+                                <span class="badge badge-secondary">
+                                    <i class="fa-solid fa-euro me-1"></i>
+                                    <span th:text="${proyeccion.price != null ? #numbers.formatDecimal(proyeccion.price, 1, 2) : '-'}">0.00</span>
+                                </span>
+                            </td>
+                            <td class="align-middle text-secondary" th:text="${proyeccion.movie?.title ?: '—'}">
+                                —
+                            </td>
+                            <td class="align-middle text-end">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/sessions/{id}(id=${proyeccion.id})}"
+                                       class="btn btn-outline-light"
+                                       title="Ver detalles"
+                                       data-bs-toggle="tooltip">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
 
-                        <td sec:authorize="hasRole('ADMIN')">
-                            <a th:href="@{/sessions/{id}(id=${proyeccion.id})}"
-                               class="btn btn-sm btn-outline-primary">
-                                <i class="fa-regular fa-eye me-1"></i> Ver
-                            </a>
-                            <a th:href="@{/sessions/edit/{id}(id=${proyeccion.id})}"
-                               class="btn btn-sm btn-outline-success">
-                                <i class="fa-solid fa-pencil me-1"></i> Editar
-                            </a>
-                            <a th:href="@{/sessions/delete/{id}(id=${proyeccion.id})}"
-                               class="btn btn-sm btn-outline-danger"
-                               onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
-                                <i class="fa-solid fa-trash me-1"></i> Eliminar
-                            </a>
-                        </td>
-                    </tr>
+                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/sessions/edit/{id}(id=${proyeccion.id})}"
+                                       class="btn btn-primary"
+                                       title="Editar proyección"
+                                       data-bs-toggle="tooltip">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </a>
+
+                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/sessions/delete/{id}(id=${proyeccion.id})}"
+                                       class="btn btn-danger"
+                                       title="Eliminar proyección"
+                                       data-bs-toggle="tooltip"
+                                       onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- Footer con contador -->
+        <div class="card-footer bg-transparent border-top border-secondary d-flex justify-content-between align-items-center">
+            <span class="text-muted small">Total de proyecciones</span>
+            <span class="badge badge-secondary fs-6" th:text="|${#lists.size(proyecciones)} resultados|">0 resultados</span>
+        </div>
     </div>
-</div>
+
+</main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
-
+<script>
+    // Inicializar tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
 </body>
 </html>

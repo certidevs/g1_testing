@@ -1,31 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/head :: head('formulario de proyección')}"></head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/head :: head('Formulario de Proyección')}"></head>
+
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
-<main class="container my-5">
-    <a th:href="@{/sessions}" class="text-decoration-none mb-3 d-inline-block">&larr; Volver a proyecciones</a>
+<main class="container flex-grow-1 my-4" th:with="isEdit=${proyeccion.id != null}">
 
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">
-                <span th:if="${proyeccion.id == null}">Nueva proyección</span>
-                <span th:unless="${proyeccion.id == null}">Editar proyección #<span th:text="${proyeccion.id}"></span></span>
-            </h3>
-        </div>
+    <div class="mb-4">
+        <h1 th:text="${isEdit ? 'Editar proyección' : 'Crear nueva proyección'}">Formulario de Proyección</h1>
+        <p class="text-secondary mb-0" th:text="${isEdit ? 'Actualiza los detalles de la proyección' : 'Rellena los datos para crear una nueva proyección'}"></p>
+    </div>
+
+    <div class="card mb-5">
         <div class="card-body">
-            <!-- Formulario -->
             <form th:action="@{/sessions}" th:object="${proyeccion}" method="POST">
 
                 <!-- ID oculto si es edición -->
-                <input type="hidden" th:if="${proyeccion.id != null}" th:field="*{id}">
+                <input type="hidden" th:if="${isEdit}" th:field="*{id}">
 
                 <!-- Fila 1: Película y Sala -->
-                <div class="row mb-3">
+                <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label for="movie" class="form-label">
-                            <i class="fa-solid fa-film me-1"></i> Película <span class="text-danger">*</span>
+                            <i class="fa-solid fa-film me-2 text-gold"></i>Película <span class="text-danger">*</span>
                         </label>
                         <select id="movie" th:field="*{movie}" class="form-select" required>
                             <option value="">-- Selecciona una película --</option>
@@ -36,9 +34,10 @@
                             </option>
                         </select>
                     </div>
+
                     <div class="col-md-6">
                         <label for="room" class="form-label">
-                            <i class="fa-solid fa-door-open me-1"></i> Sala <span class="text-danger">*</span>
+                            <i class="fa-solid fa-door-open me-2 text-gold"></i>Sala <span class="text-danger">*</span>
                         </label>
                         <select id="room" th:field="*{room}" class="form-select" required>
                             <option value="">-- Selecciona una sala --</option>
@@ -52,16 +51,17 @@
                 </div>
 
                 <!-- Fila 2: Fecha/Hora y Precio -->
-                <div class="row mb-3">
+                <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label for="startTime" class="form-label">
-                            <i class="fa-solid fa-calendar me-1"></i> Fecha y Hora <span class="text-danger">*</span>
+                            <i class="fa-solid fa-calendar me-2 text-gold"></i>Fecha y Hora <span class="text-danger">*</span>
                         </label>
                         <input type="datetime-local" id="startTime" th:field="*{startTime}" class="form-control" required>
                     </div>
+
                     <div class="col-md-6">
                         <label for="price" class="form-label">
-                            <i class="fa-solid fa-euro me-1"></i> Precio €<span class="text-danger">*</span>
+                            <i class="fa-solid fa-euro me-2 text-gold"></i>Precio € <span class="text-danger">*</span>
                         </label>
                         <input type="number" id="price" th:field="*{price}" class="form-control"
                                min="0" step="0.01" placeholder="12.50" required>
@@ -69,10 +69,10 @@
                 </div>
 
                 <!-- Fila 3: Idioma y Duración de anuncios -->
-                <div class="row mb-3">
+                <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label for="language" class="form-label">
-                            <i class="fa-solid fa-language me-1"></i> Idioma
+                            <i class="fa-solid fa-language me-2 text-gold"></i>Idioma
                         </label>
                         <select id="language" th:field="*{language}" class="form-select">
                             <option value="">-- Selecciona idioma --</option>
@@ -81,9 +81,10 @@
                             <option value="Doblada" th:selected="${proyeccion.language == 'Doblada'}">Doblada</option>
                         </select>
                     </div>
+
                     <div class="col-md-6">
                         <label for="adMinutes" class="form-label">
-                            <i class="fa-solid fa-hourglass-end me-1"></i> Duración anuncios (min)
+                            <i class="fa-solid fa-hourglass-end me-2 text-gold"></i>Duración anuncios (min)
                         </label>
                         <input type="number" id="adMinutes" th:field="*{adMinutes}" class="form-control"
                                min="0" placeholder="15">
@@ -91,19 +92,20 @@
                 </div>
 
                 <!-- Botones de acción -->
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-success me-2">
-                        <i class="fa-solid fa-check me-1"></i>
-                        <span th:if="${proyeccion.id == null}">Crear proyección</span>
-                        <span th:unless="${proyeccion.id == null}">Guardar cambios</span>
-                    </button>
+                <div class="d-flex gap-2 justify-content-end mt-5">
                     <a th:href="@{/sessions}" class="btn btn-secondary">
-                        <i class="fa-solid fa-xmark me-1"></i> Cancelar
+                        <i class="fa-solid fa-arrow-left me-1"></i> Volver
                     </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check me-1"></i>
+                        <span th:if="${!isEdit}">Crear proyección</span>
+                        <span th:if="${isEdit}">Guardar cambios</span>
+                    </button>
                 </div>
             </form>
         </div>
     </div>
+
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>

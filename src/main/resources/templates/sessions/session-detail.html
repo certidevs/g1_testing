@@ -1,106 +1,210 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/head :: head('detalle de la proyeccion')}">
-    <meta charset="UTF-8">
-    <title>proyeccion</title>
-</head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/head :: head('Detalle de Proyección')}"></head>
+
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
-<h1 class="mt-4" th:text="${proyeccion.movie != null ? proyeccion.movie.title : 'Proyección #' + proyeccion.id}"></h1>
-<main class="container my-5">
-    <a th:href="@{/sessions}" class="text-decoration-none mb-3 d-inline-block">&larr; Volver a proyecciones</a>
-    <div class="card shadow-sm">
-        <div class="row g-0">
-            <div class="col-md-4" th:if="${proyeccion.movie != null}">
-                <img th:src="${proyeccion.movie.imageUrl}" class="img-fluid" alt="Poster" style="object-fit:cover; width:100%; height:100%;">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h1 class="h3 mb-2" th:text="${proyeccion.movie != null ? proyeccion.movie.title : 'Proyección #' + proyeccion.id}">Título</h1>
-                    <p class="text-muted mb-1" th:if="${proyeccion.movie != null}" th:text="${proyeccion.movie.genre}">Género</p>
-                    <div class="row g-3 my-3">
-                        <div class="col-sm-4">
-                            <p class="text-muted small mb-0">Fecha</p>
-                            <p class="fs-6" th:text="${#temporals.format(proyeccion.startTime, 'dd/MM/yyyy')}">01/01/2026</p>
-                        </div>
-                        <div class="col-sm-4">
-                            <p class="text-muted small mb-0">Hora</p>
-                            <p class="fs-6" th:text="${#temporals.format(proyeccion.startTime, 'HH:mm')}">20:00</p>
-                        </div>
-                        <div class="col-sm-4">
-                            <p class="text-muted small mb-0">Precio</p>
-                            <p class="fs-6" th:text="${#numbers.formatCurrency(proyeccion.price)}">10.00€</p>
-                        </div>
+
+<main class="container flex-grow-1 my-4">
+
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h1 class="mb-0" th:text="${proyeccion.movie != null ? proyeccion.movie.title : 'Proyección #' + proyeccion.id}">
+                Proyección
+            </h1>
+            <small class="text-muted">Detalle de la sesión</small>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a th:href="@{/sessions}" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-left me-1"></i> Volver
+            </a>
+            <a th:href="@{/sessions/edit/{id}(id=${proyeccion.id})}" class="btn btn-primary">
+                <i class="fa-solid fa-pencil me-1"></i> Editar
+            </a>
+            <a th:href="@{/sessions/delete/{id}(id=${proyeccion.id})}" class="btn btn-danger"
+               onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
+                <i class="fa-solid fa-trash me-1"></i> Eliminar
+            </a>
+        </div>
+    </div>
+
+    <!-- HERO DETAIL CARD -->
+    <div class="card movie-card mb-5">
+        <div class="card-body p-0">
+            <div class="row g-0">
+                <!-- Imagen lado izquierdo -->
+                <div class="col-lg-4 col-md-12 p-4 p-lg-5" th:if="${proyeccion.movie != null}">
+                    <img th:src="${proyeccion.movie.imageUrl}" alt="Carátula de película" class="img-fluid rounded">
+                </div>
+
+                <!-- Contenido lado derecho -->
+                <div class="col-lg-8 col-md-12 p-4 p-lg-5">
+                    <h2 class="mb-3" th:text="${proyeccion.movie != null ? proyeccion.movie.title : 'Proyección #' + proyeccion.id}">
+                        Título
+                    </h2>
+
+                    <!-- Badges informativos -->
+                    <div class="mb-4 d-flex flex-wrap gap-2">
+                        <span class="badge badge-secondary" th:if="${proyeccion.movie != null}">
+                            <i class="fa-solid fa-masks-theater me-1"></i>
+                            <span th:text="${proyeccion.movie.genre}">Género</span>
+                        </span>
+                        <span class="badge badge-secondary">
+                            <i class="fa-solid fa-calendar me-1"></i>
+                            <span th:text="${#temporals.format(proyeccion.startTime, 'dd/MM/yyyy')}">Fecha</span>
+                        </span>
+                        <span class="badge badge-secondary">
+                            <i class="fa-solid fa-clock me-1"></i>
+                            <span th:text="${#temporals.format(proyeccion.startTime, 'HH:mm')}">20:00</span>
+                        </span>
                     </div>
-                    <div class="row g-3">
-                        <div class="col-sm-4">
-                            <p class="text-muted small mb-0">Sala</p>
-                            <p class="fs-6" th:text="${proyeccion.room != null ? proyeccion.room.name : 'Sin sala asignada'}">Sala 1</p>
+
+                    <!-- Información en grid -->
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h5 class="text-gold mb-3">
+                                <i class="fa-solid fa-euro me-2"></i>Precio
+                            </h5>
+                            <p class="h4 mb-0 text-secondary" th:text="${proyeccion.price != null ? #numbers.formatDecimal(proyeccion.price, 1, 2) + ' €' : '-'}">
+                                0.00€
+                            </p>
                         </div>
-                        <div class="col-sm-4">
-                            <p class="text-muted small mb-0">Capacidad</p>
-                            <p class="fs-6" th:text="${proyeccion.room != null ? proyeccion.room.capacity : '-'}">120</p>
+
+                        <div class="col-md-6">
+                            <h5 class="text-gold mb-3">
+                                <i class="fa-solid fa-door-open me-2"></i>Sala
+                            </h5>
+                            <p class="h4 mb-0 text-secondary" th:text="${proyeccion.room != null ? proyeccion.room.name : 'Sin sala'}">
+                                Sala
+                            </p>
                         </div>
-                        <div class="col-sm-4">
-                            <p class="text-muted small mb-0">Tipo</p>
-                            <p class="fs-6" th:text="${proyeccion.room != null ? proyeccion.room.screenType : '-'}">STANDARD</p>
+
+                        <div class="col-md-6" th:if="${proyeccion.room != null}">
+                            <h5 class="text-gold mb-3">
+                                <i class="fa-solid fa-people-group me-2"></i>Capacidad
+                            </h5>
+                            <p class="text-secondary">
+                                <span class="badge badge-secondary">
+                                    <span th:text="${proyeccion.room.capacity}">0</span> personas
+                                </span>
+                            </p>
                         </div>
-                    </div>
-                    <div class="mt-3">
-                        <p class="text-muted small mb-0">Idioma</p>
-                        <p th:text="${proyeccion.language != null ? proyeccion.language : '—'}">VO</p>
-                        <p class="text-muted small mb-0">Duración anuncios (min)</p>
-                        <p th:text="${proyeccion.adMinutes != null ? proyeccion.adMinutes : '0'}">10</p>
-                    </div>
-                    <div class="mt-3">
-                        <!-- Tickets disponibles -->
-                        <div class="mt-3">
-                            <div th:if="${#lists.isEmpty(tickets)}" class="alert alert-info">
-                                No hay tickets disponibles.
-                            </div>
-                            <div th:if="${!#lists.isEmpty(tickets)}">
-                                <p class="text-muted small mb-0">Tickets Disponibles</p>
-                                <table class="cinema">
-                                    <!-- numeros en las columnas -->
-                                    <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th th:each="i : ${#numbers.sequence(1, seatsPerRow)}"
-                                            th:text="${i}"></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="ticket, stat : ${tickets}"
-                                        th:if="${stat.index == 0 or ticket.row != tickets[stat.index - 1].row}">
-                                        <!-- letras en las filas -->
-                                        <td class="row-label" th:text="${ticket.row}"></td>
-                                        <!-- ASIENTOS DE ESA FILA -->
-                                        <td th:each="t : ${tickets}"
-                                            th:if="${t.row == ticket.row}">
-                                            <a th:if="${t.status.name() != 'PAGADO'}"
-                                               th:href="@{/tickets/buy/{id}(id=${t.id})}">
-                                                <i class="fa-solid fa-couch text-primary"></i>
-                                            </a>
-                                            <span th:if="${t.status.name() == 'PAGADO'}">
-     <i class="fa-solid fa-couch text-danger"></i>
-     </span>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+
+                        <div class="col-md-6" th:if="${proyeccion.room != null}">
+                            <h5 class="text-gold mb-3">
+                                <i class="fa-solid fa-film me-2"></i>Tipo de pantalla
+                            </h5>
+                            <p class="text-secondary">
+                                <span class="badge badge-secondary" th:text="${proyeccion.room.screenType}">STANDARD</span>
+                            </p>
                         </div>
-                    </div>
-                    <div class="mt-4">
-                        <a th:href="@{/sessions/edit/{id}(id=${proyeccion.id})}" class="btn btn-outline-primary me-2">Editar</a>
-                        <a th:href="@{/sessions}" class="btn btn-secondary">Volver</a>
+
+                        <div class="col-md-6">
+                            <h5 class="text-gold mb-3">
+                                <i class="fa-solid fa-language me-2"></i>Idioma
+                            </h5>
+                            <p class="text-secondary" th:text="${proyeccion.language != null ? proyeccion.language : 'No especificado'}">
+                                VO
+                            </p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5 class="text-gold mb-3">
+                                <i class="fa-solid fa-hourglass-end me-2"></i>Duración anuncios
+                            </h5>
+                            <p class="text-secondary" th:text="${proyeccion.adMinutes != null ? proyeccion.adMinutes + ' min' : '0 min'}">
+                                0 min
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- TICKETS / ASIENTOS -->
+    <div class="card mb-5" th:if="${!#lists.isEmpty(tickets)}">
+        <div class="card-body">
+            <h5 class="text-gold mb-4">
+                <i class="fa-solid fa-chair me-2"></i>Mapa de asientos
+            </h5>
+
+            <div class="table-responsive">
+                <table class="cinema-seats text-center">
+                    <!-- Números en las columnas -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th th:each="i : ${#numbers.sequence(1, seatsPerRow)}"
+                                th:text="${i}" class="text-muted small"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ticket, stat : ${tickets}"
+                            th:if="${stat.index == 0 or ticket.row != tickets[stat.index - 1].row}">
+                            <!-- Letras en las filas -->
+                            <td class="row-label fw-bold text-gold" th:text="${ticket.row}"></td>
+                            <!-- ASIENTOS DE ESA FILA -->
+                            <td th:each="t : ${tickets}"
+                                th:if="${t.row == ticket.row}"
+                                class="p-2">
+                                <a th:if="${t.status.name() != 'PAGADO'}"
+                                   th:href="@{/tickets/buy/{id}(id=${t.id})}"
+                                   class="btn btn-sm btn-outline-light"
+                                   title="Comprar entrada">
+                                    <i class="fa-solid fa-chair"></i>
+                                </a>
+                                <span th:if="${t.status.name() == 'PAGADO'}"
+                                      class="btn btn-sm btn-danger disabled"
+                                      title="Asiento ocupado">
+                                    <i class="fa-solid fa-chair"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-3 d-flex justify-content-center gap-4">
+                <div>
+                    <span class="badge bg-primary me-2"></span>
+                    <small class="text-muted">Disponible</small>
+                </div>
+                <div>
+                    <span class="badge bg-danger me-2"></span>
+                    <small class="text-muted">Ocupado</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info border" th:if="${#lists.isEmpty(tickets)}">
+        <i class="fa-solid fa-info-circle me-2"></i>
+        No hay entradas generadas para esta proyección.
+    </div>
+
 </main>
+
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
+
+<style>
+    .cinema-seats {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .cinema-seats th,
+    .cinema-seats td {
+        padding: 0.5rem;
+        border: none;
+    }
+
+    .cinema-seats .row-label {
+        min-width: 40px;
+        text-align: center;
+    }
+</style>
 </body>
 </html>
