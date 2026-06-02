@@ -28,6 +28,9 @@ public class Ticket {
 
     private Double price;
 
+    @Column
+    private Double snackPrice;
+
     @Builder.Default
     private Double foodPrice = 0.0;
 

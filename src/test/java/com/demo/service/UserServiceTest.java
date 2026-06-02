@@ -170,7 +170,7 @@ public class UserServiceTest {
         assertFalse(details.getAuthorities().isEmpty());
         assertTrue(details.getAuthorities().stream()
                 .anyMatch(a -> a != null && a.getAuthority() != null &&
-                         a.getAuthority().equals(Role.ROLE_USER.name())));
+                        a.getAuthority().equals(Role.ROLE_USER.name())));
 
         verify(userRepository, times(1)).findByUsername("alice");
         verifyNoMoreInteractions(userRepository);

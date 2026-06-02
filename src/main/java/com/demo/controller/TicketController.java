@@ -12,9 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -89,6 +87,18 @@ public class TicketController {
         ticketService.save(ticket);
         return "redirect:/tickets/" + ticket.getId();
 
+    }
+
+    @PostMapping("/tickets/{id}/snack")
+    public String addSnackToTicket(@PathVariable Long id, @RequestParam Double snackPrice) {
+        Ticket ticket = ticketService.findById(id).orElseThrow();
+
+        // Acumular el precio del snack
+        Double currentSnackPrice = ticket.getSnackPrice() != null ? ticket.getSnackPrice() : 0.0;
+        ticket.setSnackPrice(currentSnackPrice + snackPrice);
+
+        ticketService.save(ticket);
+        return "redirect:/tickets/" + id;
     }
 
 

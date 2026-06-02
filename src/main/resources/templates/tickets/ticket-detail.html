@@ -64,7 +64,95 @@
                                     </div>
                                     <div class="text-end">
                                         <p class="text-muted small mb-0">Precio Total</p>
-                                        <p class="mb-0 fw-bold fs-4 text-dark" th:text="${#numbers.formatCurrency(ticket.price)}">10.00€</p>
+                                        <p class="mb-0 fw-bold fs-4 text-dark"
+                                           th:text="${#numbers.formatCurrency(ticket.price + (ticket.snackPrice != null ? ticket.snackPrice : 0))}">
+                                           10.00€
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div th:if="${ticket.status.name() == 'PAGADO'}" class="mt-5">
+                                <h4 class="mb-4">¿Quieres añadir algo de picar?</h4>
+
+
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card h-100 text-center">
+                                            <div class="card-body">
+                                                <h6 class="card-title">🍿 Palomitas medianas</h6>
+                                                <p class="text-muted mb-3">4,50 €</p>
+                                                <form th:action="@{/tickets/{id}/snack(id=${ticket.id})}" method="POST">
+                                                    <input type="hidden" name="snackPrice" value="4.50">
+                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Añadir</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card h-100 text-center">
+                                            <div class="card-body">
+                                                <h6 class="card-title">🥤 Refresco</h6>
+                                                <p class="text-muted mb-3">3,00 €</p>
+                                                <form th:action="@{/tickets/{id}/snack(id=${ticket.id})}" method="POST">
+                                                    <input type="hidden" name="snackPrice" value="3.00">
+                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Añadir</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card h-100 text-center">
+                                            <div class="card-body">
+                                                <h6 class="card-title">🍿 Palomitas grandes</h6>
+                                                <p class="text-muted mb-3">6,00 €</p>
+                                                <form th:action="@{/tickets/{id}/snack(id=${ticket.id})}" method="POST">
+                                                    <input type="hidden" name="snackPrice" value="6.00">
+                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Añadir</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card h-100 text-center">
+                                            <div class="card-body">
+                                                <h6 class="card-title">🍿🥤 Pack duo</h6>
+                                                <p class="text-muted mb-3">8,50 €</p>
+                                                <form th:action="@{/tickets/{id}/snack(id=${ticket.id})}" method="POST">
+                                                    <input type="hidden" name="snackPrice" value="8.50">
+                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Añadir</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card h-100 text-center">
+                                            <div class="card-body">
+                                                <h6 class="card-title">👨‍👩‍👧‍👦 Combo familiar</h6>
+                                                <p class="text-muted mb-3">14,00 €</p>
+                                                <form th:action="@{/tickets/{id}/snack(id=${ticket.id})}" method="POST">
+                                                    <input type="hidden" name="snackPrice" value="14.00">
+                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Añadir</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card h-100 text-center">
+                                            <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 120px;">
+                                                <a th:href="@{/tickets}" class="btn btn-secondary w-100">No, gracias</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
