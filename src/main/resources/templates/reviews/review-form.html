@@ -5,11 +5,11 @@
 
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
-<main class="container flex-grow-1 my-4">
+<main class="container flex-grow-1 my-4" style="max-width: 680px">
 
     <h1 class="mb-4">
         <i class="fa-regular fa-comments text-primary me-2"></i>
-        <span th:text="${review.id != null ? 'Editar reseña' : 'Nueva reseña'}">Formulario de reseña</span>
+        <span th:text="${review.id != null ? 'Editar reseña' : 'Nueva reseña'}"></span>
     </h1>
 
     <!-- Aviso de peli asociada -->
@@ -18,9 +18,9 @@
         Reseña sobre: <strong th:text="${review.movie.title}"></strong>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <form th:action="@{/reviews}" method="post" th:object="${review}">
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+            <form th:action="@{/reviews}" method="post" th:object="${review}" id="reviewForm">
 
                 <!--ID para edicion -->
                 <input type="hidden" th:field="*{id}">
@@ -29,49 +29,137 @@
                 <input type="hidden" name="movieId"
                        th:value="${review.movie != null ? review.movie.id : ''}">
 
+                <!-- Valor numérico real que se envía al controller -->
+                <input type="hidden" id="ratingHidden" name="rating"
+                       th:value="${review.rating != null ? review.rating : 0}">
+
                 <div class="mb-3">
-                    <label for="title" class="form-label">Título <span class="text-danger">*</span></label>
+                    <label for="title" class="form-label fw-semibold">
+                        Título <span class="text-danger">*</span>
+                    </label>
                     <input id="title" type="text" class="form-control"
                            th:field="*{title}" required maxlength="255"
                            placeholder="Escribe un título para tu reseña">
                 </div>
 
-                <div class="mb-3">
-                    <label for="description" class="form-label">Descripción <span class="text-danger">*</span></label>
+                <div class="mb-4">
+                    <label for="description" class="form-label fw-semibold">
+                        Descripción <span class="text-danger">*</span>
+                    </label>
                     <textarea id="description" class="form-control" rows="5"
                               th:field="*{description}" required maxlength="1000"
                               placeholder="Cuéntanos qué te ha parecido la película..."></textarea>
                 </div>
 
+                <!--Estrellaaaaas -->
                 <div class="mb-4">
-                    <label for="rating" class="form-label">Puntuación (1 – 5) <span class="text-danger">*</span></label>
-                    <input type="number" id="rating" class="form-control"
-                           th:field="*{rating}" min="1" max="5" required style="max-width: 120px;">
+                    <label class="form-label fw-semibold d-block">
+                        Puntuación <span class="text-danger">*</span>
+                    </label>
+
+                    <div class="star-rating d-flex gap-1" id="starRating">
+                        <i class="fa-regular fa-star" data-value="1"></i>
+                        <i class="fa-regular fa-star" data-value="2"></i>
+                        <i class="fa-regular fa-star" data-value="3"></i>
+                        <i class="fa-regular fa-star" data-value="4"></i>
+                        <i class="fa-regular fa-star" data-value="5"></i>
+                    </div>
+
+                    <small class="text-muted mt-1 d-block" id="ratingText">Selecciona una puntuación</small>
+                    <div class="text-danger small mt-1" id="ratingError" style="display:none">
+                        <i class="fa-solid fa-circle-exclamation me-1"></i>Por favor selecciona una puntuación.
+                    </div>
                 </div>
 
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-success">
                         <i class="fa-solid fa-floppy-disk me-1"></i> Guardar
                     </button>
-                    <a th:if="${review.movie != null}"
-                       class="btn btn-secondary"
-                       th:href="@{/movies/{id}(id=${review.movie.id})}">
-                        Cancelar
-                    </a>
-                    <a th:if="${review.movie == null}"
-                       class="btn btn-secondary"
-                       th:href="@{/reviews}">
-                        Cancelar
-                    </a>
+                    <a th:if="${review.movie != null}" class="btn btn-secondary"
+                       th:href="@{/movies/{id}(id=${review.movie.id})}">Cancelar</a>
+                    <a th:if="${review.movie == null}" class="btn btn-secondary"
+                       th:href="@{/reviews}">Cancelar</a>
                 </div>
 
             </form>
         </div>
     </div>
-
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
+<style>
+    .star-rating i {
+        font-size: 1.5rem;
+        color: #ccc;
+        cursor: pointer;
+        transition: color 0.1s, transform 0.1s;
+    }
+    .star-rating i.filled   { color: #f5a623; }
+    .star-rating i:hover    { transform: scale(1.2); }
+</style>
 <script th:replace="~{layout/footer :: scripts}"></script>
+
+
+
+<script>
+    const stars      = document.querySelectorAll('#starRating i');
+    const hidden     = document.getElementById('ratingHidden');
+    const ratingText = document.getElementById('ratingText');
+    const ratingError= document.getElementById('ratingError');
+
+    const labels = ['', 'Muy mala', 'Floja', 'Está bien', 'Muy buena', 'Maravillosa'];
+
+    let selected = parseInt(hidden.value) || 0;
+
+    function paintStars(upTo) {
+        stars.forEach((s, i) => {
+            if (i < upTo) {
+                s.classList.replace('fa-regular', 'fa-solid');
+                s.classList.add('filled');
+            } else {
+                s.classList.replace('fa-solid', 'fa-regular');
+                s.classList.remove('filled');
+            }
+        });
+    }
+
+    // Pintar estado inicial si venimos de edición
+    paintStars(selected);
+    if (selected > 0) ratingText.textContent = selected + ' / 5 — ' + labels[selected];
+
+    stars.forEach(star => {
+        const val = parseInt(star.dataset.value);
+
+        // Hover: iluminar hasta aquí
+        star.addEventListener('mouseenter', () => {
+            paintStars(val);
+            ratingText.textContent = val + ' / 5 — ' + labels[val];
+        });
+
+        // Al salir: volver a la selección fija
+        star.addEventListener('mouseleave', () => {
+            paintStars(selected);
+            ratingText.textContent = selected > 0
+                ? selected + ' / 5 — ' + labels[selected]
+                : 'Selecciona una puntuación';
+        });
+
+        // Click: fijar selección
+        star.addEventListener('click', () => {
+            selected = val;
+            hidden.value = val;
+            ratingError.style.display = 'none';
+        });
+    });
+
+    // Validación al enviar
+    document.getElementById('reviewForm').addEventListener('submit', e => {
+        if (selected < 1) {
+            e.preventDefault();
+            ratingError.style.display = 'block';
+        }
+    });
+</script>
+
 </body>
 </html>
