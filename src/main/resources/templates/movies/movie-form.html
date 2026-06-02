@@ -3,113 +3,126 @@
 
 <head th:replace="~{layout/head :: head('Formulario Pelicula')}"></head>
 
-<body class="d-flex flex-column min-vh-100 bg-light">
+<body class="d-flex flex-column min-vh-100">
 
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
 <main class="container flex-grow-1 my-4" th:with="isEdit=${movie.id != null}">
 
-    <h1 class="mb-3" th:text="${isEdit ? 'Editar esta película' : 'Crear una película'}">
-        <i class="fa-solid fa-plus"></i> Formulario para crear una pelicula
-    </h1>
+    <div class="mb-5">
+        <h1 class="mb-2" th:text="${isEdit ? 'Editar película' : 'Crear nueva película'}">
+            <i class="fa-solid fa-plus"></i> Formulario para crear una película
+        </h1>
+        <p class="text-secondary" th:text="${isEdit ? 'Actualiza los detalles de la película' : 'Completa los siguientes datos para agregar una nueva película al catálogo'}"></p>
+    </div>
 
     <!-- Formulario para crear una PELICULA-->
-   <form th:action="@{/movies}" method="post" th:object="${movie}" enctype="multipart/form-data">
+    <div class="card mb-5">
+        <div class="card-body p-4 p-lg-5">
+            <form th:action="@{/movies}" method="post" th:object="${movie}" enctype="multipart/form-data">
 
-       <div class="mb-3" th:if="${isEdit}">
-           <label class="form-label" for="id">Identificador</label>
-           <input type="hidden" th:field="*{id}">
-           <input type="text" class="form-control" id="id" th:value="*{id}" disabled>
-       </div>
+                <!-- ID (oculto en crear, mostrado en editar) -->
+                <div class="mb-4" th:if="${isEdit}">
+                    <label class="form-label" for="id">Identificador</label>
+                    <input type="hidden" th:field="*{id}">
+                    <input type="text" class="form-control" id="id" th:value="*{id}" disabled>
+                </div>
 
+                <!-- Título -->
+                <div class="mb-4">
+                    <label for="title" class="form-label">
+                        <i class="fa-solid fa-film me-2 text-gold"></i>Título
+                    </label>
+                    <input type="text" class="form-control" id="title"
+                           th:field="*{title}" placeholder="ej: Harry Potter y la piedra filosofal" required>
+                </div>
 
-       <div class="mb-3">
-           <label for="title" class="form-label">Titulo</label>
-           <input type="text" class="form-control" id="title"
-           th:field="*{title}" placeholder="Harry Potter y la piedra filosofal..." required>
-       </div>
+                <!-- Director -->
+                <div class="mb-4">
+                    <label for="director" class="form-label">
+                        <i class="fa-solid fa-person me-2 text-gold"></i>Director
+                    </label>
+                    <input type="text" class="form-control" id="director"
+                           th:field="*{director}" placeholder="ej: Chris Columbus" required>
+                </div>
 
-       <div class="mb-3">
-           <label for="director" class="form-label">Director</label>
-           <input type="text" class="form-control" id="director"
-                  th:field="*{director}" placeholder="Chris Columbus" required>
-       </div>
+                <!-- Fila: Género, Año, Duración, Activa -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <label for="genre" class="form-label">
+                            <i class="fa-solid fa-masks-theater me-2 text-gold"></i>Género
+                        </label>
+                        <input type="text" class="form-control" id="genre"
+                               th:field="*{genre}" placeholder="ej: Fantasía">
+                    </div>
 
-<!--       <div class="mb-3">-->
-<!--           <label for="imageUrl" class="form-label">URL imagen</label>-->
-<!--           <input type="text" class="form-control" id="imageUrl"-->
-<!--                  th:field="*{imageUrl}" placeholder="https://m.media-amazon.com/......">-->
-<!--       </div>-->
+                    <div class="col-md-3">
+                        <label for="releaseYear" class="form-label">
+                            <i class="fa-solid fa-calendar me-2 text-gold"></i>Año de lanzamiento
+                        </label>
+                        <input type="number" class="form-control" id="releaseYear"
+                               th:field="*{releaseYear}" step="1" min="1888" placeholder="2001">
+                    </div>
 
-       <div class="d-flex flex-column container mb-3">
+                    <div class="col-md-3">
+                        <label for="durationMinutes" class="form-label">
+                            <i class="fa-solid fa-clock me-2 text-gold"></i>Duración (minutos)
+                        </label>
+                        <input type="number" class="form-control" id="durationMinutes"
+                               th:field="*{durationMinutes}" step="1" min="60" placeholder="120">
+                    </div>
 
-           <div class="row">
-               <div class="col-md-3 mb-3">
-                   <label for="genre" class="form-label" >Género</label>
-                   <input type="text" class="form-control" id="genre"
-                          th:field="*{genre}" placeholder="Fantasía para adolescentes">
-               </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <div class="form-check form-switch w-100">
+                            <input type="checkbox" class="form-check-input" id="active"
+                                   role="switch" th:field="*{active}">
+                            <label class="form-check-label" for="active">Película activa</label>
+                        </div>
+                    </div>
+                </div>
 
-               <div class="col-md-3 mb-3" >
-                   <label for="releaseYear" class="form-label">Año de lanzamiento</label>
-                   <input type="number" class="form-control" id="releaseYear"
-                          th:field="*{releaseYear}" step="1" min="1888" placeholder="1990 A.C...">
-               </div>
+                <!-- Sinopsis -->
+                <div class="mb-4">
+                    <label for="sinopsis" class="form-label">
+                        <i class="fa-solid fa-align-left me-2 text-gold"></i>Sinopsis
+                    </label>
+                    <textarea class="form-control" id="sinopsis" th:field="*{sinopsis}"
+                              rows="4" maxlength="600" placeholder="Descripción breve de la película..."></textarea>
+                    <small class="text-muted d-block mt-2">Máximo 600 caracteres</small>
+                </div>
 
-               <div class="col-md-3 mb-3" >
-                   <label for="durationMinutes" class="form-label">Duración en minutos</label>
-                   <input type="number" class="form-control" id="durationMinutes"
-                          th:field="*{durationMinutes}" step="1" min="60" placeholder="60min">
-               </div>
+                <!-- Imagen -->
+                <div class="mb-4">
+                    <label for="imageFile" class="form-label">
+                        <i class="fa-solid fa-image me-2 text-gold"></i>Imagen
+                    </label>
 
-               <div class="col-md-3 form-check form-switch align-self-end" style="padding-bottom: 20px">
-                   <label class="form-check-label" for="active">Película activa</label>
-                   <input type="checkbox" class="form-check-input" id="active"
-                          role="switch" th:field="*{active}">
-               </div>
+                    <!-- conserva la imagen guardada al editar si no subes una nueva -->
+                    <input type="hidden" th:field="*{imageUrl}">
 
-           </div>
-       </div>
+                    <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*">
 
-       <div class="mb-3">
-           <label for="sinopsis" class="form-label"> Sinopsis</label>
+                    <!-- EDITAR: muestra la guardada. CREAR: el JS la sustituye -->
+                    <div class="mt-3">
+                        <img id="preview" alt="Previsualización" class="rounded"
+                             th:style="${movie.imageUrl != null ? 'max-height:250px; object-fit: cover;' : 'max-height:250px; display:none; object-fit: cover;'}"
+                             th:src="${movie != null and movie.imageUrl != null ? movie.imageUrl : null}">
+                    </div>
+                </div>
 
+                <!-- Botones -->
+                <div class="d-flex gap-2 justify-content-end mt-5">
+                    <a th:href="@{/movies}" class="btn btn-secondary">
+                        <i class="fa-solid fa-xmark me-1"></i>Cancelar
+                    </a>
+                    <button sec:authorize="hasRole('ADMIN')" type="submit" class="btn btn-primary" th:text="${isEdit ? 'Actualizar película' : 'Guardar película'}">
+                        <i class="fa-solid fa-check me-1"></i>Guardar
+                    </button>
+                </div>
 
-           <textarea class="form-control" id="sinopsis" th:field="*{sinopsis}"
-                     rows="3" maxlength="600" placeholder="Érase una vez...">
-                   </textarea>
-
-<!--           <input type="text" class="form-control" id="sinopsis"-->
-<!--                  th:field="*{sinopsis}" placeholder="Érase una vez...">-->
-       </div>
-
-       <div class="mb-3">
-           <label for="imageFile" class="form-label">Imagen</label>
-
-           <!-- conserva la imagen guardada al editar si no subes una nueva -->
-           <input type="hidden" th:field="*{imageUrl}">
-
-           <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*">
-
-           <!-- EDITAR: muestra la guardada. ELEGIR archivo: el JS la sustituye -->
-           <img id="preview" alt="Previsualización" class="mt-2 rounded"
-                th:style="${movie.imageUrl != null ? 'max-height:150px;' : 'max-height:150px; display:none'}"
-                th:src="${movie != null and movie.imageUrl != null ? movie.imageUrl : null}">
-       </div>
-
-
-       <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
-           <button sec:authorize="hasRole('ADMIN')" type="submit" class="btn btn-success" th:text="${isEdit ? 'Actualizar' : 'Guardar'}">
-               <i class="fa-solid fa-check me-1"></i> Guardar
-           </button>
-
-           <a th:href="@{/movies}" class="btn btn-secondary"><i class="fa-solid fa-xmark me-1"></i>Cancelar</a>
-       </div>
-
-   </form>
-
-
-
+            </form>
+        </div>
+    </div>
 
 </main>
 
