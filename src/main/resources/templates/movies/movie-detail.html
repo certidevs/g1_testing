@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layout/head :: head('Only Film')}"></head>
 <body class="d-flex flex-column min-vh-100">
 
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
 <main class="container flex-grow-1 my-4">
+
+    <!--FICHA DE LA PELI-->
     <div class="card shadow-sm mb-4">
         <div class="card-header">
             <h5 class="card-title mb-0" th:text="${movie.title}"></h5>
         </div>
 
                 <div class="card-body">
-                    <div class="d-flex flex-row">
+                    <div class="d-flex flex-row gap-4">
 
                         <div class="d-flex flex-col" style="height: 50vh; width: auto">
 <!--                            TODO poner alt para la imagen y si se quiere unas class de bootstrap como img-fluid-->
@@ -27,7 +31,7 @@
                             </p>
 
                             <p class="card-text">Duración:
-                                <span th:text="${movie.durationMinutes}"></span>
+                                <span th:text="${movie.durationMinutes + ' min'}"></span>
                             </p>
 
                             <p class="card-text">Género:
@@ -43,7 +47,7 @@
                                 <ul class="list-group list-group-flush" >
                                     <li th:each="proyeccion : ${sessions} " class="mt-2">
                                         <strong th:text="${'Sala: ' + proyeccion.room}"></strong>
-                                        <span th:text="${'Precio: ' + proyeccion.price}"></span>
+                                        <span th:text="${'Precio: ' + proyeccion.price + '€'}"></span>
                                         <span th:text="${'Fecha: ' + proyeccion.startTime}"></span>
                                         <a th:href="@{/sessions/{id}(id=${proyeccion.id})}" class="btn btn-info">Ver entradas disponibles</a>
                                     </li>
@@ -55,9 +59,18 @@
                         <a th:href="@{/movies}" class="btn btn-secondary">
                             <i class="fa-solid fa-angle-left me-1"></i>Volver
                         </a>
-                        <a th:href="@{/reviews/new(movieId=${movie.id})}"
+
+                        <!-- Escribir reseña: autenticados van al formulario, anónimos al login -->
+                        <a sec:authorize="isAuthenticated()"
+                           th:href="@{/reviews/new(movieId=${movie.id})}"
                            class="btn btn-outline-primary ms-auto">
                             <i class="fa-regular fa-comment me-1"></i> Escribir reseña
+                        </a>
+                        <a sec:authorize="!isAuthenticated()"
+                           th:href="@{/login}"
+                           class="btn btn-outline-secondary ms-auto"
+                           title="Inicia sesión para escribir una reseña">
+                            <i class="fa-regular fa-comment me-1"></i> Escribe una reseña
                         </a>
                     </div>
                 </div>
@@ -76,7 +89,8 @@
 
         <div th:if="${#lists.isEmpty(reviews)}" class="alert alert-light border">
             Todavía no hay reseñas para esta película.
-            <a th:href="@{/reviews/new(movieId=${movie.id})}">¡Sé el primero en escribir una!</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/reviews/new(movieId=${movie.id})}">¡Sé el primero en escribir una!</a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Inicia sesión para escribir la primera reseña.</a>
         </div>
 
         <div class="row row-cols-1 row-cols-md-2 g-3" th:if="${!#lists.isEmpty(reviews)}">
@@ -94,11 +108,14 @@
                     </div>
                     <div class="card-footer bg-transparent small d-flex justify-content-between align-items-center">
                         <span class="text-muted">
-                            <i class="fa-regular fa-calendar me-1"></i>
-                            <span th:text="${#temporals.format(review.creationDate, 'dd/MM/yyyy')}"></span>
+                            <i class="fa-regular fa-user me-1"></i>
+                            <span th:if="${review.user != null}" th:text="${review.user.firstName}"></span>
+                            <span th:if="${review.user == null}">Anónimo</span>
+                            <span class="mx-1">·</span>
+                          <i class="fa-regular fa-calendar me-1"></i>
+                          <span th:text="${#temporals.format(review.creationDate, 'dd/MM/yyyy')}"></span>
                         </span>
-                        <a class="btn btn-sm btn-outline-secondary"
-                           th:href="@{/reviews/{id}(id=${review.id})}">
+                        <a class="btn btn-sm btn-outline-secondary" th:href="@{/reviews/{id}(id=${review.id})}">
                             <i class="fa-solid fa-eye me-1"></i> Ver
                         </a>
                     </div>
@@ -106,6 +123,7 @@
             </div>
         </div>
     </div>
+
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
