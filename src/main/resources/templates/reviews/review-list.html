@@ -1,24 +1,29 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/head :: head('Reseñas')}"><title>Test</title></head>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/head :: head('Reseñas')}"><title>Reseñas</title></head>
 <body class="d-flex flex-column min-vh-100">
 
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
-<main class="container flex-grow-1">
+<main class="container flex-grow-1 my-4">
 
-    <h1 class="mb-4">
-        <i class="fa-regular fa-comments text-primary me-2"></i> Opiniones de clientes
-    </h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">
+            <i class="fa-regular fa-comments text-primary me-2"></i> Opiniones de clientes
+        </h1>
+    </div>
+
+    <!-- flash message de borrado -->
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fa-solid fa-check-circle me-1"></i>
+        <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
     <div th:if="${reviews.isEmpty()}" class="alert alert-light border">
         Aún no hay reseñas.
-    </div>
-    <div th:if="${details}" class="alert alert-success fade show alert-dismissible" role="alert">
-        <i class="fa-solid fa-check-circle"></i>
-        <span th:text="${details}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 g-3">
@@ -28,37 +33,54 @@
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <h5 class="card-title mb-0" th:text="${review.title}">Título</h5>
                         <span class="badge bg-warning text-dark">
-                            <i class="fa-solid fa-star me-1"></i>
-                            <span th:text="${review.rating + ' / 5'}"></span>
-                        </span>
+              <i class="fa-solid fa-star me-1"></i>
+              <span th:text="${review.rating + ' / 5'}"></span>
+            </span>
                     </div>
-                    <p class="card-text" th:text="${review.description}">Descripción</p>
+                    <p class="card-text text-muted small" th:text="${review.description}">Descripción</p>
                     <p class="text-muted small mb-0">
+                        <i class="fa-regular fa-user me-1"></i>
+                        <span th:if="${review.user != null}" th:text="${review.user.firstName + ' ' + review.user.lastName}"></span>
+                        <span th:if="${review.user == null}">Anónimo</span>
+                        <span class="mx-1">·</span>
                         <i class="fa-regular fa-calendar me-1"></i>
-                        <span th:text="${review.creationDate}"></span>
+                        <span th:text="${#temporals.format(review.creationDate, 'dd/MM/yyyy')}"></span>
                     </p>
                 </div>
                 <div class="card-footer bg-transparent small">
-                    <div th:if="${review.movie != null}">
-                        <i class="fa-solid fa-store text-primary me-1"></i>
+                    <div th:if="${review.movie != null}" class="mb-2">
+                        <i class="fa-solid fa-film text-primary me-1"></i>
                         <a th:href="@{/movies/{id}(id=${review.movie.id})}"
                            th:text="${review.movie.title}">Película</a>
                     </div>
-                    <div class="my-3">
-                        <!-- Botón de borrar -->
-                        <a class="btn btn-secondary" th:href="@{/reviews/{id}(id=${review.id})}">
-                            <i class="fa-solid fa-eye mr-2"></i> Ver
+                    <div class="d-flex gap-2">
+                        <!-- Ver reseña siempre visible -->
+                        <a class="btn btn-sm btn-outline-secondary" th:href="@{/reviews/{id}(id=${review.id})}">
+                            <i class="fa-solid fa-eye me-1"></i> Ver
                         </a>
 
-                        <a class="btn btn-success" th:href="@{/reviews/edit/{id}(id=${review.id})}">
-                            <i class="fa-solid fa-pencil mr-2"></i> Editar
-                        </a>
+                        <!-- Editar: solo admin o el propio autor -->
+                        <div sec:authorize="hasRole('ADMIN')">
+                            <a class="btn btn-sm btn-outline-success"
+                               th:href="@{/reviews/edit/{id}(id=${review.id})}">
+                                <i class="fa-solid fa-pencil me-1"></i> Editar
+                            </a>
+                        </div>
+                        <div sec:authorize="hasRole('USER')">
+                            <a th:if="${review.user != null and review.user.username == #authentication.name}"
+                               class="btn btn-sm btn-outline-success"
+                               th:href="@{/reviews/edit/{id}(id=${review.id})}">
+                                <i class="fa-solid fa-pencil me-1"></i> Editar
+                            </a>
+                        </div>
 
-                        <a class="btn btn-danger" th:href="@{/reviews/delete/{id}(id=${review.id})}"
-                           onclick="return confirm('Esta acción borra, ¿quiere borrar esta reseña?')">
-                            <i class="fa-solid fa-trash mr-2"></i> Borrar
+                        <!-- Borrar: solo admin -->
+                        <a sec:authorize="hasRole('ADMIN')"
+                           class="btn btn-sm btn-danger"
+                           th:href="@{/reviews/delete/{id}(id=${review.id})}"
+                           onclick="return confirm('¿Seguro que quieres borrar esta reseña?')">
+                            <i class="fa-solid fa-trash me-1"></i> Borrar
                         </a>
-
                     </div>
                 </div>
             </div>
@@ -69,6 +91,5 @@
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
-
 </body>
 </html>
