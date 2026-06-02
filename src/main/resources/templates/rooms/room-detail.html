@@ -1,85 +1,122 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{layout/head :: head('Detalle Sala')}">
-</head>
+<head th:replace="~{layout/head :: head('Detalle Sala')}"></head>
 
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
-<main class="container flex-grow-1">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Salas</h1>
-        <a th:href="@{/salas}" class="btn btn-primary">
-            <i class="fa-solid fa-arrow-left"></i> Volver al listado
-        </a>
-    </div>
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="mb-0 text-muted">
-            / Salas / Ver Sala
-        </h5>
-    </div>
-    <div class="card">
-        <div class="card-header d-flex align-items-center gap-2">
-            <i class="fa-solid fa-chalkboard"></i>
+<main class="container flex-grow-1 my-4">
 
-            <h4 class="mb-0"
-                th:text="${room.name != null ? room.name : '(Sin nombre)'}">
-                Sala 1
-            </h4>
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h1 class="mb-0" th:text="${room.name != null ? room.name : 'Sala'}">Sala</h1>
+            <small class="text-muted">Detalle de la sala</small>
         </div>
-        <div class="card-body">
-            <table class="table table-borderless mt-3">
-                <tbody>
 
-                    <tr>
-                        <th class="w-35" scope="col">Nombre: </th>
-                        <td class="w-75" th:text="${room.name != null ? room.name : '(Sin nombre)'}">
-                            (Sin nombre)
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th scope="col">Tipo: </th>
-                        <td th:switch="${room.screenType}">
-                                <span th:case="${T(com.demo.model.enums.ScreenType).D4X}"><b>4DX</b></span>
-                                <span th:case="${T(com.demo.model.enums.ScreenType).IMAX}"><b>IMAX</b></span>
-                                <span th:case="${T(com.demo.model.enums.ScreenType).D3}"><b>3D</b></span>
-                                <span th:case="${T(com.demo.model.enums.ScreenType).STANDARD}"><b>Estándar</b></span>
-                                <span th:case="*"><b>Estándar</b></span>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th scope="col">Capacidad: </th>
-                        <td th:text="${room.capacity + ' personas'}">
-                            100 personas
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th scope="col">Estado: </th>
-                        <!-- incluir estado activa o inactiva-->
-                    </tr>
-
-                    <tr>
-                        <th scope="col">Descripción: </th>
-                        <!-- incluir descripcion de la sala-->
-                    </tr>
-
-                </tbody>
-            </table>
-            <a th:href="@{/salas/edit/{id}(id=${room.id})}"
-               class="btn btn-outline-warning btn-sm">
-                <i class="fa-solid fa-pencil"></i> Editar
+        <div class="d-flex gap-2">
+            <a th:href="@{/salas}" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-left me-1"></i> Volver
             </a>
-
-            <a th:href="@{/salas/deactivate/{id}(id=${room.id})}"
-               class="btn btn-outline-danger btn-sm"
+            <a th:href="@{/salas/edit/{id}(id=${room.id})}" class="btn btn-primary">
+                <i class="fa-solid fa-pencil me-1"></i> Editar
+            </a>
+            <a th:href="@{/salas/deactivate/{id}(id=${room.id})}" class="btn btn-danger"
                onclick="return confirm('¿Seguro que quieres desactivar esta sala?');">
                 <i class="fa-solid fa-trash me-1"></i> Eliminar
             </a>
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-lg-6 col-md-12">
+                    <h5 class="text-gold mb-3">
+                        <i class="fa-solid fa-info-circle me-2"></i>Información de la sala
+                    </h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <small class="text-muted">NOMBRE</small>
+                            <div class="h5 mb-0" th:text="${room.name != null ? room.name : '(Sin nombre)'}">
+                                (Sin nombre)
+                            </div>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted">CAPACIDAD</small>
+                            <div class="h5 mb-0">
+                                <span class="badge badge-secondary">
+                                    <i class="fa-solid fa-people-group me-1"></i>
+                                    <span th:text="${room.capacity}">0</span> personas
+                                </span>
+                            </div>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted">TIPO DE PANTALLA</small>
+                            <div class="h5 mb-0">
+                                <span class="badge badge-secondary">
+                                    <i class="fa-solid fa-film me-1"></i>
+                                    <span th:switch="${room.screenType}">
+                                        <span th:case="${T(com.demo.model.enums.ScreenType).D4X}">4DX</span>
+                                        <span th:case="${T(com.demo.model.enums.ScreenType).IMAX}">IMAX</span>
+                                        <span th:case="${T(com.demo.model.enums.ScreenType).D3}">3D</span>
+                                        <span th:case="${T(com.demo.model.enums.ScreenType).STANDARD}">Estándar</span>
+                                        <span th:case="*">Estándar</span>
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted">ESTADO</small>
+                            <div class="h5 mb-0">
+                                <span th:if="${room.active}" class="badge bg-success">
+                                    <i class="fa-solid fa-check me-1"></i>Activa
+                                </span>
+                                <span th:if="${!room.active}" class="badge bg-danger">
+                                    <i class="fa-solid fa-xmark me-1"></i>Inactiva
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <h5 class="text-gold mb-3">
+                        <i class="fa-solid fa-table me-2"></i>Resumen
+                    </h5>
+                    <div class="bg-gradient-dark p-4 rounded">
+                        <table class="table table-borderless mb-0 table-sm">
+                            <tbody>
+                                <tr>
+                                    <td class="text-muted ps-0">ID:</td>
+                                    <td class="text-end text-secondary pe-0" th:text="${room.id}">1</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted ps-0">Nombre:</td>
+                                    <td class="text-end text-secondary pe-0" th:text="${room.name}">Sala 1</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted ps-0">Capacidad:</td>
+                                    <td class="text-end text-secondary pe-0" th:text="${room.capacity}">100</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted ps-0">Tipo pantalla:</td>
+                                    <td class="text-end text-secondary pe-0">
+                                        <span th:switch="${room.screenType}">
+                                            <span th:case="${T(com.demo.model.enums.ScreenType).D4X}">4DX</span>
+                                            <span th:case="${T(com.demo.model.enums.ScreenType).IMAX}">IMAX</span>
+                                            <span th:case="${T(com.demo.model.enums.ScreenType).D3}">3D</span>
+                                            <span th:case="${T(com.demo.model.enums.ScreenType).STANDARD}">Estándar</span>
+                                            <span th:case="*">Estándar</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main>
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>

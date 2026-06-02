@@ -1,92 +1,153 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{layout/head :: head('Salas')}">
-</head>
+<head th:replace="~{layout/head :: head('Salas')}"></head>
 
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
-<main class="container flex-grow-1">
+<main class="container flex-grow-1 my-4">
+    <style>
+        /* Asegurar visibilidad de iconos en hover */
+        .btn-primary:hover,
+        .btn-danger:hover {
+            color: white !important;
+        }
+
+        .btn-outline-light:hover {
+            color: var(--cinema-dark) !important;
+        }
+
+        .btn-group-sm .btn {
+            padding: 0.375rem 0.5rem !important;
+        }
+
+        /* Mejorar spacing en grupo de botones */
+        .btn-group-sm .btn i {
+            margin: 0 !important;
+        }
+    </style>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Salas</h1>
-        <a th:href="@{/salas/new}" class="btn btn-primary">
-            <i class="fa-solid fa-plus"></i> Nueva Sala
-        </a>
-    </div>
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <!--poner Gestiona las salas de cine en color gris:-->
-        <h5 class="mb-0 text-muted">
-            <i class="fa-solid fa-gears text-secondary me-2"></i>
-            Gestiona las salas del cine
-        </h5>
-    </div>
-    <div class="alert alert-primary" role="alert">
-        <i class="fa-solid fa-info-circle"></i>
-        Administra las salas, puedes crear nuevas salas, editar la información existente o eliminar salas.
+        <div>
+            <h1 class="mb-0">
+                <i class="fa-solid fa-door-open me-2 text-gold"></i>Salas
+            </h1>
+            <p class="text-secondary mb-0">Gestiona las salas del cine</p>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a th:href="@{/salas/new}" class="btn btn-primary">
+                <i class="fa-solid fa-plus me-1"></i> Nueva sala
+            </a>
+        </div>
     </div>
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Capacidad</th>
-            <th scope="col">Tipo de pantalla</th>
-            <th scope="col">Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="room : ${rooms}">
-            <th scope="row" th:text="${room.id}">1</th>
-
-            <td th:text="${room.name != null ? room.name : '(Sin nombre)'}">
-                (Sin nombre)
-            </td>
-
-            <td>
-            <span class="badge bg-success">
-                <i class="fa-solid fa-people-group"></i>
-                <span th:text="${room.capacity}">0</span>
-            </span>
-            </td>
-
-            <td th:switch="${room.screenType}">
-            <span class="badge bg-warning text-dark">
-                <i class="fa-solid fa-film"></i>
-
-                <span th:case="${T(com.demo.model.enums.ScreenType).D4X}"><b>4DX</b></span>
-                <span th:case="${T(com.demo.model.enums.ScreenType).IMAX}"><b>IMAX</b></span>
-                <span th:case="${T(com.demo.model.enums.ScreenType).D3}"><b>3D</b></span>
-                <span th:case="${T(com.demo.model.enums.ScreenType).STANDARD}"><b>Estándar</b></span>
-                <span th:case="*"><b>Estándar</b></span>
-            </span>
-            </td>
-
-            <td>
-                <a th:href="@{/salas/{id}(id=${room.id})}"
-                   class="btn btn-outline-primary btn-sm">
-                    <i class="fa-solid fa-eye"></i>
-                </a>
-                <a th:href="@{/salas/edit/{id}(id=${room.id})}"
-                   class="btn btn-outline-warning btn-sm">
-                    <i class="fa-solid fa-pencil"></i>
-                </a>
-                <a th:href="@{/salas/deactivate/{id}(id=${room.id})}"
-                   class="btn btn-outline-danger btn-sm"
-                   onclick="return confirm('¿Seguro que quieres desactivar esta sala?');">
-                    <i class="fa-solid fa-trash me-1"></i>
-                </a>
-
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div th:if="${#lists.size(rooms)!=null}" class="d-flex justify-content-between align-items-center mb-4">
-        <span class="badge bg-secondary fs-6"
-              th:text="|${#lists.size(rooms)} resultados|">0 resultados</span>
+    <div class="alert alert-info border mb-4">
+        <i class="fa-solid fa-info-circle me-2"></i>
+        <strong>Administración de salas:</strong> Crea, edita o elimina salas de cine según sea necesario.
     </div>
+
+    <!-- TABLA MEJORADA -->
+    <div class="card mb-5">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col" width="8%">
+                                <i class="fa-solid fa-hashtag me-2"></i>ID
+                            </th>
+                            <th scope="col" width="25%">
+                                <i class="fa-solid fa-door-open me-2"></i>Nombre
+                            </th>
+                            <th scope="col" width="20%">
+                                <i class="fa-solid fa-people-group me-2"></i>Capacidad
+                            </th>
+                            <th scope="col" width="20%">
+                                <i class="fa-solid fa-film me-2"></i>Tipo de pantalla
+                            </th>
+                            <th scope="col" width="27%" class="text-end">
+                                <i class="fa-solid fa-sliders me-2"></i>Acciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="room : ${rooms}">
+                            <th scope="row" class="align-middle">
+                                <span class="badge bg-primary" th:text="${room.id}">1</span>
+                            </th>
+                            <td class="align-middle">
+                                <strong th:text="${room.name != null ? room.name : '(Sin nombre)'}">
+                                    (Sin nombre)
+                                </strong>
+                            </td>
+                            <td class="align-middle">
+                                <span class="badge badge-secondary">
+                                    <i class="fa-solid fa-people-group me-1"></i>
+                                    <span th:text="${room.capacity}">0</span>
+                                </span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="badge badge-secondary">
+                                    <i class="fa-solid fa-film me-1"></i>
+                                    <span th:switch="${room.screenType}">
+                                        <span th:case="${T(com.demo.model.enums.ScreenType).D4X}">4DX</span>
+                                        <span th:case="${T(com.demo.model.enums.ScreenType).IMAX}">IMAX</span>
+                                        <span th:case="${T(com.demo.model.enums.ScreenType).D3}">3D</span>
+                                        <span th:case="${T(com.demo.model.enums.ScreenType).STANDARD}">Estándar</span>
+                                        <span th:case="*">Estándar</span>
+                                    </span>
+                                </span>
+                            </td>
+                            <td class="align-middle text-end">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a th:href="@{/salas/{id}(id=${room.id})}"
+                                       class="btn btn-outline-light"
+                                       title="Ver detalles"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-placement="top">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+
+                                    <a th:href="@{/salas/edit/{id}(id=${room.id})}"
+                                       class="btn btn-primary"
+                                       title="Editar sala"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-placement="top">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </a>
+
+                                    <a th:href="@{/salas/deactivate/{id}(id=${room.id})}"
+                                       class="btn btn-danger"
+                                       title="Eliminar sala"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-placement="top"
+                                       onclick="return confirm('¿Seguro que quieres desactivar esta sala?');">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer con contador -->
+        <div class="card-footer bg-transparent border-top border-secondary d-flex justify-content-between align-items-center">
+            <span class="text-muted small">Total de salas</span>
+            <span class="badge badge-secondary fs-6" th:text="|${#lists.size(rooms)} resultados|">0 resultados</span>
+        </div>
+    </div>
+
 </main>
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
+<script>
+    // Inicializar tooltips de Bootstrap
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
 </body>
 </html>
