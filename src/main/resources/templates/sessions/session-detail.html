@@ -7,14 +7,22 @@
 
 <main class="container flex-grow-1 my-4">
 
+    <!-- Flash message de compra exitosa (issue #10) -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+        <i class="fa-solid fa-circle-check me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+
+    <!-- CABECERA -->
     <div class="d-flex justify-content-between align-items-start mb-4">
         <div>
-            <h1 class="mb-0" th:text="${proyeccion.movie != null ? proyeccion.movie.title : 'Proyección #' + proyeccion.id}">
+            <h1 class="mb-0"
+                th:text="${proyeccion.movie != null ? proyeccion.movie.title : 'Proyección #' + proyeccion.id}">
                 Proyección
             </h1>
             <small class="text-muted">Detalle de la sesión</small>
         </div>
-
         <div class="d-flex gap-2">
             <a th:href="@{/sessions}" class="btn btn-secondary">
                 <i class="fa-solid fa-arrow-left me-1"></i> Volver
@@ -33,18 +41,21 @@
     <div class="card movie-card mb-5">
         <div class="card-body p-0">
             <div class="row g-0">
-                <!-- Imagen lado izquierdo -->
+                <!-- Imagen -->
                 <div class="col-lg-4 col-md-12 p-4 p-lg-5" th:if="${proyeccion.movie != null}">
-                    <img th:src="${proyeccion.movie.imageUrl}" alt="Carátula de película" class="img-fluid rounded">
+                    <img th:src="${proyeccion.movie.imageUrl}"
+                         alt="Carátula de película"
+                         class="img-fluid rounded">
                 </div>
 
-                <!-- Contenido lado derecho -->
+                <!-- Info -->
                 <div class="col-lg-8 col-md-12 p-4 p-lg-5">
-                    <h2 class="mb-3" th:text="${proyeccion.movie != null ? proyeccion.movie.title : 'Proyección #' + proyeccion.id}">
+                    <h2 class="mb-3"
+                        th:text="${proyeccion.movie != null ? proyeccion.movie.title : 'Proyección #' + proyeccion.id}">
                         Título
                     </h2>
 
-                    <!-- Badges informativos -->
+                    <!-- Badges -->
                     <div class="mb-4 d-flex flex-wrap gap-2">
                         <span class="badge badge-secondary" th:if="${proyeccion.movie != null}">
                             <i class="fa-solid fa-masks-theater me-1"></i>
@@ -60,28 +71,30 @@
                         </span>
                     </div>
 
-                    <!-- Información en grid -->
+                    <!-- Grid de datos -->
                     <div class="row g-4">
                         <div class="col-md-6">
-                            <h5 class="text-gold mb-3">
+                            <h5 class="text-gold mb-2">
                                 <i class="fa-solid fa-euro me-2"></i>Precio
                             </h5>
-                            <p class="h4 mb-0 text-secondary" th:text="${proyeccion.price != null ? #numbers.formatDecimal(proyeccion.price, 1, 2) + ' €' : '-'}">
+                            <p class="h4 mb-0 text-secondary"
+                               th:text="${proyeccion.price != null ? #numbers.formatDecimal(proyeccion.price, 1, 2) + ' €' : '-'}">
                                 0.00€
                             </p>
                         </div>
 
                         <div class="col-md-6">
-                            <h5 class="text-gold mb-3">
+                            <h5 class="text-gold mb-2">
                                 <i class="fa-solid fa-door-open me-2"></i>Sala
                             </h5>
-                            <p class="h4 mb-0 text-secondary" th:text="${proyeccion.room != null ? proyeccion.room.name : 'Sin sala'}">
+                            <p class="h4 mb-0 text-secondary"
+                               th:text="${proyeccion.room != null ? proyeccion.room.name : 'Sin sala'}">
                                 Sala
                             </p>
                         </div>
 
                         <div class="col-md-6" th:if="${proyeccion.room != null}">
-                            <h5 class="text-gold mb-3">
+                            <h5 class="text-gold mb-2">
                                 <i class="fa-solid fa-people-group me-2"></i>Capacidad
                             </h5>
                             <p class="text-secondary">
@@ -92,28 +105,31 @@
                         </div>
 
                         <div class="col-md-6" th:if="${proyeccion.room != null}">
-                            <h5 class="text-gold mb-3">
+                            <h5 class="text-gold mb-2">
                                 <i class="fa-solid fa-film me-2"></i>Tipo de pantalla
                             </h5>
                             <p class="text-secondary">
-                                <span class="badge badge-secondary" th:text="${proyeccion.room.screenType}">STANDARD</span>
+                                <span class="badge badge-secondary"
+                                      th:text="${proyeccion.room.screenType}">STANDARD</span>
                             </p>
                         </div>
 
                         <div class="col-md-6">
-                            <h5 class="text-gold mb-3">
+                            <h5 class="text-gold mb-2">
                                 <i class="fa-solid fa-language me-2"></i>Idioma
                             </h5>
-                            <p class="text-secondary" th:text="${proyeccion.language != null ? proyeccion.language : 'No especificado'}">
+                            <p class="text-secondary"
+                               th:text="${proyeccion.language != null ? proyeccion.language : 'No especificado'}">
                                 VO
                             </p>
                         </div>
 
                         <div class="col-md-6">
-                            <h5 class="text-gold mb-3">
+                            <h5 class="text-gold mb-2">
                                 <i class="fa-solid fa-hourglass-end me-2"></i>Duración anuncios
                             </h5>
-                            <p class="text-secondary" th:text="${proyeccion.adMinutes != null ? proyeccion.adMinutes + ' min' : '0 min'}">
+                            <p class="text-secondary"
+                               th:text="${proyeccion.adMinutes != null ? proyeccion.adMinutes + ' min' : '0 min'}">
                                 0 min
                             </p>
                         </div>
@@ -123,42 +139,57 @@
         </div>
     </div>
 
-    <!-- TICKETS / ASIENTOS -->
+    <!-- MAPA DE ASIENTOS -->
     <div class="card mb-5" th:if="${!#lists.isEmpty(tickets)}">
         <div class="card-body">
-            <h5 class="text-gold mb-4">
-                <i class="fa-solid fa-chair me-2"></i>Mapa de asientos
-            </h5>
+
+            <!-- PANTALLA DEL CINE -->
+            <div class="cinema-screen-area text-center mb-4">
+                <div class="cinema-screen-label">P A N T A L L A</div>
+                <div class="cinema-screen-glow"></div>
+            </div>
 
             <div class="table-responsive">
-                <table class="cinema-seats text-center">
-                    <!-- Números en las columnas -->
+                <table class="cinema-seats text-center mx-auto"
+                       th:with="a1=${(seatsPerRow + 1) / 3 + 1}, a2=${2 * ((seatsPerRow + 1) / 3) + 1}">
                     <thead>
-                        <tr>
-                            <th></th>
-                            <th th:each="i : ${#numbers.sequence(1, seatsPerRow)}"
-                                th:text="${i}" class="text-muted small"></th>
-                        </tr>
+                    <tr>
+                        <th class="row-label"></th>
+                        <th th:each="i : ${#numbers.sequence(1, seatsPerRow)}"
+                            th:text="${i}"
+                            th:classappend="${i == a1 or i == a2 ? ' aisle' : ''}"
+                            class="seat-col-header">
+                        </th>
+                    </tr>
                     </thead>
                     <tbody>
                         <tr th:each="ticket, stat : ${tickets}"
                             th:if="${stat.index == 0 or ticket.row != tickets[stat.index - 1].row}">
-                            <!-- Letras en las filas -->
+
                             <td class="row-label fw-bold text-gold" th:text="${ticket.row}"></td>
-                            <!-- ASIENTOS DE ESA FILA -->
+
                             <td th:each="t : ${tickets}"
                                 th:if="${t.row == ticket.row}"
-                                class="p-2">
+                                class="seat-cell"
+                                th:classappend="${t.seat == a1 or t.seat == a2 ? ' aisle' : ''}">
+
+                                <!-- Butaca libre -> abre modal — CAMBIO: data-url apunta a /checkout -->
                                 <a th:if="${t.status.name() != 'PAGADO'}"
-                                   th:href="@{/tickets/buy/{id}(id=${t.id})}"
-                                   class="btn btn-sm btn-outline-light"
-                                   title="Comprar entrada">
-                                    <i class="fa-solid fa-chair"></i>
+                                   href="#"
+                                   class="seat-btn free"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#confirmarCompraModal"
+                                   th:data-ticket-id="${t.id}"
+                                   th:data-row="${t.row}"
+                                   th:data-seat="${t.seat}"
+                                   th:data-price="${proyeccion.price}"
+                                   th:data-url="@{/tickets/{id}/checkout(id=${t.id})}">
+                                    <i class="fa-solid fa-couch"></i>
                                 </a>
-                                <span th:if="${t.status.name() == 'PAGADO'}"
-                                      class="btn btn-sm btn-danger disabled"
-                                      title="Asiento ocupado">
-                                    <i class="fa-solid fa-chair"></i>
+
+                                <!-- Butaca ocupada -->
+                                <span th:if="${t.status.name() == 'PAGADO'}" class="seat-btn taken">
+                                    <i class="fa-solid fa-couch"></i>
                                 </span>
                             </td>
                         </tr>
@@ -166,19 +197,26 @@
                 </table>
             </div>
 
-            <div class="mt-3 d-flex justify-content-center gap-4">
-                <div>
-                    <span class="badge bg-primary me-2"></span>
-                    <small class="text-muted">Disponible</small>
+            <!-- Leyenda -->
+            <div class="mt-4 d-flex justify-content-center gap-4 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-couch legend-free"></i>
+                    <small class="text-muted">Disponible — pulsa para comprar</small>
                 </div>
-                <div>
-                    <span class="badge bg-danger me-2"></span>
-                    <small class="text-muted">Ocupado</small>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-couch legend-taken"></i>
+                    <small class="text-muted">Ocupada</small>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="aisle-legend-bar"></span>
+                    <small class="text-muted">Pasillo</small>
                 </div>
             </div>
+
         </div>
     </div>
 
+    <!-- Sin tickets -->
     <div class="alert alert-info border" th:if="${#lists.isEmpty(tickets)}">
         <i class="fa-solid fa-info-circle me-2"></i>
         No hay entradas generadas para esta proyección.
@@ -186,25 +224,108 @@
 
 </main>
 
+<!-- MODAL DE CONFIRMACIÓN -->
+<div class="modal fade" id="confirmarCompraModal" tabindex="-1"
+     aria-labelledby="confirmarCompraLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmarCompraLabel">
+                    <i class="fa-solid fa-ticket me-2"></i> Confirmar selección
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-secondary mb-3">Has seleccionado la siguiente butaca:</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="text-muted"><i class="fa-solid fa-signs-post me-2"></i>Fila</span>
+                        <strong id="modal-row" class="text-gold">—</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="text-muted"><i class="fa-solid fa-couch me-2"></i>Butaca</span>
+                        <strong id="modal-seat" class="text-gold">—</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="text-muted"><i class="fa-solid fa-ticket me-2"></i>Precio entrada</span>
+                        <strong id="modal-price" class="text-gold">—</strong>
+                    </li>
+                </ul>
+                <p class="text-muted small mb-0">
+                    <i class="fa-solid fa-circle-info me-1"></i>
+                    En el siguiente paso podrás añadir snacks y completar el pago.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-xmark me-1"></i> Cancelar
+                </button>
+                <a id="btn-confirmar" href="#" class="btn btn-primary">
+                    <i class="fa-solid fa-arrow-right me-1"></i> Continuar al pago
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
 
 <style>
-    .cinema-seats {
-        width: 100%;
-        border-collapse: collapse;
+    :root {
+        --seat-free:  #4A90D9;
+        --seat-taken: #C0392B;
+        --seat-free-hover: #C8A96B;
+        --aisle-color: rgba(200, 169, 107, 0.12);
     }
-
-    .cinema-seats th,
-    .cinema-seats td {
-        padding: 0.5rem;
-        border: none;
+    .cinema-screen-area { pointer-events: none; }
+    .cinema-screen-label {
+        display: inline-block;
+        background: linear-gradient(to bottom, rgba(200,169,107,0.35), rgba(200,169,107,0.05));
+        border: 2px solid rgba(200,169,107,0.55);
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+        padding: 7px 80px;
+        font-size: 0.65rem;
+        letter-spacing: 0.55em;
+        color: var(--cinema-accent-gold);
+        font-weight: 700;
     }
-
-    .cinema-seats .row-label {
-        min-width: 40px;
-        text-align: center;
+    .cinema-screen-glow {
+        height: 10px;
+        background: linear-gradient(to bottom, rgba(200,169,107,0.18), transparent);
+        width: 80%;
+        margin: 0 auto;
+        clip-path: polygon(5% 0%, 95% 0%, 100% 100%, 0% 100%);
     }
+    .cinema-seats { border-collapse: separate; border-spacing: 0; }
+    .cinema-seats th, .cinema-seats td { padding: 0; border: none; }
+    .row-label { min-width: 32px; width: 32px; text-align: center; font-size: 0.8rem; padding-right: 6px !important; }
+    .seat-col-header { font-size: 0.7rem; color: var(--cinema-text-secondary); width: 38px; text-align: center; padding-bottom: 6px !important; }
+    .seat-cell { width: 38px; height: 38px; text-align: center; vertical-align: middle; }
+    .aisle { padding-left: 18px !important; position: relative; }
+    .aisle::before { content: ''; position: absolute; left: 4px; top: 15%; width: 2px; height: 70%; background: rgba(200,169,107,0.25); border-radius: 1px; }
+    .seat-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 4px; font-size: 1.1rem; transition: transform 0.15s ease, color 0.15s ease; cursor: pointer; text-decoration: none !important; }
+    .seat-btn.free  { color: var(--seat-free) !important; }
+    .seat-btn.free:hover { color: var(--seat-free-hover) !important; transform: scale(1.25); }
+    .seat-btn.taken { color: var(--seat-taken) !important; cursor: not-allowed; }
+    .legend-free  { color: var(--seat-free);  font-size: 1.1rem; }
+    .legend-taken { color: var(--seat-taken); font-size: 1.1rem; }
+    .aisle-legend-bar { display: inline-block; width: 3px; height: 18px; background: rgba(200,169,107,0.35); border-radius: 1px; }
+    .list-group-item { background-color: var(--cinema-surface-2) !important; border-color: rgba(200,169,107,0.15) !important; color: var(--cinema-text-secondary) !important; }
 </style>
+
+<script>
+    document.getElementById('confirmarCompraModal')
+        .addEventListener('show.bs.modal', function (event) {
+            const link = event.relatedTarget;
+            document.getElementById('modal-row').textContent   = link.dataset.row;
+            document.getElementById('modal-seat').textContent  = link.dataset.seat;
+            document.getElementById('modal-price').textContent =
+                parseFloat(link.dataset.price).toFixed(2) + ' €';
+            document.getElementById('btn-confirmar').href      = link.dataset.url;
+        });
+</script>
+
 </body>
 </html>

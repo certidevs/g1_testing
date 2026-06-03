@@ -1,189 +1,379 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{layout/head :: head('Detalle de mi Ticket')}"></head>
-<body class="d-flex flex-column min-vh-100 bg-light">
+<head th:replace="~{layout/head :: head('Mi Entrada — Only Film')}"></head>
+<body class="d-flex flex-column min-vh-100">
 
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
-<main class="container flex-grow-1 my-5">
+<main class="container flex-grow-1 my-5 ticket-detail-fade">
+
+    <!-- Flash message de éxito -->
+    <div th:if="${successMessage}"
+         class="alert alert-success alert-dismissible fade show mb-4 d-flex align-items-center gap-3"
+         role="alert">
+        <i class="fa-solid fa-circle-check fa-lg"></i>
+        <div>
+            <strong>¡Entrada confirmada!</strong>
+            <span class="ms-1" th:text="${successMessage}"></span>
+        </div>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
 
             <div class="mb-4">
-                <a th:href="@{/tickets}" class="text-decoration-none text-muted">
-                    <i class="fa-solid fa-arrow-left me-1"></i> Volver a mis tickets
+                <a th:href="@{/tickets}" class="text-decoration-none text-muted small">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Volver a mis entradas
                 </a>
             </div>
 
-            <!-- TODO th:if successMessage  alert-success su compra ha sido realizada con exito -->
+            <!--TICKET PRINCIPAL-->
+            <div class="ticket-wrapper">
 
-
-            <div class="card shadow-lg border-0 overflow-hidden">
-                <div class="row g-0">
-                    <div class="col-md-5">
-                        <img th:src="${ticket.session.movie.imageUrl}"
-                             class="img-fluid h-100 w-100"
-                             alt="Póster"
-                             style="object-fit: cover; min-height: 400px;">
+                <!-- Cabecera del ticket con gradiente cinematográfico O_O -->
+                <div class="ticket-header">
+                    <div class="ticket-header-content">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="ticket-cinema-name mb-1">
+                                    <i class="fa-solid fa-film me-2"></i>Only Film
+                                </p>
+                                <h2 class="ticket-movie-title mb-0"
+                                    th:text="${ticket.session.movie.title}">Título</h2>
+                            </div>
+                            <!-- Badge estado PAGADO dorado -->
+                            <span th:if="${ticket.status.name() == 'PAGADO'}" class="ticket-badge-paid">
+                                <i class="fa-solid fa-circle-check me-1"></i> PAGADO
+                            </span>
+                            <span th:if="${ticket.status.name() != 'PAGADO'}" class="ticket-badge-pending">
+                                <i class="fa-solid fa-clock me-1"></i>
+                                <span th:text="${ticket.status}">Estado</span>
+                            </span>
+                        </div>
                     </div>
+                    <!-- Imagen de pelicula como fondo difuminado -->
+                    <div class="ticket-header-bg"
+                         th:style="'background-image: url(' + ${ticket.session.movie.imageUrl} + ')'">
+                    </div>
+                </div>
 
-                    <div class="col-md-7 d-flex flex-column">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <h2 class="card-title h3 mb-0 text-primary fw-bold" th:text="${ticket.session.movie.title}">Título</h2>
-                                <span th:classappend="${ticket.status.name() == 'PAGADO' ? 'badge bg-success' : 'badge bg-warning'}"
-                                      th:text="${ticket.status}" class="px-3 py-2">Estado</span>
-                            </div>
+                <!-- Cuerpo del ticket -->
+                <div class="ticket-body">
+                    <div class="row g-0">
 
-                            <hr class="text-muted">
+                        <!-- Info principal -->
+                        <div class="col-md-7 ticket-info-col">
 
-                            <div class="row g-3">
-                                <div class="col-6">
-                                    <p class="text-muted small mb-0 text-uppercase fw-bold">Fecha</p>
-                                    <p class="fs-5" th:text="${#temporals.format(ticket.session.startTime, 'dd/MM/yyyy')}">01/01/2026</p>
+                            <div class="ticket-info-grid">
+                                <div class="ticket-info-item">
+                                    <span class="ticket-info-label">Fecha</span>
+                                    <span class="ticket-info-value"
+                                          th:text="${#temporals.format(ticket.session.startTime, 'dd MMM yyyy')}">—</span>
                                 </div>
-                                <div class="col-6">
-                                    <p class="text-muted small mb-0 text-uppercase fw-bold">Hora</p>
-                                    <p class="fs-5" th:text="${#temporals.format(ticket.session.startTime, 'HH:mm')}">20:00</p>
+                                <div class="ticket-info-item">
+                                    <span class="ticket-info-label">Hora</span>
+                                    <span class="ticket-info-value"
+                                          th:text="${#temporals.format(ticket.session.startTime, 'HH:mm')}">—</span>
                                 </div>
-                                <div class="col-6">
-                                    <p class="text-muted small mb-0 text-uppercase fw-bold">Sala</p>
-                                    <p class="fs-5" th:text="${ticket.session.room.name}">Sala Premium</p>
+                                <div class="ticket-info-item">
+                                    <span class="ticket-info-label">Sala</span>
+                                    <span class="ticket-info-value"
+                                          th:text="${ticket.session.room.name}">—</span>
                                 </div>
-                                <div class="col-6">
-                                    <p class="text-muted small mb-0 text-uppercase fw-bold">Ubicación</p>
-                                    <p class="fs-5">Fila <span th:text="${ticket.row}"></span>, Butaca <span th:text="${ticket.seat}"></span></p>
+                                <div class="ticket-info-item">
+                                    <span class="ticket-info-label">Butaca</span>
+                                    <span class="ticket-info-value">
+                                        Fila <strong th:text="${ticket.row}" class="text-gold"></strong>
+                                        Asiento <strong th:text="${ticket.seat}" class="text-gold"></strong>
+                                    </span>
                                 </div>
-                            </div>
-
-                            <div class="bg-light p-3 rounded-3 mt-3 border-start border-4 border-primary">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <p class="text-muted small mb-0">Titular</p>
-                                        <p class="mb-0 fw-bold" th:text="${ticket.user.email}">Usuario</p>
-                                    </div>
-                                    <div class="text-end">
-                                        <p class="text-muted small mb-0">Precio Total</p>
-                                        <p class="mb-0 fw-bold fs-4 text-dark"
-                                           th:text="${#numbers.formatCurrency(ticket.price + (ticket.snackPrice != null ? ticket.snackPrice : 0))}">
-                                           10.00€
-                                        </p>
-                                    </div>
+                                <div class="ticket-info-item">
+                                    <span class="ticket-info-label">Titular</span>
+                                    <span class="ticket-info-value small" th:text="${ticket.user.email}">—</span>
                                 </div>
                             </div>
 
-                            <div th:if="${ticket.status.name() == 'PAGADO'}" class="mt-5">
-                                <h4 class="mb-4">¿Quieres añadir algo de picar?</h4>
-
-
-                                <div class="row g-3 mb-4">
-                                    <div class="col-md-6 col-lg-4">
-                                        <div class="card h-100 text-center">
-                                            <div class="card-body">
-                                                <h6 class="card-title">🍿 Palomitas medianas</h6>
-                                                <p class="text-muted mb-3">4,50 €</p>
-                                                <form th:action="@{/tickets/{id}/snack(id=${ticket.id})}" method="POST">
-                                                    <input type="hidden" name="snackPrice" value="4.50">
-                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Añadir</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-6 col-lg-4">
-                                        <div class="card h-100 text-center">
-                                            <div class="card-body">
-                                                <h6 class="card-title">🥤 Refresco</h6>
-                                                <p class="text-muted mb-3">3,00 €</p>
-                                                <form th:action="@{/tickets/{id}/snack(id=${ticket.id})}" method="POST">
-                                                    <input type="hidden" name="snackPrice" value="3.00">
-                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Añadir</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-6 col-lg-4">
-                                        <div class="card h-100 text-center">
-                                            <div class="card-body">
-                                                <h6 class="card-title">🍿 Palomitas grandes</h6>
-                                                <p class="text-muted mb-3">6,00 €</p>
-                                                <form th:action="@{/tickets/{id}/snack(id=${ticket.id})}" method="POST">
-                                                    <input type="hidden" name="snackPrice" value="6.00">
-                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Añadir</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-6 col-lg-4">
-                                        <div class="card h-100 text-center">
-                                            <div class="card-body">
-                                                <h6 class="card-title">🍿🥤 Pack duo</h6>
-                                                <p class="text-muted mb-3">8,50 €</p>
-                                                <form th:action="@{/tickets/{id}/snack(id=${ticket.id})}" method="POST">
-                                                    <input type="hidden" name="snackPrice" value="8.50">
-                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Añadir</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-6 col-lg-4">
-                                        <div class="card h-100 text-center">
-                                            <div class="card-body">
-                                                <h6 class="card-title">👨‍👩‍👧‍👦 Combo familiar</h6>
-                                                <p class="text-muted mb-3">14,00 €</p>
-                                                <form th:action="@{/tickets/{id}/snack(id=${ticket.id})}" method="POST">
-                                                    <input type="hidden" name="snackPrice" value="14.00">
-                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Añadir</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-6 col-lg-4">
-                                        <div class="card h-100 text-center">
-                                            <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 120px;">
-                                                <a th:href="@{/tickets}" class="btn btn-secondary w-100">No, gracias</a>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <!-- Desglose de precios -->
+                            <div class="ticket-price-breakdown mt-4">
+                                <h6 class="text-gold mb-3">
+                                    <i class="fa-solid fa-receipt me-2"></i>Desglose
+                                </h6>
+                                <div class="breakdown-line">
+                                    <span class="text-muted small">
+                                        <i class="fa-solid fa-ticket me-2"></i>Entrada
+                                    </span>
+                                    <span class="text-secondary small"
+                                          th:text="${#numbers.formatDecimal(ticket.session.price, 1, 2) + ' €'}">—</span>
+                                </div>
+                                <div class="breakdown-line" th:if="${ticket.snackPrice != null and ticket.snackPrice > 0}">
+                                    <span class="text-muted small">
+                                        <i class="fa-solid fa-popcorn me-2"></i>Snacks
+                                    </span>
+                                    <span class="text-secondary small"
+                                          th:text="${#numbers.formatDecimal(ticket.snackPrice, 1, 2) + ' €'}">—</span>
+                                </div>
+                                <div class="breakdown-divider"></div>
+                                <div class="breakdown-line breakdown-total">
+                                    <span class="fw-bold">Total pagado</span>
+                                    <span class="text-gold fw-bold fs-5"
+                                          th:text="${#numbers.formatDecimal(ticket.price + (ticket.snackPrice != null ? ticket.snackPrice : 0), 1, 2) + ' €'}">—</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="card-footer bg-white p-4 border-top text-center mt-auto">
-                            <p class="text-muted small mb-2 text-uppercase">Código de acceso</p>
-                            <div class="mb-3">
-                                <img th:src="${'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + ticket.QRCode}"
-                                     alt="QR Code" class="img-thumbnail shadow-sm">
+                        <!-- Separador dentado (efecto ticket físico) -->
+                        <div class="ticket-perforation d-none d-md-flex"></div>
+
+                        <!-- QR -->
+                        <div class="col-md-5 ticket-qr-col">
+                            <div class="text-center">
+                                <p class="text-muted small text-uppercase mb-2" style="letter-spacing:0.1em">
+                                    Código de acceso
+                                </p>
+                                <div class="ticket-qr-frame">
+                                    <img th:src="${'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + ticket.QRCode}"
+                                         alt="QR Code"
+                                         class="ticket-qr-img">
+                                </div>
+                                <p class="font-monospace small text-muted mt-2 mb-0"
+                                   th:text="${ticket.QRCode}"
+                                   style="font-size:0.7rem; letter-spacing:0.05em; word-break:break-all">
+                                    HASH-ID
+                                </p>
                             </div>
-                            <p class="font-monospace small mb-0" th:text="${ticket.QRCode}">HASH-ID-TICKET</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Footer del ticket -->
+                <div class="ticket-footer">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <p class="text-muted small mb-0">
+                            <i class="fa-solid fa-shield-halved me-1"></i>
+                            Entrada válida solo para la sesión indicada
+                        </p>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-secondary btn-sm" onclick="window.print()">
+                                <i class="fa-solid fa-print me-1"></i> Imprimir
+                            </button>
+                            <button class="btn btn-primary btn-sm"
+                                    onclick="navigator.clipboard?.writeText(document.querySelector('.font-monospace')?.textContent?.trim() || '')
+                                             .then(() => this.innerHTML='<i class=\'fa-solid fa-check me-1\'></i> Copiado')
+                                             .catch(() => {})">
+                                <i class="fa-solid fa-copy me-1"></i> Copiar código
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="mt-4 d-flex justify-content-center gap-2">
-                <button class="btn btn-outline-dark" onclick="window.print()">
-                    <i class="fa-solid fa-print me-1"></i> Imprimir PDF
-                </button>
-                <button class="btn btn-primary">
-                    <i class="fa-solid fa-share-nodes me-1"></i> Compartir entrada
-                </button>
-            </div>
+            </div><!-- /ticket-wrapper -->
+
         </div>
     </div>
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <div th:replace="~{layout/footer :: scripts}"></div>
+
+
+<!-- ESTILOS TICKET FINAL -->
+<style>
+    /* Animación entrada */
+    @keyframes ticketReveal {
+        from { opacity: 0; transform: translateY(24px) scale(0.98); }
+        to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+    .ticket-detail-fade {
+        animation: ticketReveal 0.45s cubic-bezier(.22,.68,0,1.2) both;
+    }
+
+    /* Wrapper del ticket */
+    .ticket-wrapper {
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(200,169,107,0.35);
+        box-shadow: 0 8px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(200,169,107,0.08);
+    }
+
+    /* Cabecera con backdrop */
+    .ticket-header {
+        position: relative;
+        padding: 28px 32px 24px;
+        overflow: hidden;
+        min-height: 130px;
+        display: flex;
+        align-items: flex-end;
+    }
+    .ticket-header-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center top;
+        filter: blur(6px) brightness(0.25);
+        transform: scale(1.05);
+        z-index: 0;
+    }
+    .ticket-header::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg,
+            rgba(11,11,13,0.7) 0%,
+            rgba(107,31,42,0.3) 60%,
+            rgba(11,11,13,0.8) 100%);
+        z-index: 1;
+    }
+    .ticket-header-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+    }
+    .ticket-cinema-name {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--cinema-accent-gold);
+        font-weight: 700;
+    }
+    .ticket-movie-title {
+        font-family: var(--font-display) !important;
+        font-size: clamp(1.3rem, 4vw, 2rem) !important;
+        color: var(--cinema-text-primary) !important;
+        line-height: 1.2;
+    }
+
+    /* Badges de estado */
+    .ticket-badge-paid {
+        background: linear-gradient(135deg, #C8A96B, #9B8350);
+        color: #0B0B0D;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(200,169,107,0.35);
+    }
+    .ticket-badge-pending {
+        background: rgba(255,152,0,0.15);
+        border: 1px solid rgba(255,152,0,0.4);
+        color: #FFB74D;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Cuerpo */
+    .ticket-body {
+        background: var(--cinema-surface-1);
+    }
+
+    /* Columna info */
+    .ticket-info-col {
+        padding: 28px 28px 24px;
+        border-right: none;
+    }
+    @media (min-width: 768px) {
+        .ticket-info-col {
+            border-right: 1px dashed rgba(200,169,107,0.2);
+        }
+    }
+    .ticket-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .ticket-info-item { display: flex; flex-direction: column; gap: 3px; }
+    .ticket-info-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--cinema-text-secondary);
+        font-weight: 600;
+    }
+    .ticket-info-value {
+        font-size: 0.95rem;
+        color: var(--cinema-text-primary);
+        font-weight: 500;
+    }
+
+    /* Desglose de precios */
+    .ticket-price-breakdown {
+        background: var(--cinema-surface-2);
+        border-radius: 10px;
+        padding: 14px 16px;
+        border: 1px solid rgba(200,169,107,0.1);
+    }
+    .breakdown-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+    }
+    .breakdown-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(200,169,107,0.25), transparent);
+        margin: 8px 0;
+    }
+    .breakdown-total { padding-top: 4px; }
+
+    /* Separador dentado (simulación perforación ticket) */
+    .ticket-perforation {
+        width: 1px;
+        flex-shrink: 0;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Columna QR */
+    .ticket-qr-col {
+        padding: 28px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .ticket-qr-frame {
+        display: inline-block;
+        padding: 10px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .ticket-qr-img {
+        display: block;
+        width: 150px;
+        height: 150px;
+    }
+
+    /* Footer del ticket */
+    .ticket-footer {
+        background: var(--cinema-surface-2);
+        border-top: 1px solid rgba(200,169,107,0.12);
+        padding: 16px 28px;
+    }
+
+    /* Ajuste: quitar hover lift del wrapper */
+    .ticket-wrapper:hover {
+        transform: none !important;
+    }
+
+    /* Print styles del ticket */
+    @media print {
+        .ticket-wrapper { box-shadow: none; border: 1px solid #ccc; }
+        .ticket-header-bg { filter: brightness(0.5); }
+        nav, footer, .mb-4 a, .ticket-footer .btn { display: none !important; }
+    }
+</style>
 
 </body>
 </html>

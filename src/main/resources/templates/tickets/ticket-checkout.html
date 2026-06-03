@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/head :: head('Checkout — Only Film')}"></head>
+
+<body class="d-flex flex-column min-vh-100 checkout-page">
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
+
+<main class="container flex-grow-1 my-5 checkout-fade-in">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb checkout-breadcrumb">
+            <li class="breadcrumb-item">
+                <a th:href="@{/sessions/{id}(id=${ticket.session.id})}">
+                    <i class="fa-solid fa-couch me-1"></i>Selección de butaca
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <i class="fa-solid fa-bag-shopping me-1"></i>Snacks &amp; Pago
+            </li>
+        </ol>
+    </nav>
+
+    <form th:action="@{/tickets/{id}/checkout(id=${ticket.id})}" method="POST" id="checkout-form">
+
+        <div class="row g-4 align-items-start">
+
+
+            <!-- COLUMNA IZQUIERDA - Resumen + Snacks-->
+
+            <div class="col-lg-6">
+
+                <!-- Resumen de la entrada -->
+                <div class="card checkout-card mb-4">
+                    <div class="card-body p-4">
+
+                        <h5 class="text-gold mb-4">
+                            <i class="fa-solid fa-ticket me-2"></i>Tu entrada
+                        </h5>
+
+                        <div class="d-flex gap-3 align-items-start mb-4">
+                            <img th:src="${ticket.session.movie.imageUrl}"
+                                 alt="Póster"
+                                 class="checkout-poster rounded">
+                            <div class="flex-grow-1">
+                                <h4 class="mb-1" th:text="${ticket.session.movie.title}">Título</h4>
+                                <p class="text-muted small mb-2" th:text="${ticket.session.room.name}">Sala</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="badge badge-secondary">
+                                        <i class="fa-solid fa-calendar me-1"></i>
+                                        <span th:text="${#temporals.format(ticket.session.startTime, 'dd/MM/yyyy')}">Fecha</span>
+                                    </span>
+                                    <span class="badge badge-secondary">
+                                        <i class="fa-solid fa-clock me-1"></i>
+                                        <span th:text="${#temporals.format(ticket.session.startTime, 'HH:mm')}">Hora</span>
+                                    </span>
+                                    <span class="badge badge-secondary">
+                                        <i class="fa-solid fa-couch me-1"></i>
+                                        Fila <span th:text="${ticket.row}"></span>,
+                                        Butaca <span th:text="${ticket.seat}"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Separador dorado -->
+                        <div class="checkout-divider"></div>
+
+                        <!-- Línea precio entrada -->
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="text-muted"><i class="fa-solid fa-ticket me-2"></i>Entrada</span>
+                            <span class="text-gold fw-bold"
+                                  th:text="${#numbers.formatDecimal(ticket.session.price, 1, 2) + ' €'}">0.00 €</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Snacks -->
+                <div class="card checkout-card">
+                    <div class="card-body p-4">
+
+                        <h5 class="text-gold mb-1">
+                            <i class="fa-solid fa-cookie-bite me-2"></i>¿Añadir algo de picar?
+                        </h5>
+                        <p class="text-muted small mb-4">Opcional — puedes continuar sin añadir nada</p>
+
+                        <div class="row g-3">
+
+                            <!-- Palomitas medianas -->
+                            <div class="col-6">
+                                <div class="snack-item">
+                                    <div class="snack-emoji">🍿</div>
+                                    <div class="snack-info">
+                                        <span class="snack-name">Palomitas medianas</span>
+                                        <span class="snack-price">4,50 €</span>
+                                    </div>
+                                    <div class="snack-qty">
+                                        <button type="button"
+                                                class="snack-toggle">
+                                            + Añadir
+                                        </button>
+
+                                        <input type="hidden"
+                                               name="qtyPalomitasMedianas"
+                                               value="0"
+                                               class="snack-counter"
+                                               data-price="4.50">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Palomitas grandes -->
+                            <div class="col-6">
+                                <div class="snack-item">
+                                    <div class="snack-emoji">🍿</div>
+                                    <div class="snack-info">
+                                        <span class="snack-name">Palomitas grandes</span>
+                                        <span class="snack-price">6,00 €</span>
+                                    </div>
+                                    <div class="snack-qty">
+                                        <button type="button"
+                                                class="snack-toggle">
+                                            + Añadir
+                                        </button>
+
+                                        <input type="hidden"
+                                               name="qtyPalomitasGrandes"
+                                               value="0"
+                                               class="snack-counter"
+                                               data-price="6.00">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Refresco -->
+                            <div class="col-6">
+                                <div class="snack-item">
+                                    <div class="snack-emoji">🥤</div>
+                                    <div class="snack-info">
+                                        <span class="snack-name">Refresco</span>
+                                        <span class="snack-price">3,00 €</span>
+                                    </div>
+                                    <div class="snack-qty">
+                                        <button type="button"
+                                                class="snack-toggle">
+                                            + Añadir
+                                        </button>
+
+                                        <input type="hidden"
+                                               name="qtyRefresco"
+                                               value="0"
+                                               class="snack-counter"
+                                               data-price="3.00">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pack Duo -->
+                            <div class="col-6">
+                                <div class="snack-item">
+                                    <div class="snack-emoji">🍿🥤</div>
+                                    <div class="snack-info">
+                                        <span class="snack-name">Pack duo</span>
+                                        <span class="snack-price">8,50 €</span>
+                                    </div>
+                                    <div class="snack-qty">
+                                        <button type="button"
+                                                class="snack-toggle">
+                                            + Añadir
+                                        </button>
+
+                                        <input type="hidden"
+                                               name="qtyPackDuo"
+                                               value="0"
+                                               class="snack-counter"
+                                               data-price="8.50">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Combo familiar -->
+                            <div class="col-12">
+                                <div class="snack-item">
+                                    <div class="snack-emoji">👨‍👩‍👧‍👦</div>
+                                    <div class="snack-info">
+                                        <span class="snack-name">Combo familiar</span>
+                                        <span class="snack-price">14,00 €</span>
+                                    </div>
+                                    <div class="snack-qty">
+                                        <button type="button"
+                                                class="snack-toggle">
+                                            + Añadir
+                                        </button>
+
+                                        <input type="hidden"
+                                               name="qtyComboFamiliar"
+                                               value="0"
+                                               class="snack-counter"
+                                               data-price="14.00">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Desglose en tiempo real -->
+                        <div class="checkout-divider mt-4"></div>
+                        <div class="mt-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted small">Entrada</span>
+                                <span class="text-muted small"
+                                      th:text="${#numbers.formatDecimal(ticket.session.price, 1, 2) + ' €'}">0.00 €</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-3" id="snack-line"
+                                 style="display:none !important" th:style="${''}">
+                                <span class="text-muted small">Snacks</span>
+                                <span class="text-muted small" id="snack-subtotal">0,00 €</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-gold">Total</span>
+                                <span class="fw-bold text-gold fs-5" id="total-display"
+                                      th:text="${#numbers.formatDecimal(ticket.session.price, 1, 2) + ' €'}">0.00 €</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- COLUMNA DERECHA - Formulario de pago -->
+            <div class="col-lg-6">
+                <div class="card checkout-card checkout-payment-card">
+                    <div class="card-body p-4 p-lg-5">
+
+                        <div class="d-flex align-items-center gap-2 mb-4">
+                            <div class="payment-lock-icon">
+                                <i class="fa-solid fa-lock"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0">Datos de pago</h5>
+                                <p class="text-muted small mb-0">Conexión segura y cifrada</p>
+                            </div>
+                        </div>
+
+                        <!-- Nombre titular -->
+                        <div class="mb-4">
+                            <label for="cardHolder" class="form-label payment-label">
+                                <i class="fa-solid fa-user me-2"></i>Nombre del titular
+                            </label>
+                            <input type="text"
+                                   class="form-control payment-input"
+                                   id="cardHolder"
+                                   name="cardHolder"
+                                   placeholder="Como aparece en la tarjeta"
+                                   autocomplete="cc-name"
+                                   required>
+                            <div class="invalid-feedback">Introduce el nombre del titular.</div>
+                        </div>
+
+                        <!-- Número de tarjeta -->
+                        <div class="mb-4">
+                            <label for="cardNumber" class="form-label payment-label">
+                                <i class="fa-solid fa-credit-card me-2"></i>Número de tarjeta
+                            </label>
+                            <div class="position-relative">
+                                <input type="text"
+                                       class="form-control payment-input card-number-input"
+                                       id="cardNumber"
+                                       name="cardNumber"
+                                       placeholder="1234123412341234"
+                                       maxlength="16"
+                                       inputmode="numeric"
+                                       pattern="[0-9]{16}"
+                                       required>
+                            </div>
+                            <div class="invalid-feedback">Introduce un número de tarjeta válido (16 dígitos).</div>
+                        </div>
+
+                        <!-- Fecha + CVV -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-7">
+                                <label for="cardExpiry" class="form-label payment-label">
+                                    <i class="fa-solid fa-calendar-alt me-2"></i>Caducidad
+                                </label>
+                                <input type="text"
+                                       class="form-control payment-input"
+                                       id="cardExpiry"
+                                       name="cardExpiry"
+                                       placeholder="MM/AA"
+                                       maxlength="5"
+                                       inputmode="numeric"
+                                       pattern="(0[1-9]|1[0-2])\/[0-9]{2}"
+                                       autocomplete="cc-exp"
+                                       required>
+                                <div class="invalid-feedback">Formato MM/AA inválido.</div>
+                            </div>
+                            <div class="col-5">
+                                <label for="cardCvv" class="form-label payment-label">
+                                    <i class="fa-solid fa-shield me-2"></i>CVV
+                                </label>
+                                <input type="text"
+                                       class="form-control payment-input"
+                                       id="cardCvv"
+                                       name="cardCvv"
+                                       placeholder="123"
+                                       maxlength="4"
+                                       inputmode="numeric"
+                                       pattern="[0-9]{3,4}"
+                                       required>
+                                <div class="invalid-feedback">CVV inválido.</div>
+                            </div>
+                        </div>
+
+                        <div class="checkout-divider mb-4"></div>
+
+                        <!-- Resumen precio compacto -->
+                        <div class="payment-summary mb-4">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted small">Entrada</span>
+                                <span class="text-muted small"
+                                      th:text="${#numbers.formatDecimal(ticket.session.price, 1, 2) + ' €'}">—</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted small">Snacks</span>
+                                <span class="text-muted small" id="pay-snack-subtotal">0,00 €</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-gold fw-bold">Total a pagar</span>
+                                <span class="text-gold fw-bold" id="pay-total-display"
+                                      th:text="${#numbers.formatDecimal(ticket.session.price, 1, 2) + ' €'}">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Botón pagar -->
+                        <button type="submit" class="btn btn-primary w-100 btn-pay" id="pay-btn">
+                            <span class="pay-text">
+                                <i class="fa-solid fa-lock me-2"></i>
+                                Pagar ahora · <span id="pay-btn-amount"
+                                                    th:text="${#numbers.formatDecimal(ticket.session.price, 1, 2) + ' €'}">—</span>
+                            </span>
+                            <span class="pay-spinner" aria-hidden="true">
+                                <span class="spinner-ring"></span>
+                                Procesando pago...
+                            </span>
+                        </button>
+
+                        <p class="text-muted small text-center mt-3 mb-0">
+                            <i class="fa-solid fa-shield-halved me-1"></i>
+                            Pago 100% seguro · Datos encriptados
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /row -->
+    </form>
+</main>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<script th:replace="~{layout/footer :: scripts}"></script>
+
+<!-- ══════════════════════════════════════
+     ESTILOS CHECKOUT
+     ══════════════════════════════════════ -->
+<style>
+    /* Animación de entrada de página */
+    @keyframes checkoutFadeIn {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .checkout-fade-in {
+        animation: checkoutFadeIn 0.4s ease-out both;
+    }
+
+    /* Spinner de pago */
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .spinner-ring {
+        display: inline-block;
+        width: 16px; height: 16px;
+        border: 2px solid rgba(11,11,13,0.3);
+        border-top-color: var(--cinema-dark);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+
+    /* Breadcrumb */
+    .checkout-breadcrumb {
+        background: transparent;
+        padding: 0;
+        font-size: 0.85rem;
+    }
+    .checkout-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+        color: var(--cinema-accent-gold);
+        content: "›";
+    }
+    .checkout-breadcrumb .breadcrumb-item a {
+        color: var(--cinema-text-secondary) !important;
+    }
+    .checkout-breadcrumb .breadcrumb-item.active {
+        color: var(--cinema-accent-gold);
+    }
+
+    /* Cards de checkout */
+    .checkout-card {
+        border: 1px solid rgba(200,169,107,0.2) !important;
+        background: var(--cinema-surface-1) !important;
+        transition: border-color 0.3s ease;
+    }
+    .checkout-card:hover {
+        border-color: rgba(200,169,107,0.45) !important;
+        transform: none; /* override del hover global de .card */
+        box-shadow: var(--shadow-md) !important;
+    }
+
+    /* Póster pequeño */
+    .checkout-poster {
+        width: 70px;
+        height: 100px;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 1px solid rgba(200,169,107,0.25);
+    }
+
+    /* Separador dorado */
+    .checkout-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(200,169,107,0.35), transparent);
+    }
+
+    /* Snack items */
+    .snack-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--cinema-surface-2);
+        border: 1px solid rgba(200,169,107,0.1);
+        border-radius: 10px;
+        padding: 10px 12px;
+        transition: border-color 0.2s ease;
+        height: 100%;
+    }
+    .snack-item:has(.snack-counter:not([value="0"])),
+    .snack-item:has(.snack-counter:focus) {
+        border-color: rgba(200,169,107,0.45);
+    }
+    .snack-emoji {
+        font-size: 1.4rem;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+    .snack-info {
+        flex-grow: 1;
+        min-width: 0;
+    }
+    .snack-name {
+        display: block;
+        font-size: 0.78rem;
+        color: var(--cinema-text-primary);
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .snack-price {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--cinema-accent-gold);
+        font-weight: 600;
+    }
+    .snack-qty { flex-shrink: 0; }
+    .snack-input {
+        width: 52px;
+        text-align: center;
+        background: var(--cinema-surface-1) !important;
+        border: 1px solid rgba(200,169,107,0.2) !important;
+        border-radius: 6px !important;
+        color: var(--cinema-text-primary) !important;
+        font-size: 0.9rem;
+        padding: 4px 6px !important;
+    }
+    .snack-input:focus {
+        border-color: var(--cinema-accent-gold) !important;
+        box-shadow: 0 0 0 2px rgba(200,169,107,0.2) !important;
+    }
+
+
+
+
+
+    .snack-toggle {
+        border: 1px solid rgba(200,169,107,.25);
+        background: transparent;
+        color: var(--cinema-accent-gold);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: .8rem;
+        font-weight: 600;
+        transition: all .2s ease;
+    }
+
+    .snack-toggle.active {
+        background: rgba(200,169,107,.15);
+        border-color: var(--cinema-accent-gold);
+        color: var(--cinema-accent-gold);
+    }
+
+    /* Ocultar flechas nativas del number */
+    .snack-input::-webkit-inner-spin-button,
+    .snack-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .snack-input[type=number] { -moz-appearance: textfield; }
+
+    /* Pago - icono candado */
+    .payment-lock-icon {
+        width: 40px; height: 40px;
+        background: rgba(200,169,107,0.12);
+        border: 1px solid rgba(200,169,107,0.25);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--cinema-accent-gold);
+        flex-shrink: 0;
+    }
+
+    /* Labels y inputs de pago */
+    .payment-label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--cinema-text-secondary) !important;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+    .payment-input {
+        background: var(--cinema-surface-2) !important;
+        border: 1px solid rgba(200,169,107,0.15) !important;
+        color: var(--cinema-text-primary) !important;
+        border-radius: 8px !important;
+        padding: 12px 14px !important;
+        font-size: 1rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .payment-input::placeholder {
+        color: rgba(255, 255, 255, 0.12);
+        opacity: 1;
+    }
+    .payment-input:focus {
+        border-color: var(--cinema-accent-gold) !important;
+        box-shadow: 0 0 0 3px rgba(200,169,107,0.15) !important;
+    }
+    .payment-input.is-invalid {
+        border-color: #e05555 !important;
+        box-shadow: 0 0 0 3px rgba(224,85,85,0.15) !important;
+    }
+    .card-number-input {
+        font-family: 'Courier New', monospace;
+        letter-spacing: 0.12em;
+    }
+    .card-brand-icon {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--cinema-accent-gold);
+        font-size: 1.4rem;
+        pointer-events: none;
+    }
+
+    /* Logos marcas tarjeta */
+    .payment-brands i {
+        color: var(--cinema-text-secondary);
+        opacity: 0.6;
+        transition: opacity 0.2s;
+    }
+    .payment-brands i:hover { opacity: 1; }
+
+    /* Resumen de precios en columna pago */
+    .payment-summary {
+        background: var(--cinema-surface-2);
+        border-radius: 8px;
+        padding: 14px 16px;
+        border: 1px solid rgba(200,169,107,0.12);
+    }
+
+    /* Botón pagar - estados */
+    .btn-pay {
+        padding: 14px !important;
+        font-size: 1rem !important;
+        border-radius: 10px !important;
+        position: relative;
+        overflow: hidden;
+    }
+    .pay-spinner { display: none; align-items: center; justify-content: center; gap: 6px; }
+    .btn-pay.loading .pay-text    { display: none; }
+    .btn-pay.loading .pay-spinner { display: flex; }
+    .btn-pay.loading { cursor: not-allowed; opacity: 0.85; }
+
+    /* Card de pago - borde destello dorado */
+    .checkout-payment-card {
+        border-color: rgba(200,169,107,0.3) !important;
+        box-shadow: 0 0 30px rgba(200,169,107,0.06) !important;
+    }
+
+    /* Feedback de validación */
+    .invalid-feedback { font-size: 0.78rem; color: #e07070 !important; }
+
+    /* Responsive */
+    @media (max-width: 576px) {
+        .checkout-poster { width: 55px; height: 80px; }
+        .btn { width: 100% !important; }
+    }
+</style>
+
+
+<!-- =========================== -->
+<script th:inline="javascript">
+(function () {
+    /* ── 1. Precio base desde Thymeleaf ── */
+    const BASE_PRICE = /*[[${ticket.session.price}]]*/ 0;
+
+    /* ── 2. Total en tiempo real ── */
+    function recalculate() {
+        let snackTotal = 0;
+        document.querySelectorAll('.snack-counter').forEach(function (input) {
+            const qty   = parseInt(input.value, 10) || 0;
+            const price = parseFloat(input.dataset.price) || 0;
+            snackTotal += qty * price;
+        });
+        const total = BASE_PRICE + snackTotal;
+
+        const fmt = function (n) {
+            return n.toFixed(2).replace('.', ',') + ' €';
+        };
+
+        document.getElementById('snack-subtotal').textContent     = fmt(snackTotal);
+        document.getElementById('pay-snack-subtotal').textContent  = fmt(snackTotal);
+        document.getElementById('total-display').textContent       = fmt(total);
+        document.getElementById('pay-total-display').textContent   = fmt(total);
+        document.getElementById('pay-btn-amount').textContent      = fmt(total);
+
+        const snackLine = document.getElementById('snack-line');
+        snackLine.style.display = snackTotal > 0 ? 'flex' : 'none';
+    }
+
+    document.querySelectorAll('.snack-counter').forEach(function (input) {
+        input.addEventListener('input', recalculate);
+    });
+
+    /* añadir o quitar snacks*/
+    document.querySelectorAll('.snack-toggle').forEach(btn => {
+
+        btn.addEventListener('click', function () {
+
+            const input =
+                this.parentElement.querySelector('.snack-counter');
+
+            if (input.value === "0") {
+                input.value = "1";
+                this.textContent = "✓ Añadido";
+                this.classList.add('active');
+            } else {
+                input.value = "0";
+                this.textContent = "+ Añadir";
+                this.classList.remove('active');
+            }
+
+            recalculate();
+        });
+
+    });
+
+    recalculate();
+
+
+    /*validacion tarketa*/
+    document.querySelectorAll('#cardNumber, #cardCvv').forEach(input => {
+
+        input.addEventListener('input', function () {
+
+            this.value = this.value.replace(/\D/g, '');
+
+        });
+
+    });
+    /* que no este caducada */
+    document.getElementById('checkout-form').addEventListener('submit', function (e) {
+
+        const expiry = document.getElementById('cardExpiry');
+
+        const [month, year] = expiry.value.split('/');
+
+        if (!month || !year) return;
+
+        const expiryDate = new Date(
+            2000 + parseInt(year),
+            parseInt(month)
+        );
+
+        const today = new Date();
+
+        if (expiryDate <= today) {
+
+            e.preventDefault();
+
+            alert('La tarjeta está caducada');
+
+            expiry.focus();
+        }
+
+    });
+})();
+
+
+</script>
+
+</body>
+</html>

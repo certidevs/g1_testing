@@ -21,6 +21,12 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final RoomRepository roomRepository;
 
+    private static final double PRICE_PALOMITAS_MEDIANAS = 4.50;
+    private static final double PRICE_PALOMITAS_GRANDES  = 6.00;
+    private static final double PRICE_REFRESCO           = 3.00;
+    private static final double PRICE_PACK_DUO           = 8.50;
+    private static final double PRICE_COMBO_FAMILIAR     = 14.00;
+
     public List <Ticket> getBySessionId(Long id){
         return ticketRepository.findBySession_Id(id);
     }
@@ -88,6 +94,71 @@ public class TicketService {
         if (!tickets.isEmpty()) {
             ticketRepository.saveAll(tickets);
         }
+
+
         return tickets;
+    }
+
+    public void processCheckout(
+            Long ticketId,
+            User user,
+            int qtyPalomitasMedianas,
+            int qtyPalomitasGrandes,
+            int qtyRefresco,
+            int qtyPackDuo,
+            int qtyComboFamiliar
+    ) {
+
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow();
+
+        double snackTotal = calculateSnackTotal(
+                qtyPalomitasMedianas,
+                qtyPalomitasGrandes,
+                qtyRefresco,
+                qtyPackDuo,
+                qtyComboFamiliar
+        );
+
+        ticket.setSnackPrice(snackTotal > 0 ? snackTotal : null);
+
+        ticket.setPrice(ticket.getSession().getPrice());
+
+        ticket.setBuyDateTime(java.time.LocalDateTime.now());
+
+        ticket.setStatus(BuyStatus.PAGADO);
+
+        if (user != null) {
+            ticket.setUser(user);
+        }
+
+        ticket.setQRCode(generateQrCode(ticket.getId()));
+
+        ticketRepository.save(ticket);
+    }
+
+    private double calculateSnackTotal(
+            int qtyPalomitasMedianas,
+            int qtyPalomitasGrandes,
+            int qtyRefresco,
+            int qtyPackDuo,
+            int qtyComboFamiliar
+    ) {
+
+        return qtyPalomitasMedianas * PRICE_PALOMITAS_MEDIANAS
+                + qtyPalomitasGrandes * PRICE_PALOMITAS_GRANDES
+                + qtyRefresco * PRICE_REFRESCO
+                + qtyPackDuo * PRICE_PACK_DUO
+                + qtyComboFamiliar * PRICE_COMBO_FAMILIAR;
+    }
+
+    private String generateQrCode(Long ticketId) {
+
+        return "ONLYFILM-" + ticketId + "-"
+                + java.util.UUID.randomUUID()
+                .toString()
+                .replace("-", "")
+                .substring(0, 8)
+                .toUpperCase();
     }
 }
