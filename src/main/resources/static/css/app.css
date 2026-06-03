@@ -947,3 +947,95 @@ footer a:hover {
         font-size: 0.95rem;
     }
 }
+
+/* ---- Corregir color de iconos y hover de botones en listados ---- */
+.icon-gold {
+    color: var(--cinema-accent-gold) !important;
+}
+
+/* Forzar iconos dentro de badges a dorado (compatibilidad retroactiva) */
+.badge .fa,
+.badge .fas,
+.badge .far,
+.badge .fab {
+    color: var(--cinema-accent-gold) !important;
+}
+
+/* Asegurar que los iconos dentro de botones hereden el color del botón */
+.btn .fa,
+.btn .fas,
+.btn .far,
+.btn .fab {
+    color: inherit !important;
+    transition: color 0.15s ease !important;
+}
+
+/* Sobrescribir comportamiento por defecto que pone azul los botones outline-primary */
+.btn-outline-primary {
+    color: var(--cinema-accent-gold) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-dark) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    box-shadow: var(--shadow-gold) !important;
+    transform: translateY(-2px);
+}
+
+/* En caso de que exista otra regla que fuerce azul con !important, aumentar especificidad */
+.card-footer .btn.btn-outline-primary:hover {
+    background-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-dark) !important;
+    border-color: var(--cinema-accent-gold) !important;
+}
+
+/* Utilidades para ticket-list: iconos contrastados y botones compactos */
+.icon-contrast {
+    color: var(--cinema-accent-gold) !important; /* dorado */
+}
+
+/* Iconos dentro de badges claras */
+.badge.bg-light .fa,
+.badge.bg-light .fas,
+.badge.bg-light .far,
+.badge.bg-light .fab {
+    color: var(--cinema-accent-gold) !important;
+}
+
+/* Iconos dentro de botones heredan y cambian correctamente al hover */
+.btn .fa,
+.btn .fas,
+.btn .far,
+.btn .fab {
+    color: inherit !important;
+    transition: color 0.15s ease !important;
+}
+
+/* Botones compactos para listados */
+.btn-sm-custom {
+    padding: 0.32rem 0.6rem !important;
+    font-size: 0.80rem !important;
+    border-radius: 0.45rem !important;
+    text-transform: none !important;
+}
+
+/* Forzar apariencia dorada para btn-outline-primary y comportamiento al hover */
+.btn-outline-primary {
+    color: var(--cinema-accent-gold) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    background-color: transparent !important;
+}
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-dark) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    box-shadow: var(--shadow-gold) !important;
+    transform: translateY(-2px);
+}
