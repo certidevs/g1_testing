@@ -1039,3 +1039,264 @@ footer a:hover {
     box-shadow: var(--shadow-gold) !important;
     transform: translateY(-2px);
 }
+
+/* ============================================
+   ACCESSIBILITY & CONTRAST FIXES (WCAG AA)
+   ============================================ */
+
+:root {
+    --cinema-accent-gold-hover: #D4B67A;
+    --cinema-focus-ring: rgba(200, 169, 107, 0.55);
+    --cinema-button-text-dark: #050505;
+}
+
+/* ============================================
+   BOTONES - CONTRASTE MEJORADO
+   ============================================ */
+
+.btn {
+    min-height: 44px;
+    font-weight: 600 !important;
+}
+
+/* --------------------------------------------
+   BTN PRIMARY
+   -------------------------------------------- */
+
+.btn-primary {
+    background-color: var(--cinema-accent-gold) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-button-text-dark) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    background-color: var(--cinema-accent-gold-hover) !important;
+    border-color: var(--cinema-accent-gold-hover) !important;
+    color: var(--cinema-button-text-dark) !important;
+    box-shadow: var(--shadow-gold) !important;
+    transform: translateY(-2px);
+}
+
+/* --------------------------------------------
+   BTN SECONDARY
+   -------------------------------------------- */
+
+.btn-secondary {
+    background-color: var(--cinema-surface-1) !important;
+    border: 2px solid var(--cinema-accent-gold) !important;
+    color: var(--cinema-accent-gold) !important;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+    background-color: var(--cinema-accent-gold) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-button-text-dark) !important;
+}
+
+/* --------------------------------------------
+   BTN OUTLINE LIGHT
+   -------------------------------------------- */
+
+.btn-outline-light {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    color: var(--cinema-text-primary) !important;
+    border: 2px solid rgba(245, 244, 241, 0.85) !important;
+}
+
+.btn-outline-light:hover,
+.btn-outline-light:focus,
+.btn-outline-light:active {
+    background-color: var(--cinema-accent-gold) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-button-text-dark) !important;
+}
+
+/* --------------------------------------------
+   BTN OUTLINE PRIMARY
+   -------------------------------------------- */
+
+.btn-outline-primary {
+    background-color: transparent !important;
+    color: var(--cinema-accent-gold) !important;
+    border: 2px solid var(--cinema-accent-gold) !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-button-text-dark) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    box-shadow: var(--shadow-gold) !important;
+}
+
+/* --------------------------------------------
+   BTN LIGHT
+   -------------------------------------------- */
+
+.btn-light {
+    background-color: var(--cinema-accent-gold) !important;
+    border-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-button-text-dark) !important;
+}
+
+.btn-light:hover,
+.btn-light:focus,
+.btn-light:active {
+    background-color: var(--cinema-accent-gold-hover) !important;
+    border-color: var(--cinema-accent-gold-hover) !important;
+    color: var(--cinema-button-text-dark) !important;
+}
+
+/* --------------------------------------------
+   BTN DANGER
+   -------------------------------------------- */
+
+.btn-danger {
+    background-color: var(--cinema-accent-burgundy) !important;
+    border-color: var(--cinema-accent-burgundy) !important;
+    color: #ffffff !important;
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active {
+    background-color: #8B2F3F !important;
+    border-color: #8B2F3F !important;
+    color: #ffffff !important;
+}
+
+/* ============================================
+   FOCUS STATES ACCESIBLES
+   ============================================ */
+
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-outline-light:focus-visible,
+.btn-outline-primary:focus-visible,
+.btn-danger:focus-visible,
+.btn-light:focus-visible {
+    outline: 3px solid var(--cinema-accent-gold) !important;
+    outline-offset: 3px !important;
+    box-shadow:
+            0 0 0 4px var(--cinema-focus-ring),
+            var(--shadow-gold) !important;
+}
+
+/* ============================================
+   DISABLED STATES
+   ============================================ */
+
+.btn:disabled,
+.btn.disabled {
+    opacity: 0.65 !important;
+    filter: grayscale(30%);
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ============================================
+   BOTONES DENTRO DE CARDS
+   ============================================ */
+
+.card .btn {
+    position: relative;
+    z-index: 1;
+}
+
+.card .btn-outline-light,
+.card .btn-outline-primary,
+.card .btn-secondary {
+    box-shadow:
+            0 0 0 1px rgba(255,255,255,0.08),
+            var(--shadow-sm) !important;
+}
+
+.card .btn:hover {
+    box-shadow:
+            0 0 0 1px rgba(200,169,107,0.25),
+            var(--shadow-gold) !important;
+}
+
+/* ============================================
+   ICONOS EN BOTONES
+   ============================================ */
+
+.btn i,
+.btn .fa,
+.btn .fas,
+.btn .far,
+.btn .fab {
+    color: inherit !important;
+}
+
+/* ============================================
+   MEJOR VISIBILIDAD EN NAVBAR OSCURA
+   ============================================ */
+
+.navbar .btn-outline-light {
+    background-color: rgba(255,255,255,0.06) !important;
+    border-color: rgba(255,255,255,0.9) !important;
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    .btn:hover,
+    .btn:focus {
+        transform: none !important;
+    }
+}
+
+/* ============================================
+   NAVBAR ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+
+.navbar .btn {
+    min-height: 44px;
+}
+
+.navbar .btn-outline-light {
+    background-color: rgba(255,255,255,0.05) !important;
+    border: 2px solid rgba(245,244,241,0.85) !important;
+}
+
+.navbar .btn-outline-light:hover,
+.navbar .btn-outline-light:focus {
+    background-color: var(--cinema-accent-gold) !important;
+    color: var(--cinema-button-text-dark) !important;
+    border-color: var(--cinema-accent-gold) !important;
+}
+
+.navbar .btn-primary {
+    box-shadow: var(--shadow-sm);
+}
+
+.navbar .btn-primary:hover {
+    box-shadow: var(--shadow-gold);
+}
+
+.navbar .rounded-circle {
+    transition: all 0.3s ease;
+}
+
+.navbar .dropdown-toggle:hover .rounded-circle,
+.navbar .btn:hover .rounded-circle {
+    box-shadow: var(--shadow-gold);
+}
+
+.navbar .nav-link:focus-visible,
+.navbar .btn:focus-visible {
+    outline: 3px solid var(--cinema-accent-gold);
+    outline-offset: 3px;
+}
