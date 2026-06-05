@@ -28,8 +28,12 @@ public class ReviewController {
     }
 
     @GetMapping("reviews/{id}")
-    public String reviewDetail(Model model, @PathVariable Long id) {
+    public String reviewDetail(Model model, @PathVariable Long id,
+                               @RequestParam(required = false) String returnUrl) {
         model.addAttribute("review", reviewRepository.findById(id).orElseThrow());
+        // Seguridad -> solo aceptamos rutas internas (empiezan por /)
+        String backUrl = (returnUrl != null && returnUrl.startsWith("/")) ? returnUrl : "/reviews";
+        model.addAttribute("returnUrl", backUrl);
         return "reviews/review-detail";
     }
 

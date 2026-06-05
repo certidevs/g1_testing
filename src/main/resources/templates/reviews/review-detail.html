@@ -65,8 +65,8 @@
         <div class="card-footer bg-transparent border-top small px-4 pb-4 d-flex gap-2 flex-wrap">
 
             <!-- Volver -->
-            <a th:href="@{/reviews}" class="btn btn-sm btn-outline-primary">
-                <i class="fa-solid fa-arrow-left me-1" aria-hidden="true"></i> Volver al listado
+            <a th:href="${returnUrl != null ? returnUrl : '/reviews'}" class="btn btn-sm btn-outline-primary">
+                <i class="fa-solid fa-arrow-left me-1" aria-hidden="true"></i> Volver
             </a>
 
             <!-- Editar: visible solo al autor o admin -->
