@@ -21,8 +21,20 @@
                     <label for="name" class="form-label">
                         <i class="fa-solid fa-door-open me-2 text-gold"></i>Nombre de la sala
                     </label>
-                    <input type="text" class="form-control" id="name" name="name" th:field="*{name}"
-                           placeholder="Ej: Sala 1" required maxlength="50">
+
+                    <input type="text"
+                           class="form-control"
+                           id="name"
+                           name="name"
+                           th:field="*{name}"
+                           placeholder="Ej: Sala 1"
+                           required
+                           maxlength="50">
+
+                    <div class="text-danger mt-1"
+                         th:if="${#fields.hasErrors('name')}"
+                         th:errors="*{name}">
+                    </div>
                 </div>
 
                 <div class="row g-3 mb-4">
@@ -31,7 +43,15 @@
                             <i class="fa-solid fa-people-group me-2 text-gold"></i>Capacidad
                         </label>
                         <input type="number" class="form-control" id="capacity" name="capacity"
-                               th:field="*{capacity}" required placeholder="Ej: 100" min="1">
+                               th:field="*{capacity}"
+                               required
+                               placeholder="Ej: 100"
+                               min="10"
+                               max="300">
+                        <div class="text-danger"
+                             th:if="${#fields.hasErrors('capacity')}"
+                             th:errors="*{capacity}">
+                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -44,6 +64,19 @@
                             <option th:value="${T(com.demo.model.enums.ScreenType).IMAX}" th:text="'IMAX'"></option>
                             <option th:value="${T(com.demo.model.enums.ScreenType).D4X}" th:text="'4DX'"></option>
                         </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="floorNumber" class="form-label">
+                            <i class="fa-solid fa-building me-2 text-gold"></i>Planta <span class="text-secondary">(opcional)</span>
+                        </label>
+                        <input type="number" class="form-control" id="floorNumber" name="floorNumber"
+                               th:field="*{floorNumber}"
+                               th:classappend="${#fields.hasErrors('floorNumber')} ? 'is-invalid'"
+                               placeholder="Ej: 0" min="0">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('floorNumber')}" th:errors="*{floorNumber}"></div>
                     </div>
                 </div>
 
