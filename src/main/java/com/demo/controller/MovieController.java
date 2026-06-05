@@ -24,6 +24,12 @@ public class MovieController {
     private final SessionRepository sessionRepository;
     private final ReviewRepository reviewRepository;
 
+    //Redirect raíz a /movies
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/movies";
+    }
+
     //GetMapping de peliculas
     @GetMapping("movies")
     public String moviesList(Model model,
