@@ -1300,3 +1300,223 @@ footer a:hover {
     outline: 3px solid var(--cinema-accent-gold);
     outline-offset: 3px;
 }
+
+/* ============================================
+   SESSION LIST — CINEMA STYLE
+   ============================================ */
+
+.sessions-wrapper {
+    border: 1px solid var(--cinema-surface-2);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+/* Day group header */
+.session-day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--cinema-surface-2);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid rgba(200, 169, 107, 0.1);
+    border-left: 3px solid transparent;
+}
+
+.session-day-header:hover {
+    background: rgba(200, 169, 107, 0.06);
+}
+
+.session-day-header.today {
+    border-left-color: var(--cinema-accent-gold);
+    background: rgba(200, 169, 107, 0.08);
+}
+
+.day-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--cinema-text-primary) !important;
+    text-transform: capitalize;
+}
+
+.day-toggle-icon {
+    color: var(--cinema-accent-gold);
+    font-size: 0.8rem;
+    transition: transform 0.25s ease;
+    transform: rotate(-90deg);
+}
+
+.day-toggle-icon.open {
+    transform: rotate(0deg);
+}
+
+.badge-today-pill {
+    background: var(--cinema-accent-gold);
+    color: var(--cinema-dark);
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 0.18rem 0.55rem;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: var(--font-ui);
+}
+
+/* Session row */
+.session-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0.9rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    background: var(--cinema-surface-1);
+    transition: background 0.2s ease;
+}
+
+.session-row:last-of-type {
+    border-bottom: none;
+}
+
+.session-row:hover {
+    background: rgba(200, 169, 107, 0.04);
+}
+
+/* Time — protagonista visual */
+.session-time {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--cinema-accent-gold) !important;
+    min-width: 4.75rem;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+/* Room name + badge container */
+.session-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.session-room {
+    color: var(--cinema-text-primary) !important;
+    font-weight: 500;
+    font-size: 0.9375rem;
+}
+
+.session-room i {
+    color: var(--cinema-accent-gold) !important;
+}
+
+.session-lang {
+    font-size: 0.8rem;
+    color: var(--cinema-text-secondary) !important;
+}
+
+.session-lang i {
+    color: var(--cinema-text-secondary) !important;
+}
+
+/* Price */
+.session-price {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.price-amount {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--cinema-text-primary) !important;
+    letter-spacing: -0.01em;
+}
+
+/* CTA button column */
+.session-action {
+    min-width: 110px;
+    text-align: right;
+}
+
+/* ---- Screen type badges ---- */
+.badge-screen {
+    display: inline-block;
+    font-size: 0.68rem !important;
+    font-weight: 700 !important;
+    font-family: var(--font-ui) !important;
+    padding: 0.22rem 0.55rem !important;
+    border-radius: 4px !important;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.4;
+}
+
+.badge-imax {
+    background: linear-gradient(135deg, #C8A96B, #D4B67A) !important;
+    color: #050505 !important;
+    box-shadow: 0 0 8px rgba(200, 169, 107, 0.35);
+}
+
+.badge-4dx {
+    background: linear-gradient(135deg, #7C3AED, #9333EA) !important;
+    color: #ffffff !important;
+}
+
+.badge-3d {
+    background: linear-gradient(135deg, #1D4ED8, #2563EB) !important;
+    color: #ffffff !important;
+}
+
+.badge-standard {
+    background: var(--cinema-surface-2) !important;
+    color: var(--cinema-text-secondary) !important;
+    border: 1px solid rgba(168, 168, 173, 0.2) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .session-row {
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .session-time {
+        font-size: 1.25rem;
+        min-width: 4rem;
+    }
+
+    .session-price {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .session-day-header {
+        padding: 0.875rem 1rem;
+    }
+
+    .session-row {
+        flex-wrap: wrap;
+    }
+
+    .session-info {
+        flex: 1 1 100%;
+        order: 2;
+    }
+
+    .session-action {
+        order: 3;
+        min-width: auto;
+        width: 100%;
+        text-align: left;
+    }
+
+    .session-action .btn {
+        width: 100% !important;
+    }
+}

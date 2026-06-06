@@ -52,8 +52,9 @@ public class MovieController {
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
             model.addAttribute("movie", movie);
-            model.addAttribute("sessions", sessionRepository.findByMovie_Id(id));
+            model.addAttribute("sessions", sessionRepository.findByMovie_IdOrderByStartTimeAsc(id));
             model.addAttribute("reviews", reviewRepository.findByMovieId(id));
+            model.addAttribute("esLocale", new java.util.Locale("es"));     // Lo puse en el HTML pero se queja, la solucion: sacarlo fuera al controlador y pasarle el atributo
             return "movies/movie-detail";
         }
         return"redirect:/movies";

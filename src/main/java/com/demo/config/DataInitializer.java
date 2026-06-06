@@ -182,100 +182,139 @@ public class DataInitializer implements CommandLineRunner {
                 .language("doblada").adMinutes(10)
                 .startTime(hoy.minusDays(1).atTime(16, 0)).build());
 
-        // SESIONES FUTURAS que se crean dinamicamente con respecto a hoy - próximos 8 días(vamos, relativas a hoy)
+        // SESIONES FUTURAS — 8 días vista, 5 salas activas (room3 inactiva)
         //
-        //  Sala 1 · 4DX  · 13€ → La odisea / Mandalorian / Proyecto salvación
-        //  Sala 2 · IMAX · 14€ → Super Mario / La odisea / Top Gun
-        //                        + Toy Story en pase de mañana solo fines de semana
-        //  Sala 4 · 3D   · 11€ → Devil Wears Prada / Playa de lobos / El drama
-        //                        + matinal alternando Las ovejas y tod lo que nunca fuimos
-        //  Sala 4 pases únicos → El ser querido (días 2 y 5)
+        // Precio por sala:  4DX(1)=13€  IMAX(2)=14€  3D(4)=11€  STANDARD(5)=10€  STANDARD(6)=9€
+        //
+        // Sala 1 · 4DX : [finde 11:30 Mandalorian] · 16:30 La odisea · 19:00 Mandalorian · 21:30 Proyecto
+        // Sala 2 · IMAX: [finde 11:00 Toy Story]   · 16:00 Super Mario · 18:30 La odisea · 21:00 Top Gun
+        // Sala 4 · 3D  : 11:00 Ovejas(par)/Todo(impar) · 16:30 Devil Wears · 19:00 Playa · 21:15 El drama
+        // Sala 5 · STD : 10:30 Toy Story · 16:00 Super Mario · 18:30 Las ovejas · 21:00 El ser querido
+        // Sala 6 · STD : 10:00 El drama  · 16:30 Proyecto    · 19:00 Top Gun   · 21:30 Playa de lobos
         List<Session> sesionesFuturas = new ArrayList<>();
+
+        // Referencias a las sesiones de HOY para asignar tickets a usuarios
+        Session todayOdisea4dx = null, todayMandalorian4dx = null, todayProyecto4dx = null;
+        Session todayMario_imax = null, todayOdisea_imax = null, todayTopgun_imax = null;
+        Session todayTopgun_std = null, todayPlaya_std = null;
 
         for (int dia = 0; dia <= 7; dia++) {
             LocalDate fecha = hoy.plusDays(dia);
+            int dow = fecha.getDayOfWeek().getValue(); // 1=Lun … 7=Dom
+            boolean esFinDeSemana = (dow == 6 || dow == 7);
 
-            // Sesiones de la sala 1 · 4DX · 13 € -----------------------------------------
-            sesionesFuturas.add(sessionRepo.save(Session.builder()
-                    .movie(m5).room(room1).price(13.00)
-                    .language("doblada").adMinutes(15)
-                    .startTime(fecha.atTime(16, 30)).build()));
-
-            sesionesFuturas.add(sessionRepo.save(Session.builder()
-                    .movie(m2).room(room1).price(13.00)
-                    .language("VO").adMinutes(20)
-                    .startTime(fecha.atTime(19, 0)).build()));
-
-            sesionesFuturas.add(sessionRepo.save(Session.builder()
-                    .movie(m4).room(room1).price(13.00)
-                    .language("VOSE").adMinutes(15)
-                    .startTime(fecha.atTime(21, 30)).build()));
-
-            // Sesiones de la sala 2 · IMAX · 14 € -----------------------------------------
-            sesionesFuturas.add(sessionRepo.save(Session.builder()
-                    .movie(m10).room(room2).price(14.00)
-                    .language("doblada").adMinutes(15)
-                    .startTime(fecha.atTime(16, 0)).build()));
-
-            sesionesFuturas.add(sessionRepo.save(Session.builder()
-                    .movie(m5).room(room2).price(14.00)
-                    .language("VO").adMinutes(15)
-                    .startTime(fecha.atTime(18, 30)).build()));
-
-            sesionesFuturas.add(sessionRepo.save(Session.builder()
-                    .movie(m0).room(room2).price(14.00)
-                    .language("VOSE").adMinutes(15)
-                    .startTime(fecha.atTime(21, 0)).build()));
-
-            // Toy Story en IMAX: pase matinal solo sábados y domingos
-            int diaSemana = fecha.getDayOfWeek().getValue(); // 1=lun … 7=dom
-            if (diaSemana == 6 || diaSemana == 7) {
+            // ── Sala 1 · 4DX · 13€ ────────────────────────────────────────────
+            if (esFinDeSemana) {
                 sesionesFuturas.add(sessionRepo.save(Session.builder()
-                        .movie(m7).room(room2).price(14.00)
-                        .language("doblada").adMinutes(10)
+                        .movie(m2).room(room1).price(13.00).language("doblada").adMinutes(20)
+                        .startTime(fecha.atTime(11, 30)).build()));
+            }
+            Session r1a = sessionRepo.save(Session.builder()
+                    .movie(m5).room(room1).price(13.00).language("doblada").adMinutes(15)
+                    .startTime(fecha.atTime(16, 30)).build());
+            sesionesFuturas.add(r1a);
+
+            Session r1b = sessionRepo.save(Session.builder()
+                    .movie(m2).room(room1).price(13.00).language("VO").adMinutes(20)
+                    .startTime(fecha.atTime(19, 0)).build());
+            sesionesFuturas.add(r1b);
+
+            Session r1c = sessionRepo.save(Session.builder()
+                    .movie(m4).room(room1).price(13.00).language("VOSE").adMinutes(15)
+                    .startTime(fecha.atTime(21, 30)).build());
+            sesionesFuturas.add(r1c);
+
+            // ── Sala 2 · IMAX · 14€ ───────────────────────────────────────────
+            if (esFinDeSemana) {
+                sesionesFuturas.add(sessionRepo.save(Session.builder()
+                        .movie(m7).room(room2).price(14.00).language("doblada").adMinutes(10)
                         .startTime(fecha.atTime(11, 0)).build()));
             }
+            Session r2a = sessionRepo.save(Session.builder()
+                    .movie(m10).room(room2).price(14.00).language("doblada").adMinutes(15)
+                    .startTime(fecha.atTime(16, 0)).build());
+            sesionesFuturas.add(r2a);
 
-            // Sesiones de la sala 4 · 3D · 11 € -----------------------------------------
-            sesionesFuturas.add(sessionRepo.save(Session.builder()
-                    .movie(m11).room(room4).price(11.00)
-                    .language("VO").adMinutes(15)
-                    .startTime(fecha.atTime(16, 30)).build()));
+            Session r2b = sessionRepo.save(Session.builder()
+                    .movie(m5).room(room2).price(14.00).language("VO").adMinutes(15)
+                    .startTime(fecha.atTime(18, 30)).build());
+            sesionesFuturas.add(r2b);
 
-            sesionesFuturas.add(sessionRepo.save(Session.builder()
-                    .movie(m8).room(room4).price(11.00)
-                    .language("VO").adMinutes(12)
-                    .startTime(fecha.atTime(19, 0)).build()));
+            Session r2c = sessionRepo.save(Session.builder()
+                    .movie(m0).room(room2).price(14.00).language("VOSE").adMinutes(15)
+                    .startTime(fecha.atTime(21, 0)).build());
+            sesionesFuturas.add(r2c);
 
-            sesionesFuturas.add(sessionRepo.save(Session.builder()
-                    .movie(m3).room(room4).price(11.00)
-                    .language("VOSE").adMinutes(12)
-                    .startTime(fecha.atTime(21, 15)).build()));
-
-            // Matinal sala 4: alternando película según día par/impar
+            // ── Sala 4 · 3D · 11€ ─────────────────────────────────────────────
             if (dia % 2 == 0) {
                 sesionesFuturas.add(sessionRepo.save(Session.builder()
-                        .movie(m1).room(room4).price(11.00)
-                        .language("doblada").adMinutes(10)
+                        .movie(m1).room(room4).price(11.00).language("doblada").adMinutes(10)
                         .startTime(fecha.atTime(11, 0)).build()));
             } else {
                 sesionesFuturas.add(sessionRepo.save(Session.builder()
-                        .movie(m6).room(room4).price(11.00)
-                        .language("VO").adMinutes(13)
+                        .movie(m6).room(room4).price(11.00).language("VO").adMinutes(13)
                         .startTime(fecha.atTime(11, 0)).build()));
             }
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m11).room(room4).price(11.00).language("VO").adMinutes(15)
+                    .startTime(fecha.atTime(16, 30)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m8).room(room4).price(11.00).language("VO").adMinutes(12)
+                    .startTime(fecha.atTime(19, 0)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m3).room(room4).price(11.00).language("VOSE").adMinutes(12)
+                    .startTime(fecha.atTime(21, 15)).build()));
+
+            // ── Sala 5 · STANDARD · 10€ ───────────────────────────────────────
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m7).room(room5).price(10.00).language("doblada").adMinutes(10)
+                    .startTime(fecha.atTime(10, 30)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m10).room(room5).price(10.00).language("doblada").adMinutes(15)
+                    .startTime(fecha.atTime(16, 0)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m1).room(room5).price(10.00).language("doblada").adMinutes(10)
+                    .startTime(fecha.atTime(18, 30)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m9).room(room5).price(10.00).language("VO").adMinutes(18)
+                    .startTime(fecha.atTime(21, 0)).build()));
+
+            // ── Sala 6 · STANDARD · 9€ ────────────────────────────────────────
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m3).room(room6).price(9.00).language("VO").adMinutes(12)
+                    .startTime(fecha.atTime(10, 0)).build()));
+
+            sesionesFuturas.add(sessionRepo.save(Session.builder()
+                    .movie(m4).room(room6).price(9.00).language("doblada").adMinutes(15)
+                    .startTime(fecha.atTime(16, 30)).build()));
+
+            Session r6c = sessionRepo.save(Session.builder()
+                    .movie(m0).room(room6).price(9.00).language("doblada").adMinutes(15)
+                    .startTime(fecha.atTime(19, 0)).build());
+            sesionesFuturas.add(r6c);
+
+            Session r6d = sessionRepo.save(Session.builder()
+                    .movie(m8).room(room6).price(9.00).language("doblada").adMinutes(12)
+                    .startTime(fecha.atTime(21, 30)).build());
+            sesionesFuturas.add(r6d);
+
+            // Guardar referencias del día 0 para los tickets de usuarios de prueba
+            if (dia == 0) {
+                todayOdisea4dx      = r1a;
+                todayMandalorian4dx = r1b;
+                todayProyecto4dx    = r1c;
+                todayMario_imax     = r2a;
+                todayOdisea_imax    = r2b;
+                todayTopgun_imax    = r2c;
+                todayTopgun_std     = r6c;
+                todayPlaya_std      = r6d;
+            }
         }
-
-        // El ser querido: pase único los días 2 y 5
-        sesionesFuturas.add(sessionRepo.save(Session.builder()
-                .movie(m9).room(room4).price(11.00)
-                .language("VO").adMinutes(18)
-                .startTime(hoy.plusDays(2).atTime(11, 30)).build()));
-
-        sesionesFuturas.add(sessionRepo.save(Session.builder()
-                .movie(m9).room(room4).price(11.00)
-                .language("VOSE").adMinutes(18)
-                .startTime(hoy.plusDays(5).atTime(11, 30)).build()));
 
         // GENERAR TICKETS para todas las sesiones
         ticketService.generarTickets(pasada1);
@@ -334,10 +373,9 @@ public class DataInitializer implements CommandLineRunner {
         ticketRepo.saveAll(tAgotados);
 
 
-        // COMPRADORES FRECUENTES - los fieles a nuestros cines
+        // COMPRADORES FRECUENTES
         // Sala 1 · La odisea 4DX · hoy 16:30
-        // carlosR fila A · lauraS fila B · pabloG fila D · sofiaL fila G
-        List<Ticket> ts0 = ticketRepo.findBySession_Id(sesionesFuturas.get(0).getId());
+        List<Ticket> ts0 = ticketRepo.findBySession_Id(todayOdisea4dx.getId());
         if (ts0.size() > 65) {
             ts0.get(1).setStatus(BuyStatus.PAGADO);  ts0.get(1).setUser(carlosR);
             ts0.get(1).setBuyDateTime(LocalDateTime.now().minusHours(4));
@@ -350,9 +388,8 @@ public class DataInitializer implements CommandLineRunner {
             ticketRepo.saveAll(List.of(ts0.get(1), ts0.get(12), ts0.get(34), ts0.get(65)));
         }
 
-        // Sala 1 · The Mandalorian 4DX · hoy 19:00
-        // elenaM fila A · javierT fila C · user2 fila F
-        List<Ticket> ts1 = ticketRepo.findBySession_Id(sesionesFuturas.get(1).getId());
+        // Sala 1 · Mandalorian 4DX · hoy 19:00
+        List<Ticket> ts1 = ticketRepo.findBySession_Id(todayMandalorian4dx.getId());
         if (ts1.size() > 55) {
             ts1.get(3).setStatus(BuyStatus.PAGADO);  ts1.get(3).setUser(elenaM);
             ts1.get(3).setBuyDateTime(LocalDateTime.now().minusHours(3));
@@ -364,8 +401,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // Sala 1 · Proyecto salvación 4DX · hoy 21:30
-        // sofiaL fila B · carlosR fila E
-        List<Ticket> ts2 = ticketRepo.findBySession_Id(sesionesFuturas.get(2).getId());
+        List<Ticket> ts2 = ticketRepo.findBySession_Id(todayProyecto4dx.getId());
         if (ts2.size() > 47) {
             ts2.get(9).setStatus(BuyStatus.PAGADO);  ts2.get(9).setUser(sofiaL);
             ts2.get(9).setBuyDateTime(LocalDateTime.now().minusHours(2));
@@ -375,8 +411,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // Sala 2 · Super Mario IMAX · hoy 16:00
-        // pabloG fila A · lauraS fila C · elenaM fila F · javierT fila J · user2 fila M
-        List<Ticket> ts3 = ticketRepo.findBySession_Id(sesionesFuturas.get(3).getId());
+        List<Ticket> ts3 = ticketRepo.findBySession_Id(todayMario_imax.getId());
         if (ts3.size() > 120) {
             ts3.get(2).setStatus(BuyStatus.PAGADO);   ts3.get(2).setUser(pabloG);
             ts3.get(2).setBuyDateTime(LocalDateTime.now().minusHours(2));
@@ -392,8 +427,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // Sala 2 · La odisea IMAX · hoy 18:30
-        // user2 fila B · carlosR fila D · sofiaL fila H
-        List<Ticket> ts4 = ticketRepo.findBySession_Id(sesionesFuturas.get(4).getId());
+        List<Ticket> ts4 = ticketRepo.findBySession_Id(todayOdisea_imax.getId());
         if (ts4.size() > 88) {
             ts4.get(14).setStatus(BuyStatus.PAGADO); ts4.get(14).setUser(user2);
             ts4.get(14).setBuyDateTime(LocalDateTime.now().minusHours(1));
@@ -405,8 +439,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // Sala 2 · Top Gun IMAX · hoy 21:00
-        // javierT fila A · pabloG fila E · lauraS fila K · elenaM fila N
-        List<Ticket> ts5 = ticketRepo.findBySession_Id(sesionesFuturas.get(5).getId());
+        List<Ticket> ts5 = ticketRepo.findBySession_Id(todayTopgun_imax.getId());
         if (ts5.size() > 115) {
             ts5.get(4).setStatus(BuyStatus.PAGADO);   ts5.get(4).setUser(javierT);
             ts5.get(4).setBuyDateTime(LocalDateTime.now().minusHours(3));
@@ -417,6 +450,24 @@ public class DataInitializer implements CommandLineRunner {
             ts5.get(115).setStatus(BuyStatus.PAGADO); ts5.get(115).setUser(elenaM);
             ts5.get(115).setBuyDateTime(LocalDateTime.now().minusDays(2));
             ticketRepo.saveAll(List.of(ts5.get(4), ts5.get(52), ts5.get(100), ts5.get(115)));
+        }
+
+        // Sala 6 · Top Gun STANDARD · hoy 19:00
+        List<Ticket> ts6 = ticketRepo.findBySession_Id(todayTopgun_std.getId());
+        if (ts6.size() > 30) {
+            ts6.get(5).setStatus(BuyStatus.PAGADO);  ts6.get(5).setUser(user);
+            ts6.get(5).setBuyDateTime(LocalDateTime.now().minusHours(2));
+            ts6.get(30).setStatus(BuyStatus.PAGADO); ts6.get(30).setUser(user2);
+            ts6.get(30).setBuyDateTime(LocalDateTime.now().minusHours(4));
+            ticketRepo.saveAll(List.of(ts6.get(5), ts6.get(30)));
+        }
+
+        // Sala 6 · Playa de lobos STANDARD · hoy 21:30
+        List<Ticket> ts7 = ticketRepo.findBySession_Id(todayPlaya_std.getId());
+        if (ts7.size() > 20) {
+            ts7.get(8).setStatus(BuyStatus.PAGADO); ts7.get(8).setUser(carlosR);
+            ts7.get(8).setBuyDateTime(LocalDateTime.now().minusHours(1));
+            ticketRepo.save(ts7.get(8));
         }
 
 

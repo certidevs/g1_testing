@@ -83,7 +83,7 @@
     </div>
 
     <!-- SESIONES / PROYECCIONES -->
-    <div class="mb-5">
+    <div class="mb-5" th:with="today=${#temporals.createToday()}">
         <h3 class="mb-4">
             <i class="fa-solid fa-film text-gold me-2"></i>Sesiones disponibles
         </h3>
@@ -93,33 +93,90 @@
             No hay sesiones disponibles en este momento.
         </div>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3" th:if="${!#lists.isEmpty(sessions)}">
-            <div class="col" th:each="proyeccion : ${sessions}">
-                <div class="card h-100 session-card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <h5 class="card-title mb-0">
-                                <i class="fa-solid fa-door-open me-2 text-gold"></i>
-                                <span th:text="${'Sala ' + proyeccion.room}">Sala</span>
-                            </h5>
-                            <span class="badge bg-primary">
-                                <i class="fa-solid fa-tag me-1"></i>
-                                <span th:text="${proyeccion.price + '€'}">10€</span>
-                            </span>
-                        </div>
+        <div th:if="${!#lists.isEmpty(sessions)}" class="sessions-wrapper">
+            <th:block th:each="s, stat : ${sessions}"
+                      th:with="
+                        currentDay=${#temporals.format(s.startTime, 'yyyy-MM-dd')},
+                        prevDay=${stat.first ? '' : #temporals.format(sessions[stat.index - 1].startTime, 'yyyy-MM-dd')},
+                        isNewDay=${stat.first or !currentDay.equals(prevDay)},
+                        isToday=${currentDay.equals(#temporals.format(today, 'yyyy-MM-dd'))},
+                        screenTypeName=${s.room.screenType.name()},
+                        screenTypeLabel=${screenTypeName == 'D3' ? '3D' : (screenTypeName == 'D4X' ? '4DX' : screenTypeName)},
+                        screenTypeBadgeClass=${'badge-screen ' + (screenTypeName == 'IMAX' ? 'badge-imax' : (screenTypeName == 'D4X' ? 'badge-4dx' : (screenTypeName == 'D3' ? 'badge-3d' : 'badge-standard')))}
+                      ">
 
-                        <p class="card-text text-secondary mb-3">
-                            <i class="fa-solid fa-calendar me-2"></i>
-                            <span th:text="${proyeccion.startTime}">Fecha y hora</span>
-                        </p>
+                <!-- Cabecera de día (se muestra cuando cambia la fecha) -->
+                <div th:if="${isNewDay}"
+                     class="session-day-header"
+                     th:classappend="${isToday} ? ' today'"
+                     th:attr="data-group=${currentDay}"
+                     onclick="toggleDayGroup(this)">
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="fa-solid fa-calendar-day text-gold"></i>
+                        <span class="day-name"
+                              th:text="${#temporals.format(s.startTime, 'EEEE d ''de'' MMMM', esLocale)}">
+                            Viernes 6 de junio
+                        </span>
+                        <span th:if="${isToday}" class="badge-today-pill">Hoy</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down day-toggle-icon"
+                       th:classappend="${isToday} ? ' open'"></i>
+                </div>
 
-                        <a th:href="@{/sessions/{id}(id=${proyeccion.id})}" class="btn btn-outline-light btn-sm w-100">
-                            <i class="fa-solid fa-ticket me-1"></i> Ver entradas disponibles
+                <!-- Fila de sesión -->
+                <div class="session-row"
+                     th:attr="data-group=${currentDay}"
+                     th:style="${!isToday} ? 'display:none' : ''">
+
+                    <!-- Hora -->
+                    <div class="session-time">
+                        <span th:text="${#temporals.format(s.startTime, 'HH:mm')}">20:00</span>
+                    </div>
+
+                    <!-- Sala + tecnología -->
+                    <div class="session-info">
+                        <span class="session-room">
+                            <i class="fa-solid fa-door-open me-1"></i>
+                            <span th:text="${s.room.name}">Sala 1</span>    <!-- "Sala 1", "Sala 5"... -->
+                        </span>
+
+                        <span th:if="${screenTypeName != 'STANDARD'}"
+                              th:class="${screenTypeBadgeClass}"
+                              th:text="${screenTypeLabel}">IMAX</span>      <!-- "IMAX", "4DX", "3D" -->    <!-- Como en los cines normales, cuando la pantalla es normal no se pone -->
+                        <span th:if="${s.language != null and s.language != 'doblada'}" class="session-lang"> <!-- Como en los cines normales, cuando el idioma está doblado no se pone -->
+                            <span th:text="${s.language}">VO</span>         <!-- "VO", "VOSE" -->
+                        </span>
+                    </div>
+
+                    <!-- Precio -->
+                    <div class="session-price">
+                        <span class="price-amount"
+                              th:text="${#numbers.formatDecimal(s.price, 1, 2) + ' €'}">12.50 €</span>
+                    </div>
+
+                    <!-- Acción -->
+                    <div class="session-action">
+                        <a th:href="@{/sessions/{id}(id=${s.id})}" class="btn btn-primary">
+                            <i class="fa-solid fa-ticket me-1"></i>Ver entradas
                         </a>
                     </div>
                 </div>
-            </div>
+
+            </th:block>
         </div>
+
+        <script th:if="${!#lists.isEmpty(sessions)}">
+            function toggleDayGroup(header) {
+                var group = header.getAttribute('data-group');
+                var icon  = header.querySelector('.day-toggle-icon');
+                var rows  = document.querySelectorAll('.session-row[data-group="' + group + '"]');
+                var isOpen = icon.classList.contains('open');
+                rows.forEach(function(row) {
+                    row.style.display = isOpen ? 'none' : 'flex';
+                });
+                icon.classList.toggle('open', !isOpen);
+            }
+        </script>
     </div>
 
     <!-- RESEÑAS -->
