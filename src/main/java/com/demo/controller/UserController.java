@@ -98,6 +98,33 @@ public class UserController {
         }
     }
 
+    @GetMapping("admin/users/deactivate/{id}")
+    public String deactivate(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User currentUser,
+            RedirectAttributes redirectAttributes) {
+        try {
+            userService.deactivate(id, currentUser.getId());
+            redirectAttributes.addFlashAttribute("message", "Usuario desactivado correctamente");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("admin/users/activate/{id}")
+    public String activate(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+        try {
+            userService.activate(id);
+            redirectAttributes.addFlashAttribute("message", "Usuario activado correctamente");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/admin/users";
+    }
+
     @GetMapping("profile")
     public String profile(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("user", userService.findById(user.getId()));

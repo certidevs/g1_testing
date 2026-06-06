@@ -123,12 +123,29 @@ public class UserService implements UserDetailsService {
         return userRepository.save(userDB); // guardamos el usuario ACTUALIZADO en BD
     }
 
+    public void deactivate(Long userId, Long currentUserId) {
+        User user = findById(userId);
+        if (user.getRole() == Role.ROLE_ADMIN) {
+            throw new IllegalArgumentException("No se puede desactivar una cuenta de administrador");
+        }
+        if (currentUserId.equals(userId)) {
+            throw new IllegalArgumentException("No puedes desactivar tu propia cuenta");
+        }
+        user.setActive(false);
+        userRepository.save(user);
+    }
+
+    public void activate(Long userId) {
+        User user = findById(userId);
+        user.setActive(true);
+        userRepository.save(user);
+    }
+
     public UserStatsDTO findStatsById(Long id) {
         return new UserStatsDTO(
                 reviewRepository.countByUser_Id(id),
                 reviewRepository.findByUser_Id(id)
         );
     }
-
 
 }

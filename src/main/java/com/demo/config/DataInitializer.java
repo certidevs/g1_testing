@@ -106,6 +106,17 @@ public class DataInitializer implements CommandLineRunner {
         // ==========================================
         // Datos de prueba de los USUARIOS (Users)
         // ==========================================
+
+        userRepo.save(User.builder()
+                .firstName("Admin").lastName("Cinema").username("admin")
+                .email("admin@cinema.com").role(Role.ROLE_ADMIN).active(true).imageUrl("/uploads/lobo.png")
+                .password(passwordEncoder.encode("admin")).build());
+
+        userRepo.save(User.builder()
+                .firstName("Admin2").lastName("Cinema").username("admin2")
+                .email("admin2@cinema.com").role(Role.ROLE_ADMIN).active(true)
+                .password(passwordEncoder.encode("admin2")).build());
+
         var user = userRepo.save(User.builder()
                 .firstName("Alejandro").lastName("Mendoza").username("user")
                 .email("alex_m98@gmail.com").role(Role.ROLE_USER).active(true)
@@ -113,13 +124,8 @@ public class DataInitializer implements CommandLineRunner {
 
         var user2 = userRepo.save(User.builder()
                 .firstName("Maria").lastName("Fernandez").username("user2")
-                .email("maria.fernandez@gmail.com").role(Role.ROLE_USER)
+                .email("maria.fernandez@gmail.com").role(Role.ROLE_USER).active(false)
                 .password(passwordEncoder.encode("user2")).build());
-
-        userRepo.save(User.builder()
-                .firstName("Admin").lastName("Cinema").username("admin")
-                .email("admin@cinema.com").role(Role.ROLE_ADMIN).active(true).imageUrl("/uploads/lobo.png")
-                .password(passwordEncoder.encode("admin")).build());
 
         // — Usuarios nuevos —
         var carlosR = userRepo.save(User.builder()

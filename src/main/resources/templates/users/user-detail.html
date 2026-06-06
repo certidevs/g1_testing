@@ -42,8 +42,13 @@
             <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-sm btn-outline-primary">
                 <i class="fa-solid fa-user-pen me-1" aria-hidden="true"></i> Editar
             </a>
-            <a th:href="@{/admin/users/deactivate/{id}(id=${user.id})}" class="btn btn-sm btn-danger">
-                <i class="fa-solid fa-trash me-1" aria-hidden="true"></i> Desactivar
+            <a th:if="${user.active and user.role.name() != 'ROLE_ADMIN'}"
+               th:href="@{/admin/users/deactivate/{id}(id=${user.id})}" class="btn btn-sm btn-danger">
+                <i class="fa-solid fa-user-slash me-1" aria-hidden="true"></i> Desactivar
+            </a>
+            <a th:if="${!user.active}"
+               th:href="@{/admin/users/activate/{id}(id=${user.id})}" class="btn btn-sm btn-success">
+                <i class="fa-solid fa-user-check me-1" aria-hidden="true"></i> Activar
             </a>
         </div>
 
