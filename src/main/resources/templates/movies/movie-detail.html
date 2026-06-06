@@ -71,7 +71,7 @@
                             <i class="fa-regular fa-comment me-1"></i> Escribir reseña
                         </a>
                         <a sec:authorize="!isAuthenticated()"
-                           th:href="@{/login}"
+                           th:href="@{/reviews/new(movieId=${movie.id})}"
                            class="btn btn-outline-light ms-auto"
                            title="Inicia sesión para escribir una reseña">
                             <i class="fa-regular fa-comment me-1"></i> Escribe una reseña
@@ -191,7 +191,7 @@
             <i class="fa-solid fa-info-circle me-2"></i>
             Todavía no hay reseñas para esta película.
             <a sec:authorize="isAuthenticated()" th:href="@{/reviews/new(movieId=${movie.id})}" class="ms-2">¡Sé el primero en escribir una!</a>
-            <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="ms-2">Inicia sesión para escribir la primera reseña.</a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/reviews/new(movieId=${movie.id})}" class="ms-2">Inicia sesión para escribir la primera reseña.</a>
         </div>
 
         <div class="row row-cols-1 row-cols-md-2 g-3" th:if="${!#lists.isEmpty(reviews)}">

@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @Configuration
 public class SecurityConfig {
@@ -19,6 +20,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        // En Spring Security 6+ HttpSessionRequestCache solo devuelve la petición guardada
+        // si la URL contiene el parámetro "continue". Al ponerlo a null desactivamos ese check
+        // y recuperamos el comportamiento clásico: tras login vuelves a donde ibas.
+        HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+        requestCache.setMatchingRequestParameterName(null);
+        http.requestCache(cache -> cache.requestCache(requestCache));
 
         //permitir h2-console
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"));
@@ -45,8 +53,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/sessions").hasRole("ADMIN")
 
                 // 5. Control de Reseñas (ReviewController)
-                .requestMatchers(HttpMethod.GET, "/reviews", "/reviews/{id}").permitAll()
-                .requestMatchers("/reviews/new", "/reviews/edit/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.GET, "/reviews").permitAll()
+                .requestMatchers(HttpMethod.GET, "/reviews/new").hasAnyRole("ADMIN", "USER") // debe ir ANTES que /reviews/{id} !!
+                .requestMatchers(HttpMethod.GET, "/reviews/{id}").permitAll()
+                .requestMatchers("/reviews/edit/**").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.POST, "/reviews").hasAnyRole("ADMIN", "USER")
                 .requestMatchers("/reviews/disable/**", "/reviews/delete/**").hasRole("ADMIN")
 
