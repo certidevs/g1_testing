@@ -112,14 +112,4 @@ public class TicketController {
     public String buyTicket(@PathVariable Long id) {
         return "redirect:/tickets/" + id + "/checkout";
     }
-
-    //  POST /tickets/{id}/snack - Todo revisar!!
-    @PostMapping("/tickets/{id}/snack")
-    public String addSnackToTicket(@PathVariable Long id, @RequestParam Double snackPrice) {
-        Ticket ticket = ticketService.findById(id).orElseThrow();
-        Double current = ticket.getSnackPrice() != null ? ticket.getSnackPrice() : 0.0;
-        ticket.setSnackPrice(current + snackPrice);
-        ticketService.save(ticket);
-        return "redirect:/tickets/" + id;
-    }
 }

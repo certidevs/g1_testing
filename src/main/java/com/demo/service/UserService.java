@@ -84,20 +84,18 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User update(User userForm) {
+    public User update(User userForm, Long currentUserId) {
         //Obtenemos de BD el usuario
         User userDB = findById(userForm.getId());
 
         //Comprobamos si el username esta ocupado por un usuario distinto a este usuario.
-        //Si lo está lanzamos un throw IllegalArgumentException
-
         Optional<User> userOptional = userRepository.findByUsername(userForm.getUsername());
 
         if(userOptional.isPresent() && !userOptional.get().getId().equals(userForm.getId())){
             throw new IllegalArgumentException("Este username ya existe");
         }
 
-        //Con el email se hace lo mismo, lo vemos con PROGRAMACION FUNCIONAL para tener las 2 opciones
+        //Con el email se hace lo mismo
         userRepository.findByEmail(userForm.getEmail())
                 .filter(user -> !user.getId().equals(userForm.getId()))
                 .ifPresent(user -> {
@@ -108,7 +106,13 @@ public class UserService implements UserDetailsService {
         userDB.setEmail(userForm.getEmail());
         userDB.setRole(userForm.getRole());
         userDB.setImageUrl(userForm.getImageUrl());
-        // TODO un admin podría desactivarse a sí mismo, hay que impedirlo lanzando Illegal....
+
+        // Impedir que un admin se desactive a sí mismo
+        if (userDB.getRole() == Role.ROLE_ADMIN
+                && currentUserId.equals(userDB.getId())
+                && Boolean.FALSE.equals(userForm.getActive())) {
+            throw new IllegalArgumentException("Un administrador no puede desactivarse a sí mismo");
+        }
         userDB.setActive(userForm.getActive());
 
         // Si se introduce una nueva contraseña se cifra y actualizamos,
@@ -119,19 +123,12 @@ public class UserService implements UserDetailsService {
         return userRepository.save(userDB); // guardamos el usuario ACTUALIZADO en BD
     }
 
-//    TODO se debe terminar con REVIEW para avanzar con esto
-
-//    En reviewRepository agregar esto
-//long countByUser_Id(Long id);
-//    List<Review> findByUser_Id(Long id);
-
-
-//    public UserStatsDTO findStatsById(Long id) {
-//        return new UserStatsDTO(
-//                reviewRepository.countByUser_Id(id),
-//                reviewRepository.findByUSer_Id(id)
-//        );
-//    }
+    public UserStatsDTO findStatsById(Long id) {
+        return new UserStatsDTO(
+                reviewRepository.countByUser_Id(id),
+                reviewRepository.findByUser_Id(id)
+        );
+    }
 
 
 }

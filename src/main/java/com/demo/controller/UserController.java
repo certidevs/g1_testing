@@ -30,8 +30,7 @@ public class UserController {
     @GetMapping("admin/users/{id}")
     public String detail(Model model, @PathVariable Long id){
         model.addAttribute("user", userService.findById(id));
-//        TODO se debe temrinar con REVIEW para avanzar con esto
-// model.addAttribute("userStats", userService.findStatsById(id));
+        model.addAttribute("userStats", userService.findStatsById(id));
         return "users/user-detail";
     }
 
@@ -64,6 +63,7 @@ public class UserController {
     @PostMapping("admin/users")
     public String save(
             @ModelAttribute User user,
+            @AuthenticationPrincipal User currentUser,
             RedirectAttributes redirectAttributes,
             @RequestParam("imageFile") MultipartFile imageFile
     ){
@@ -83,7 +83,7 @@ public class UserController {
                 redirectAttributes.addFlashAttribute("message", "Usuario creado correctamente");
                 log.info("Usuario creado correctamente {}", user);
             } else {
-                user = userService.update(user);
+                user = userService.update(user, currentUser.getId());
                 redirectAttributes.addFlashAttribute("message", "Usuario actualizado correctamente");
                 log.info("Usuario actualizado correctamente {}", user);
             }
@@ -98,15 +98,12 @@ public class UserController {
         }
     }
 
-    //En progreso PROFILE GETMAPPING
-    //TODO terminar con REVIEW para avanzar con est0
-//    @GetMapping("profile")
-//    public String profile(Model model, @AuthenticationPrincipal User user) {
-//        model.addAttribute("user", userService.findById(user.getId()));
-//        model.addAttribute("userStats", userService.findStatsById(user.getId()));
-//
-//        return "users/user-detail";
-//    }
+    @GetMapping("profile")
+    public String profile(Model model, @AuthenticationPrincipal User user) {
+        model.addAttribute("user", userService.findById(user.getId()));
+        model.addAttribute("userStats", userService.findStatsById(user.getId()));
+        return "users/user-detail";
+    }
 
     //En progreso PROFILE POSTMAPPING
 
