@@ -223,6 +223,12 @@ a:hover {
     box-shadow: 0 0 0 0.25rem rgba(200, 169, 107, 0.25) !important;
 }
 
+.form-control::placeholder,
+.form-select::placeholder {
+    color: #787880 !important;
+    opacity: 1 !important;
+}
+
 .form-label {
     color: var(--cinema-text-secondary) !important;
     font-weight: 500;
@@ -242,6 +248,7 @@ a:hover {
     background-color: var(--cinema-surface-1) !important;
     border: 1px solid var(--cinema-surface-2) !important;
     border-radius: 0.75rem !important;
+    overflow: hidden !important;
     box-shadow: var(--shadow-sm) !important;
     transition: all 0.3s ease;
     color: var(--cinema-text-primary) !important;
@@ -340,8 +347,10 @@ a:hover {
 
 .navbar-brand img {
     transition: transform 0.3s ease;
-    max-height: 56px;
+    height: 76px;
     width: auto;
+    margin-top: -10px;
+    margin-bottom: -10px;
 }
 
 .navbar-brand:hover img {
@@ -1302,8 +1311,124 @@ footer a:hover {
 }
 
 /* ============================================
-   SESSION LIST — CINEMA STYLE
+   FILTERS — CINEMA STYLE
    ============================================ */
+
+.filters-section {
+    padding: 1.25rem 0;
+}
+
+/* Genre pills */
+.genre-pill {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    border: 1px solid rgba(200, 169, 107, 0.35);
+    border-radius: 20px;
+    color: var(--cinema-text-secondary) !important;
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    font-family: var(--font-ui);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.genre-pill:hover {
+    border-color: var(--cinema-accent-gold);
+    color: var(--cinema-accent-gold) !important;
+}
+
+.genre-pill.active,
+.genre-pill.active:hover {
+    background: var(--cinema-accent-gold);
+    border-color: var(--cinema-accent-gold);
+    color: #111111 !important;
+    font-weight: 800;
+}
+
+/* Botón de búsqueda de filtros — anula el min-height global de .btn */
+.btn-search {
+    min-height: 38px !important;
+    height: 38px !important;
+    padding: 0 1rem !important;
+    font-size: 0.82rem !important;
+}
+
+/* Títulos de sección en movie-list */
+.section-label {
+    font-size: 1.35rem !important;
+}
+
+/* Search input with icon */
+.search-input-wrapper {
+    position: relative;
+    min-width: 180px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--cinema-text-secondary);
+    font-size: 0.8rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.search-input {
+    padding-left: 2.25rem !important;
+    background: var(--cinema-surface-2) !important;
+    border: 1px solid rgba(200, 169, 107, 0.2) !important;
+    color: var(--cinema-text-primary) !important;
+    height: 38px;
+}
+
+.search-input:focus {
+    border-color: var(--cinema-accent-gold) !important;
+    box-shadow: 0 0 0 2px rgba(200, 169, 107, 0.15) !important;
+}
+
+/* Filter selects */
+.filter-select {
+    background: var(--cinema-surface-2) !important;
+    border: 1px solid rgba(200, 169, 107, 0.2) !important;
+    color: var(--cinema-text-primary) !important;
+    width: auto !important;
+    min-width: 130px;
+    height: 38px;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.filter-select:focus {
+    border-color: var(--cinema-accent-gold) !important;
+    box-shadow: 0 0 0 2px rgba(200, 169, 107, 0.15) !important;
+}
+
+.filter-select option {
+    background: var(--cinema-surface-2);
+    color: var(--cinema-text-primary);
+}
+
+/* Limpiar filtros link */
+.btn-limpiar {
+    color: var(--cinema-text-secondary);
+    text-decoration: none;
+    font-size: 0.82rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+    padding: 0.25rem 0;
+}
+
+.btn-limpiar:hover {
+    color: var(--cinema-accent-gold);
+}
 
 .sessions-wrapper {
     border: 1px solid var(--cinema-surface-2);

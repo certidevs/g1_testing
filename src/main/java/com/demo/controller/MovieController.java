@@ -38,6 +38,10 @@ public class MovieController {
                              @RequestParam(required = false) Integer releaseYear,
                              @RequestParam(required = false) String title
     ){
+        // Bug encontrado, solucion -> Convertir strings vacíos a null para que el JPQL los trate como "sin filtro"
+        if (genre != null && genre.isBlank()) genre = null;
+        if (title != null && title.isBlank()) title = null;
+
         List<Movie> movies = movieRepository.findActiveFiltering(durationMinutes, genre, releaseYear, title);
         model.addAttribute("movies", movies);
         model.addAttribute("numMovies", movies.size());

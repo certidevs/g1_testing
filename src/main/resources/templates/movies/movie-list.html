@@ -36,111 +36,103 @@
 
     <!-- Contenedor de filtros y listado -->
     <div class="container">
-        <!-- Filtros rápidos -->
-        <div class="mb-5">
-            <h5 class="mb-3 text-gold">
-                <i class="fa-solid fa-filter me-2"></i>Filtros rápidos
-            </h5>
+        <!-- filtros con estilazo -->
+        <div class="filters-section mb-5">
 
-            <!-- Filtros por duración -->
-            <div class="mb-3">
-                <small class="text-muted d-block mb-2">
-                    <i class="fa-solid fa-clock me-1"></i>Por duración:
-                </small>
+            <!-- Fila 1: título + pills de género -->
+            <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+                <div>
+                    <h5 class="mb-1 section-label">Esta semana en Only Film</h5>
+                    <small class="text-secondary"
+                           th:text="${(param.genre == null and param.title == null and param.durationMinutes == null and param.releaseYear == null) ? (numMovies + ' películas en cartelera') : (numMovies + ' resultado(s) encontrado(s)')}"></small>
+                </div>
                 <div class="d-flex flex-wrap gap-2">
-                    <a th:href="@{/movies(durationMinutes=90)}" class="btn btn-light btn-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Hasta 90min</a>
-                    <a th:href="@{/movies(durationMinutes=120)}" class="btn btn-light btn-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Hasta 120min</a>
-                    <a th:href="@{/movies(durationMinutes=160)}" class="btn btn-light btn-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Hasta 160min</a>
+                    <a th:href="@{/movies}" class="genre-pill"
+                       th:classappend="${param.genre == null} ? ' active'">TODAS</a>
+                    <a th:href="@{/movies(genre='Accion')}"          class="genre-pill" th:classappend="${param.genre != null and param.genre[0] == 'Accion'}          ? ' active'">ACCIÓN</a>
+                    <a th:href="@{/movies(genre='Comedia')}"         class="genre-pill" th:classappend="${param.genre != null and param.genre[0] == 'Comedia'}         ? ' active'">COMEDIA</a>
+                    <a th:href="@{/movies(genre='Romance')}"         class="genre-pill" th:classappend="${param.genre != null and param.genre[0] == 'Romance'}         ? ' active'">ROMANCE</a>
+                    <a th:href="@{/movies(genre='Animación')}"       class="genre-pill" th:classappend="${param.genre != null and param.genre[0] == 'Animación'}       ? ' active'">ANIMACIÓN</a>
+                    <a th:href="@{/movies(genre='Ciencia ficción')}" class="genre-pill" th:classappend="${param.genre != null and param.genre[0] == 'Ciencia ficción'} ? ' active'">CIENCIA FICCIÓN</a>
+                    <a th:href="@{/movies(genre='Adventure')}"       class="genre-pill" th:classappend="${param.genre != null and param.genre[0] == 'Adventure'}       ? ' active'">AVENTURA</a>
                 </div>
             </div>
 
-            <!-- Filtros por género -->
-            <div class="mb-3">
-                <small class="text-muted d-block mb-2">
-                    <i class="fa-solid fa-masks-theater me-1"></i>Por género:
-                </small>
-                <div class="d-flex flex-wrap gap-2">
-                    <a th:href="@{/movies(genre='Romance')}" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Romance</a>
-                    <a th:href="@{/movies(genre='Accion')}" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Acción</a>
-                    <a th:href="@{/movies(genre='Comedia')}" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Comedia</a>
-                </div>
-            </div>
+            <!-- Fila 2: buscador + dropdowns + limpiar -->
+            <form th:action="@{/movies}" method="get"
+                  class="d-flex flex-wrap gap-2 align-items-center">
 
-            <!-- Filtros por año -->
-            <div class="mb-0">
-                <small class="text-muted d-block mb-2">
-                    <i class="fa-solid fa-calendar me-1"></i>Por año:
-                </small>
-                <div class="d-flex flex-wrap gap-2">
-                    <a th:href="@{/movies(releaseYear=2010)}" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Hasta 2010</a>
-                    <a th:href="@{/movies(releaseYear=2020)}" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Hasta 2020</a>
-                    <a th:href="@{/movies(releaseYear=2026)}" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Hasta 2026</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Filtros avanzados -->
-        <div class="d-flex flex-column mb-5 w-100">
-            <h5 class="mb-3">
-                <i class="fa-solid fa-magnifying-glass me-2"></i>Búsqueda avanzada
-            </h5>
-            <form th:action="@{/movies}" method="get" class="d-flex flex-column flex-lg-row w-100 gap-2">
-                <div class="d-flex flex-column flex-lg-grow-1">
-                    <label class="form-label">Película</label>
-                    <input type="text" name="title" class="form-control"
-                           placeholder="Buscar por título de película..." th:value="${param.title}">
+                <div class="search-input-wrapper flex-grow-1">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" name="title" class="form-control search-input"
+                           placeholder="Buscar película..." th:value="${param.title}">
                 </div>
 
-                <div class="d-flex justify-content-end align-items-end gap-2">
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        Buscar
-                    </button>
-                    <a th:href="@{/movies}" class="btn btn-secondary btn-sm">
-                        <i class="fa-solid fa-trash"></i>
-                        Limpiar
-                    </a>
-                </div>
+                <select name="genre" class="form-select filter-select">
+                    <option value="">Género</option>
+                    <option value="Accion"          th:selected="${param.genre != null and param.genre[0] == 'Accion'}">Acción</option>
+                    <option value="Comedia"         th:selected="${param.genre != null and param.genre[0] == 'Comedia'}">Comedia</option>
+                    <option value="Romance"         th:selected="${param.genre != null and param.genre[0] == 'Romance'}">Romance</option>
+                    <option value="Animación"       th:selected="${param.genre != null and param.genre[0] == 'Animación'}">Animación</option>
+                    <option value="Ciencia ficción" th:selected="${param.genre != null and param.genre[0] == 'Ciencia ficción'}">Ciencia ficción</option>
+                    <option value="Adventure"       th:selected="${param.genre != null and param.genre[0] == 'Adventure'}">Aventura</option>
+                </select>
+
+                <select name="releaseYear" class="form-select filter-select">
+                    <option value="">Áño</option>
+                    <option value="2010" th:selected="${param.releaseYear == '2010'}">Hasta 2010</option>
+                    <option value="2020" th:selected="${param.releaseYear == '2020'}">Hasta 2020</option>
+                    <option value="2026" th:selected="${param.releaseYear == '2026'}">Hasta 2026</option>
+                </select>
+
+                <select name="durationMinutes" class="form-select filter-select">
+                    <option value="">Duración</option>
+                    <option value="90"  th:selected="${param.durationMinutes == '90'}">Hasta 90 min</option>
+                    <option value="120" th:selected="${param.durationMinutes == '120'}">Hasta 120 min</option>
+                    <option value="160" th:selected="${param.durationMinutes == '160'}">Hasta 160 min</option>
+                </select>
+
+                <button type="submit" class="btn btn-primary btn-search">
+                    <i class="fa-solid fa-magnifying-glass me-1"></i>Buscar
+                </button>
+
+                <a th:href="@{/movies}" class="btn-limpiar">
+                    <i class="fa-solid fa-xmark me-1"></i>Limpiar filtros
+                </a>
             </form>
         </div>
 
         <!-- Grid de películas -->
         <div class="mb-5">
-            <h5 class="mb-4">
+            <h5 class="mb-4 section-label">
                 <i class="fa-solid fa-film me-2"></i>Catálogo de películas
             </h5>
             <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
                 <div class="col" th:each="movie : ${movies}">
                     <div class="card movie-card h-100">
                         <img th:src="${movie.getImageUrl}" class="card-img-top" alt="Film card">
-                        <div class="card-body">
+                            <div class="card-body d-flex flex-column">
                             <h5 class="card-title" th:text="${movie.title}">Película</h5>
-                            <p class="card-text">
-                                <span class="badge badge-secondary">
-                                    <span th:text="${movie.genre}">Género</span>
-                                </span>
-                            </p>
-                            <p class="card-text">
-                                <span class="badge badge-secondary">
-                                    <span th:text="|${movie.durationMinutes} min|">120 min</span>
-                                </span>
-                            </p>
-                            <div class="card-footer bg-transparent border-0 pt-0">
-                                <a th:href="@{/movies/{id}(id=${movie.id})}"
-                                   class="btn btn-outline-light btn-sm w-100 mb-2">
-                                    <i class="fa-regular fa-eye me-1"></i> Más información
-                                </a>
-
-                                <a sec:authorize="hasRole('ADMIN')" th:href="@{/movies/edit/{id}(id=${movie.id})}"
-                                   class="btn btn-primary btn-sm w-100 mb-2">
-                                    <i class="fa-solid fa-paintbrush"></i> Editar
-                                </a>
-
-                                <a sec:authorize="hasRole('ADMIN')" th:href="@{movies/deactivate/{id}(id=${movie.id})}"
-                                   class="btn btn-danger btn-sm w-100"
-                                   onclick="return confirm('¿Estás seguro que quieres inhabilitar esta película?');">
-                                    <i class="fa-solid fa-circle-minus"></i> Inhabilitar
-                                </a>
+                            <div class="mt-auto">
+                                <div class="d-flex flex-wrap gap-2 mb-3 mt-3">
+                                    <span class="badge badge-secondary" th:text="${movie.genre}">Género</span>
+                                    <span class="badge badge-secondary" th:text="|${movie.durationMinutes} min|">120 min</span>
+                                </div>
+                                <div class="d-flex flex-column gap-2">
+                                    <a th:href="@{/movies/{id}(id=${movie.id})}"
+                                       class="btn btn-outline-light btn-sm w-100">
+                                        <i class="fa-regular fa-eye me-1"></i> Más información
+                                    </a>
+                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/movies/edit/{id}(id=${movie.id})}"
+                                       class="btn btn-primary btn-sm w-100">
+                                        <i class="fa-solid fa-paintbrush"></i> Editar
+                                    </a>
+                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{movies/deactivate/{id}(id=${movie.id})}"
+                                       class="btn btn-danger btn-sm w-100"
+                                       onclick="return confirm('¿Estás seguro que quieres inhabilitar esta película?');">
+                                        <i class="fa-solid fa-circle-minus"></i> Inhabilitar
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
