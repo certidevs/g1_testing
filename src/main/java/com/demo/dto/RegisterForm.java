@@ -7,6 +7,12 @@ import lombok.Data;
 
 @Data
 public class RegisterForm {
+    @NotBlank(message = "El nombre es obligatorio")
+    private String firstName;
+
+    @NotBlank(message = "El apellido es obligatorio")
+    private String lastName;
+
     @NotBlank(message = "El username es obligatorio")
     private String username;
 

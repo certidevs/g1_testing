@@ -25,6 +25,23 @@
                 </div>
 
                 <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="firstName"
+                           placeholder="username" required th:field="*{firstName}" minlength="3" maxlength="20" autofocus
+                           th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'">
+                    <label for="username">Nombre</label>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="lastName"
+                           placeholder="username" required th:field="*{lastName}" minlength="3" maxlength="20" autofocus
+                           th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'">
+                    <label for="username">Apellido</label>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                </div>
+
+
+                <div class="form-floating mb-3">
                     <input type="email" class="form-control" id="email"
                            placeholder="email" required th:field="*{email}"
                            th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
