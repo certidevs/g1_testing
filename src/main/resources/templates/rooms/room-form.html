@@ -13,7 +13,11 @@
 
     <div class="card mb-4">
         <div class="card-body">
-            <form th:action="@{/salas}" method="post" th:object="${room}">
+            <form th:action="@{/salas}" method="post"
+                  th:object="${room}">
+                <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+                    Corrige los errores en el formulario antes de guardar.
+                </div>
                 <input type="hidden" th:field="*{id}">
                 <input type="hidden" th:field="*{active}">
 
@@ -24,14 +28,14 @@
 
                     <input type="text"
                            class="form-control"
+                           th:classappend="${#fields.hasErrors('name')} ? ' is-invalid' : ''"
                            id="name"
                            name="name"
                            th:field="*{name}"
                            placeholder="Ej: Sala 1"
                            required
                            maxlength="50">
-
-                    <div class="text-danger mt-1"
+                    <div class="invalid-feedback"
                          th:if="${#fields.hasErrors('name')}"
                          th:errors="*{name}">
                     </div>
@@ -42,14 +46,18 @@
                         <label for="capacity" class="form-label">
                             <i class="fa-solid fa-people-group me-2 text-gold"></i>Capacidad
                         </label>
-                        <input type="number" class="form-control" id="capacity" name="capacity"
+                        <input type="number" class="form-control"
+                               th:classappend="${#fields.hasErrors('capacity')} ? ' is-invalid' : ''"
+                               id="capacity"
+                               name="capacity"
                                th:field="*{capacity}"
                                required
                                placeholder="Ej: 100"
                                min="10"
                                max="300">
-                        <div class="text-danger"
+                        <div class="invalid-feedback"
                              th:if="${#fields.hasErrors('capacity')}"
+
                              th:errors="*{capacity}">
                         </div>
                     </div>
