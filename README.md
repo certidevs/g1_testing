@@ -1,68 +1,73 @@
 # 🎬 Only Film
 
-Sistema de gestión de cine desarrollado con Spring Boot y Thymeleaf, orientado a la gestión de películas, sesiones, salas, entradas y usuarios.
+> Aplicación web de gestión de cine desarrollada con **Spring Boot**, **Thymeleaf** y enfoque profesional en **testing automatizado**, **calidad software** e **integración continua**.
 
-El proyecto ha sido desarrollado siguiendo un enfoque académico-profesional, poniendo especial atención en:
-
-* Arquitectura MVC
-* Testing automatizado
-* Calidad software
-* Integración continua
-* Trabajo colaborativo con GitHub
-* Buenas prácticas de desarrollo
-
----
-
-# 📌 Descripción del proyecto
-
-Only Film es una aplicación web que simula el funcionamiento básico de un cine moderno.
-
-La plataforma permite:
-
-* Gestionar películas en cartelera
-* Administrar salas de proyección
-* Configurar sesiones y horarios
-* Gestionar tickets y reservas
-* Gestionar usuarios y autenticación
-* Visualizar información mediante templates Thymeleaf
-
-Además, el proyecto incorpora testing automatizado y pipelines CI/CD para aproximarse a un entorno de desarrollo profesional real.
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-25-orange?logo=openjdk&logoColor=white" alt="Java 25">
+  <img src="https://img.shields.io/badge/Spring%20Boot-4.0.5-6DB33F?logo=springboot&logoColor=white" alt="Spring Boot">
+  <img src="https://img.shields.io/badge/Thymeleaf-server--side-005F0F?logo=thymeleaf&logoColor=white" alt="Thymeleaf">
+  <img src="https://img.shields.io/badge/H2-in--memory-1F6FEB" alt="H2">
+  <img src="https://img.shields.io/badge/Testing-JUnit%20%7C%20Mockito%20%7C%20Selenium-red" alt="Testing">
+  <img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white" alt="GitHub Actions">
+</p>
 
 ---
 
-# 🧱 Funcionalidades principales
+# ✨ ¿Qué es?
 
-## 🎞️ Gestión de películas
+**Only Film** es una aplicación web completa de gestión de cine desarrollada con Spring Boot y Thymeleaf, donde:
 
-* Alta y visualización de películas
-* Género, duración y dirección
-* Asociación con sesiones
+* 👀 Los visitantes pueden consultar películas, sesiones y disponibilidad.
+* 🔐 Los usuarios registrados pueden comprar entradas y acceder a sus tickets QR.
+* 🛠️ Los administradores gestionan películas, salas, sesiones y usuarios desde un panel administrativo.
 
-## 🏛️ Gestión de salas
+El proyecto pone especial énfasis en:
 
-* Capacidad
-* Tipo de pantalla
-* Gestión de disponibilidad
+* arquitectura MVC
+* testing automatizado
+* calidad software
+* integración continua
+* buenas prácticas de desarrollo
 
-## 🕒 Gestión de sesiones
+---
 
-* Asociación película/sala
-* Horarios
-* Precio
-* Idioma de proyección
+# 🚀 Funcionalidades principales
 
-## 🎟️ Gestión de tickets
+## 👤 Usuario anónimo
+
+* Consultar cartelera
+* Ver detalles de películas
+* Ver sesiones disponibles
+* Registro e inicio de sesión
+
+## 👥 Usuario autenticado
 
 * Compra de entradas
-* Gestión de asientos
-* Estado de tickets
-* Asociación con usuarios
+* Selección de butacas
+* Checkout de tickets
+* Tickets QR
+* Historial de entradas
 
-## ⭐ Reviews
+## 🛠️ Administrador
 
-* Valoraciones de películas
-* Comentarios
-* Sistema de puntuación
+* CRUD de películas
+* CRUD de salas
+* CRUD de sesiones
+* Gestión de usuarios
+* Activación/desactivación lógica de elementos
+
+---
+
+# 🧱 Modelo de datos
+
+| Entidad     | Descripción                                    |
+| ----------- | ---------------------------------------------- |
+| **Movie**   | Películas disponibles en cartelera             |
+| **Room**    | Salas de proyección                            |
+| **Session** | Sesiones asociadas a película y sala           |
+| **Ticket**  | Entradas asociadas a usuario y sesión          |
+| **Review**  | Valoraciones y comentarios                     |
+| **User**    | Usuarios con roles (`ROLE_USER`, `ROLE_ADMIN`) |
 
 ---
 
@@ -71,7 +76,7 @@ Además, el proyecto incorpora testing automatizado y pipelines CI/CD para aprox
 ## Backend
 
 * Java 25
-* Spring Boot
+* Spring Boot 4
 * Spring MVC
 * Spring Data JPA
 * Hibernate
@@ -79,23 +84,18 @@ Además, el proyecto incorpora testing automatizado y pipelines CI/CD para aprox
 ## Frontend
 
 * Thymeleaf
+* Bootstrap 5
 * HTML5
 * CSS3
-* Bootstrap
 
 ## Base de datos
 
 * H2 Database
 
-## Build & Dependency Management
-
-* Maven
-
 ## Testing
 
 * JUnit 5
 * Mockito
-* Spring Boot Test
 * MockMvc
 * Selenium WebDriver
 
@@ -107,82 +107,101 @@ Además, el proyecto incorpora testing automatizado y pipelines CI/CD para aprox
 
 ---
 
-# 🧪 Testing
+# 🧠 Detalles técnicos destacables
+
+* Arquitectura MVC desacoplada mediante:
+
+    * Controller
+    * Service
+    * Repository
+
+* Testing multinivel:
+
+    * Repository Tests
+    * Service Tests
+    * Controller Tests
+    * Selenium UI Tests
+
+* Seguridad con Spring Security y roles:
+
+    * `ROLE_USER`
+    * `ROLE_ADMIN`
+
+* Generación dinámica de tickets QR.
+
+* Gestión de estados de tickets:
+
+    * `LIBRE`
+    * `PAGADO`
+    * `CANCELADO`
+
+* Borrado lógico mediante atributo `active`.
+
+* Integración continua mediante GitHub Actions.
+
+* Base de datos H2 en memoria para testing y desarrollo rápido.
+
+---
+
+# 🧪 Testing y calidad software
 
 El proyecto incorpora diferentes niveles de testing automatizado.
 
 ## Backend Testing
 
-### Controller Tests
-
-Validación de endpoints MVC utilizando MockMvc.
-
 ### Repository Tests
 
-Verificación de consultas JPA y persistencia.
+Validación de consultas JPA y persistencia.
 
 ### Service Tests
 
-Testing de lógica de negocio mediante mocks y aislamiento de dependencias.
+Testing de lógica de negocio utilizando Mockito y mocks.
+
+### Controller Tests
+
+Validación de endpoints MVC mediante MockMvc.
+
+---
 
 ## UI Testing con Selenium
 
-Se realizan pruebas E2E sobre:
+Automatización del flujo completo de usuario:
 
-* Navegación
-* Formularios
 * Login
-* Flujos de reserva
-* Validaciones visuales
-* Interacción con templates Thymeleaf
+* Navegación
+* Selección de butaca
+* Checkout
+* Generación de ticket QR
 
 ---
 
-# ⚙️ Integración continua (CI/CD)
+## CI/CD
 
-El proyecto utiliza GitHub Actions para automatizar:
+GitHub Actions automatiza:
 
-* Build del proyecto
-* Ejecución de tests
-* Verificación de integración
-* Validación básica de calidad
+* compilación
+* ejecución de tests
+* validación de integración
 
-## Nota sobre ejecución del pipeline
-
-Debido a las limitaciones de minutos mensuales disponibles en GitHub Actions dentro del entorno académico compartido, los workflows CI/CD se ejecutan manualmente mediante `workflow_dispatch` en lugar de hacerlo automáticamente en cada push.
-
-Esto permite optimizar recursos sin renunciar a la validación continua del proyecto.
+> ℹ️ Los workflows se ejecutan manualmente mediante `workflow_dispatch`
+> para optimizar el consumo de minutos disponibles en el entorno académico compartido.
 
 ---
 
-# 📂 Estructura del proyecto
+# 🔒 Permisos por rol
 
-```text
-src/
- ├── main/
- │    ├── java/
- │    │     ├── controller/
- │    │     ├── model/
- │    │     ├── repository/
- │    │     ├── service/
- │    │     └── config/
- │    │
- │    └── resources/
- │          ├── templates/
- │          ├── static/
- │          └── application.properties
- │
- └── test/
-      ├── java/
-      │     ├── controller/
-      │     ├── repository/
-      │     ├── service/
-      │     └── selenium/
-```
+| Acción                   | Visitante | Usuario | Admin |
+| ------------------------ | :-------: | :-----: | :---: |
+| Ver películas y sesiones |     ✅     |    ✅    |   ✅   |
+| Comprar tickets          |     ❌     |    ✅    |   ✅   |
+| Acceder a tickets QR     |     ❌     |    ✅    |   ✅   |
+| Gestionar películas      |     ❌     |    ❌    |   ✅   |
+| Gestionar sesiones       |     ❌     |    ❌    |   ✅   |
+| Gestionar usuarios       |     ❌     |    ❌    |   ✅   |
 
 ---
 
-# 🚀 Instalación y ejecución
+# ▶️ Cómo arrancar el proyecto
 
 ## Requisitos
 
@@ -192,21 +211,22 @@ src/
 
 ---
 
-## Clonar el repositorio
+## Clonar repositorio
 
 ```bash
 git clone https://github.com/certidevs/g1_testing.git
+cd g1_testing
 ```
 
 ---
 
-## Ejecutar la aplicación
+## Ejecutar aplicación
 
 ```bash
 mvn spring-boot:run
 ```
 
-La aplicación estará disponible en:
+Abrir en navegador:
 
 ```text
 http://localhost:8080
@@ -214,66 +234,118 @@ http://localhost:8080
 
 ---
 
-# 🧪 Ejecutar tests
+# 🔑 Cuentas demo
 
-## Tests backend
+| Usuario | Contraseña | Rol           |
+| ------- | ---------- | ------------- |
+| admin   | admin      | Administrador |
+| user    | user       | Usuario       |
 
-```bash
-mvn test
+---
+
+# 🗄️ Consola H2
+
+URL:
+
+```text
+http://localhost:8080/h2-console
 ```
 
-## Tests completos incluyendo Selenium
+JDBC URL:
 
-```bash
-mvn verify
+```text
+jdbc:h2:mem:testdb
 ```
+
+Usuario:
+
+```text
+sa
+```
+
+Contraseña:
+
+```text
+(vacía)
+```
+
+---
+
+# 🗂️ Estructura del proyecto
+
+```text
+src/main/java/com/demo
+├── config/        # Seguridad y configuración
+├── controller/    # Controladores MVC
+├── model/         # Entidades JPA y enums
+├── repository/    # Repositorios Spring Data JPA
+├── service/       # Lógica de negocio
+└── dto/           # DTOs y formularios
+
+src/test/java/com/demo
+├── controller/    # Controller Tests
+├── repository/    # Repository Tests
+├── service/       # Service Tests
+└── ui/            # Selenium Tests
+```
+
+---
+
+# 📸 Capturas
+
+## 🎬 Cartelera
+
+![Cartelera](docs/screenshots/cartelera.png)
+
+## 💳 Checkout
+
+![Checkout](docs/screenshots/checkout.png)
+
+## 🎟️ Ticket QR
+
+![Ticket QR](docs/screenshots/ticket.png)
+
+## 🛠️ Panel Admin
+
+![Admin](docs/screenshots/admin.png)
 
 ---
 
 # 👥 Equipo de desarrollo
 
-* Andrés Soto
+* Fran Ramírez Martín
 * Adrián López de Haro
 * Barbara Urbano
-* Fran Ramírez Martín
-
-
----
-
-# 📈 Objetivos académicos y técnicos
-
-Este proyecto tiene como objetivos:
-
-* Aplicar arquitectura MVC con Spring Boot
-* Trabajar con entidades relacionales y JPA
-* Implementar testing automatizado multinivel
-* Utilizar integración continua
-* Simular flujos de trabajo colaborativos reales
-* Mejorar la calidad y mantenibilidad del software
+* Andrés Soto
 
 ---
 
-# 🔮 Mejoras futuras
+# 🚀 Posibles mejoras futuras
 
-* Sistema avanzado de reservas
-* Pasarela de pago
 * API REST
 * Dockerización
-* Persistencia en MySQL/PostgreSQL
-* Despliegue cloud
-* Cobertura de tests avanzada
+* PostgreSQL/MySQL
 * SonarQube
-* Roles y permisos avanzados
+* Despliegue cloud
+* Pasarela de pago
+* JWT/API móvil
+* Cobertura avanzada de tests
 
 ---
 
 # 🔗 Repositorio
 
-[Repositorio GitHub - Only Film](https://github.com/certidevs/g1_testing?utm_source=chatgpt.com)
+https://github.com/certidevs/g1_testing
 
 ---
 
 # 📄 Licencia
 
 Proyecto académico desarrollado con fines educativos.
+
+---
+
+<p align="center">
+  Hecho con ☕ Java + 🍃 Spring Boot + 🎬 pasión por el testing
+</p>
 
