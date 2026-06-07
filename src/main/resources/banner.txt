@@ -1,0 +1,17 @@
+${AnsiColor.BRIGHT_RED}
+   ____        _         ______ _ _
+  / __ \      | |       |  ____(_) |
+ | |  | |_ __ | |_   _  | |__   _| |_ __ ___
+ | |  | | '_ \| | | | | |  __| | | | '_ ` _ \
+ | |__| | | | | | |_| | | |    | | | | | | | |
+  \____/|_| |_|_|\__, | |_|    |_|_|_| |_| |_|
+                  __/ |
+                 |___/
+
+${AnsiColor.BRIGHT_YELLOW}         🎬 CINEMA MANAGEMENT SYSTEM 🎬
+
+${AnsiColor.BRIGHT_BLACK}--------------------------------------------------
+${AnsiColor.BRIGHT_CYAN} Spring Boot • Selenium • JUnit • GitHub Actions
+${AnsiColor.BRIGHT_BLACK}--------------------------------------------------
+
+${AnsiColor.DEFAULT}
