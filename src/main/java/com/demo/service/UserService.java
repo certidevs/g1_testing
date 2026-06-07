@@ -51,6 +51,7 @@ public class UserService implements UserDetailsService {
         user.setRole(Role.ROLE_USER);
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
+        user.setActive(true);
         // user.setPassword(form.getPassword()); // password en texto plano
         String encodedPassword = passwordEncoder.encode(form.getPassword());
         user.setPassword(encodedPassword); // $2a$10$u7/W/ivh4XDB40YBjdE9o.wTRaXFitlUrXSUorudG1IdZs/mL2DHu
