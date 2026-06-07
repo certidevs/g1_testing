@@ -23,7 +23,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         WHERE m.active = true
         AND(:durationMinutes IS NULL OR m.durationMinutes <= :durationMinutes)
         AND(:genre IS NULL OR m.genre = :genre)
-        AND(:releaseYear IS NULL OR m.releaseYear <= :releaseYear)
+        AND(:releaseYear IS NULL OR m.releaseYear >= :releaseYear)
         AND (:title IS NULL OR :title = '' OR LOWER(m.title) LIKE LOWER(CONCAT('%', :title, '%')))
                 """)
 

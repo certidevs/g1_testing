@@ -1314,6 +1314,10 @@ footer a:hover {
    FILTERS — CINEMA STYLE
    ============================================ */
 
+#filtros {
+    scroll-margin-top: 80px;
+}
+
 .filters-section {
     padding: 1.25rem 0;
 }

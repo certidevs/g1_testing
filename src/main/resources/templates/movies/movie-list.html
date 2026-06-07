@@ -37,7 +37,7 @@
     <!-- Contenedor de filtros y listado -->
     <div class="container">
         <!-- filtros con estilazo -->
-        <div class="filters-section mb-5">
+        <div class="filters-section mb-5" id="filtros">
 
             <!-- Fila 1: título + pills de género -->
             <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
@@ -65,31 +65,22 @@
                 <div class="search-input-wrapper flex-grow-1">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     <input type="text" name="title" class="form-control search-input"
-                           placeholder="Buscar película..." th:value="${param.title}">
+                           placeholder="Buscar película..." th:value="${param.title != null ? param.title[0] : ''}">
                 </div>
 
-                <select name="genre" class="form-select filter-select">
-                    <option value="">Género</option>
-                    <option value="Accion"          th:selected="${param.genre != null and param.genre[0] == 'Accion'}">Acción</option>
-                    <option value="Comedia"         th:selected="${param.genre != null and param.genre[0] == 'Comedia'}">Comedia</option>
-                    <option value="Romance"         th:selected="${param.genre != null and param.genre[0] == 'Romance'}">Romance</option>
-                    <option value="Animación"       th:selected="${param.genre != null and param.genre[0] == 'Animación'}">Animación</option>
-                    <option value="Ciencia ficción" th:selected="${param.genre != null and param.genre[0] == 'Ciencia ficción'}">Ciencia ficción</option>
-                    <option value="Adventure"       th:selected="${param.genre != null and param.genre[0] == 'Adventure'}">Aventura</option>
-                </select>
-
                 <select name="releaseYear" class="form-select filter-select">
-                    <option value="">Áño</option>
-                    <option value="2010" th:selected="${param.releaseYear == '2010'}">Hasta 2010</option>
-                    <option value="2020" th:selected="${param.releaseYear == '2020'}">Hasta 2020</option>
-                    <option value="2026" th:selected="${param.releaseYear == '2026'}">Hasta 2026</option>
+                    <option value="">Año de estreno</option>
+                    <option value="2025" th:selected="${param.releaseYear != null and param.releaseYear[0] == '2025'}">Estrenos recientes (2025+)</option>
+                    <option value="2022" th:selected="${param.releaseYear != null and param.releaseYear[0] == '2022'}">Últimos 5 años (2022+)</option>
+                    <option value="2015" th:selected="${param.releaseYear != null and param.releaseYear[0] == '2015'}">Desde 2015</option>
+                    <option value="2010" th:selected="${param.releaseYear != null and param.releaseYear[0] == '2010'}">Desde 2010</option>
                 </select>
 
                 <select name="durationMinutes" class="form-select filter-select">
                     <option value="">Duración</option>
-                    <option value="90"  th:selected="${param.durationMinutes == '90'}">Hasta 90 min</option>
-                    <option value="120" th:selected="${param.durationMinutes == '120'}">Hasta 120 min</option>
-                    <option value="160" th:selected="${param.durationMinutes == '160'}">Hasta 160 min</option>
+                    <option value="90"  th:selected="${param.durationMinutes != null and param.durationMinutes[0] == '90'}">Hasta 90 min</option>
+                    <option value="120" th:selected="${param.durationMinutes != null and param.durationMinutes[0] == '120'}">Hasta 120 min</option>
+                    <option value="160" th:selected="${param.durationMinutes != null and param.durationMinutes[0] == '160'}">Hasta 160 min</option>
                 </select>
 
                 <button type="submit" class="btn btn-primary btn-search">
@@ -144,6 +135,13 @@
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
+
+<script>
+    // Scroll automático a los filtros cuando se busca una peli
+    if (window.location.search.length > 0) {
+        document.getElementById('filtros').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+</script>
 
 </body>
 </html>
