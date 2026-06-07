@@ -14,4 +14,7 @@ ${AnsiColor.BRIGHT_BLACK}--------------------------------------------------
 ${AnsiColor.BRIGHT_CYAN} Spring Boot • Selenium • JUnit • GitHub Actions
 ${AnsiColor.BRIGHT_BLACK}--------------------------------------------------
 
+${AnsiColor.BRIGHT_GREEN}Version: ${application.version}
+${AnsiColor.BRIGHT_GREEN}Team: Fran • Adrián • Barbara • Andrés
+
 ${AnsiColor.DEFAULT}
