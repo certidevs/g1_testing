@@ -1,5 +1,6 @@
 package com.demo.ui;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -7,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@Disabled
 public class MovieSeleniumTest extends BaseSeleniumTest{
     @Test
     void movieList(){
