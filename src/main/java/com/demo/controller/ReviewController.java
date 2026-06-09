@@ -21,13 +21,13 @@ public class ReviewController {
     private final MovieRepository movieRepository;
 
     // getmapping reviews
-    @GetMapping("reviews")
+    @GetMapping("/reviews")
     public String reviews(Model model) {
         model.addAttribute("reviews", reviewRepository.findAll());
         return "reviews/review-list";
     }
 
-    @GetMapping("reviews/{id}")
+    @GetMapping("/reviews/{id}")
     public String reviewDetail(Model model, @PathVariable Long id,
                                @RequestParam(required = false) String returnUrl) {
         model.addAttribute("review", reviewRepository.findById(id).orElseThrow());
@@ -37,7 +37,7 @@ public class ReviewController {
         return "reviews/review-detail";
     }
 
-    @GetMapping("reviews/new")
+    @GetMapping("/reviews/new")
     public String newReview(Model model, @RequestParam(required = false) Long movieId) {
         Review review = new Review();
         if (movieId != null)
@@ -46,7 +46,7 @@ public class ReviewController {
         return "reviews/review-form";
     }
 
-    @GetMapping("reviews/edit/{id}")
+    @GetMapping("/reviews/edit/{id}")
     public String editReview(Model model, @PathVariable Long id,
                              @AuthenticationPrincipal User userActual) {
         Review review = reviewRepository.findById(id).orElseThrow();
@@ -64,10 +64,12 @@ public class ReviewController {
     }
 
     //movieId viene del campo hidden del formulario para asociar la película correctamente
-    @PostMapping("reviews")
+    @PostMapping("/reviews")
     public String saveReview(@ModelAttribute Review review,
                              @RequestParam(required = false) Long movieId,
                              @AuthenticationPrincipal User currentUser) {
+
+        //System.out.println("CURRENT USER: " + currentUser);
         if (movieId != null)
             review.setMovie(movieRepository.findById(movieId).orElse(null));
 
@@ -88,7 +90,7 @@ public class ReviewController {
         return "redirect:/reviews";
     }
 
-    @GetMapping("reviews/delete/{id}")
+    @GetMapping("/reviews/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         // Solo ADMIN pasa por aqui, comprobado con debug, SecurityConfig ya lo garantiza a nivel de ruta
         reviewRepository.deleteById(id);
