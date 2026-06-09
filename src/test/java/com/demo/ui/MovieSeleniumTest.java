@@ -20,7 +20,7 @@ public class MovieSeleniumTest extends BaseSeleniumTest{
 
         //Verificamos el badge de resultados (ej: "2 resultados")
         //El .cssSelector es una clase de css compuesta
-        assertTrue(driver.findElement(By.cssSelector(".badge.bg-secondary")).getText().contains("resultado"));
+        assertTrue(driver.findElement(By.cssSelector(".badge.badge-secondary")).getText().contains("resultado"));
 
         //Verifica que hay cards de películas
         //Esta buscando por clase de CSS

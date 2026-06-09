@@ -48,8 +48,6 @@ public class CheckoutSeleniumTest extends BaseSeleniumTest {
     Session session;
     Ticket freeTicket;
 
-    WebDriverWait wait;
-
     @BeforeEach
     void setUpCheckout() {
         ticketRepository.deleteAll();
