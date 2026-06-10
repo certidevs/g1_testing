@@ -23,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.security.test.context.support.WithMockUser;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 import static org.hamcrest.Matchers.*;
@@ -161,29 +163,93 @@ public class TicketControllerTest {
                 .andExpect(model().attribute("sessions", hasSize(1)));
     }
 
-    @Disabled
+
     @Test
-    @WithMockUser(username = "cliente_test", roles = {"USER"}) // <--- Simula un Usuario común
-    @DisplayName("GET /tickets/buy/{id}")
+    @WithMockUser(username = "cliente_test", roles = {"USER"})
+    @DisplayName("GET /tickets/buy/{id} redirige al checkout e inicia la compra")
     void buyTicketSuccess() throws Exception {
+
         Long ticketId = ticket2.getId();
 
-        // Verificamos estado inicial antes del proceso de compra
         assertEquals(BuyStatus.LIBRE, ticket2.getStatus());
-        assertNull(ticket2.getUser());
+        assertNotNull(ticket2.getBuyDateTime());
 
-        // Simulamos la llamada pasando el modelo implícito o flash attribute si requiere mapear el @ModelAttribute User
-        mockMvc.perform(get("/tickets/buy/" + ticketId).with(user(user))
-                        .flashAttr("user", user))
+        mockMvc.perform(get("/tickets/buy/" + ticketId)
+                        .with(user(user)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/tickets/" + ticketId));
+                .andExpect(redirectedUrl("/tickets/" + ticketId + "/checkout"));
 
-        // Obtenemos el registro actualizado de la base de datos para validar los cambios de la compra
-        Ticket ticketComprado = ticketRepository.findById(ticketId).orElseThrow();
+        Ticket updated = ticketRepository.findById(ticketId).orElseThrow();
 
-        assertEquals(BuyStatus.PAGADO, ticketComprado.getStatus());
-        assertNotNull(ticketComprado.getBuyDateTime());
-        assertEquals(user.getId(), ticketComprado.getUser().getId());
-        assertEquals(10.0, ticketComprado.getPrice()); // Precio obtenido del Session asignado
+        assertEquals(BuyStatus.LIBRE, updated.getStatus());
+        assertNotNull(updated.getBuyDateTime());
     }
+
+    @Test
+    @DisplayName("POST /tickets/save crea un nuevo ticket")
+    void saveTicketCreate() throws Exception {
+        long before = ticketRepository.count();
+
+        mockMvc.perform(post("/tickets/save")
+                        .with(user(user))
+                        .with(csrf())
+                        .param("row", "B")
+                        .param("seat", "5")
+                        .param("price", "12.50")
+                        .param("discount", "0")
+                        .param("status", BuyStatus.LIBRE.name())
+                        .param("session", session.getId().toString())
+                        .param("user", user.getId().toString())
+                        .param("QRCode", "ONLYFILM-NEW-QR"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/tickets"));
+
+        assertEquals(before + 1, ticketRepository.count());
+
+        Ticket saved = ticketRepository.findAll().stream()
+                .filter(ticket -> "B".equals(ticket.getRow()) && "5".equals(ticket.getSeat()))
+                .findFirst()
+                .orElseThrow();
+
+        assertEquals(12.50, saved.getPrice());
+        assertEquals(0.0, saved.getDiscount());
+        assertEquals(BuyStatus.LIBRE, saved.getStatus());
+        assertEquals(session.getId(), saved.getSession().getId());
+        assertEquals(user.getId(), saved.getUser().getId());
+        assertEquals("ONLYFILM-NEW-QR", saved.getQRCode());
+    }
+
+    @Test
+    @DisplayName("POST /tickets/save actualiza un ticket existente")
+    void saveTicketUpdate() throws Exception {
+        Long ticketId = ticket2.getId();
+
+        mockMvc.perform(post("/tickets/save")
+                        .with(user(user))
+                        .with(csrf())
+                        .param("id", ticketId.toString())
+                        .param("row", "C")
+                        .param("seat", "9")
+                        .param("price", "15.00")
+                        .param("discount", "2.00")
+                        .param("status", BuyStatus.PAGADO.name())
+                        .param("session", session.getId().toString())
+                        .param("user", user.getId().toString())
+                        .param("QRCode", "ONLYFILM-UPDATED-QR"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/tickets"));
+
+        Ticket updated = ticketRepository.findById(ticketId).orElseThrow();
+
+        assertEquals("C", updated.getRow());
+        assertEquals("9", updated.getSeat());
+        assertEquals(15.00, updated.getPrice());
+        assertEquals(2.00, updated.getDiscount());
+        assertEquals(BuyStatus.PAGADO, updated.getStatus());
+        assertEquals(session.getId(), updated.getSession().getId());
+        assertEquals(user.getId(), updated.getUser().getId());
+        assertEquals("ONLYFILM-UPDATED-QR", updated.getQRCode());
+    }
+
+
 }

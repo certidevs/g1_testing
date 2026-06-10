@@ -2,10 +2,8 @@ package com.demo.controller;
 
 import com.demo.model.Ticket;
 import com.demo.model.User;
-import com.demo.model.enums.BuyStatus;
 import com.demo.model.enums.Role;
 import com.demo.repository.SessionRepository;
-import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
 import com.demo.service.TicketService;
 import lombok.AllArgsConstructor;
@@ -15,9 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @AllArgsConstructor
@@ -111,5 +107,15 @@ public class TicketController {
     @GetMapping("tickets/buy/{id}")
     public String buyTicket(@PathVariable Long id) {
         return "redirect:/tickets/" + id + "/checkout";
+    }
+
+
+    // POST tickets/save
+    @PostMapping("tickets/save")
+    public String saveTicket(@ModelAttribute Ticket ticket) {
+
+        ticketService.save(ticket);
+
+        return "redirect:/tickets";
     }
 }
