@@ -1,7 +1,7 @@
 package com.demo.ui;
 
 import com.demo.model.Movie;
-import com.demo.repository.MovieRepository;
+import com.demo.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Duration;
 import java.util.Map;
@@ -24,6 +25,24 @@ public class BaseSeleniumTest {
     @Autowired
     MovieRepository movieRepository;
 
+    @Autowired
+    TicketRepository ticketRepository;
+
+    @Autowired
+    SessionRepository sessionRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    RoomRepository roomRepository;
+
+    @Autowired
+    ReviewRepository reviewRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     String baseUrl;
     WebDriver driver;
     WebDriverWait wait;
@@ -33,7 +52,13 @@ public class BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
+        ticketRepository.deleteAll();
+        reviewRepository.deleteAll();
+        sessionRepository.deleteAll();
+        roomRepository.deleteAll();
         movieRepository.deleteAll();
+        userRepository.deleteAll();
+
         movieAction = movieRepository.save(
                 Movie.builder().active(true).title("The Bourne Identity").genre("Action")
                         .durationMinutes(119).releaseYear(2002).director("Doug Liman").build()
