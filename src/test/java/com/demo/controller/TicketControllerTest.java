@@ -60,17 +60,18 @@ public class TicketControllerTest {
 
     private Ticket ticket1;
     private Ticket ticket2;
+    private Ticket ticket3;
     private Session session;
     private User user;
 
     @BeforeEach
     void setUp() {
         // Limpieza de datos respetando restricciones de integridad referencial
-        ticketRepository.deleteAll();
-        sessionRepository.deleteAll();
-        roomRepository.deleteAll();
-        movieRepository.deleteAll();
-        userRepository.deleteAll();
+//        ticketRepository.deleteAll();
+//        sessionRepository.deleteAll();
+//        roomRepository.deleteAll();
+//        movieRepository.deleteAll();
+//        userRepository.deleteAll();
 
         // 1. Crear entidades requeridas de apoyo
         Movie movie = movieRepository.save(Movie.builder().title("Batman").active(true).build());
@@ -98,13 +99,21 @@ public class TicketControllerTest {
                 .seat("1")
                 .price(10.0)
                 .user(user)
-                .status(BuyStatus.LIBRE)
+                .status(BuyStatus.PAGADO)
                 .build());
 
         ticket2 = ticketRepository.save(Ticket.builder()
                 .session(session)
                 .row("A")
                 .seat("2")
+                .price(10.0)
+                .status(BuyStatus.PAGADO)
+                .build());
+
+        ticket3 = ticketRepository.save(Ticket.builder()
+                .session(session)
+                .row("B")
+                .seat("7")
                 .price(10.0)
                 .status(BuyStatus.LIBRE)
                 .build());
@@ -119,7 +128,7 @@ public class TicketControllerTest {
                 .andExpect(model().attributeExists("tickets"))
                 .andExpect(model().attribute("tickets", hasSize(2)))
                 .andExpect(model().attribute("numTickets", 2))
-                .andExpect(model().attribute("title", "Listado de tickets"));
+                .andExpect(model().attribute("title", "Entradas vendidas"));
     }
 
     @Test
@@ -169,10 +178,10 @@ public class TicketControllerTest {
     @DisplayName("GET /tickets/buy/{id} redirige al checkout e inicia la compra")
     void buyTicketSuccess() throws Exception {
 
-        Long ticketId = ticket2.getId();
+        Long ticketId = ticket3.getId();
 
-        assertEquals(BuyStatus.LIBRE, ticket2.getStatus());
-        assertNotNull(ticket2.getBuyDateTime());
+        assertEquals(BuyStatus.LIBRE, ticket3.getStatus());
+        assertNotNull(ticket3.getBuyDateTime());
 
         mockMvc.perform(get("/tickets/buy/" + ticketId)
                         .with(user(user)))

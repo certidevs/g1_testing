@@ -36,10 +36,10 @@ public class SessionControllerTest {
 
     @BeforeEach
     void setUp() {
-        ticketRepository.deleteAll();
-        sessionRepository.deleteAll();
-        movieRepository.deleteAll();
-        roomRepository.deleteAll();
+//        ticketRepository.deleteAll();
+//        sessionRepository.deleteAll();
+//        movieRepository.deleteAll();
+//        roomRepository.deleteAll();
     }
 
     @Test
@@ -106,9 +106,9 @@ public class SessionControllerTest {
     }
 
     @Test
-    void deleteSession() throws Exception {
+    void deactivateSession() throws Exception {
         var session = sessionRepository.save(com.demo.model.Session.builder().build());
-        mockMvc.perform(get("/sessions/delete/" + session.getId()))
+        mockMvc.perform(get("/sessions/deactivate/" + session.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/sessions"));
     }
