@@ -19,4 +19,9 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     @Query("SELECT s FROM Session s ORDER BY s.startTime DESC NULLS LAST")
     List<Session> findAllOrderByStartTimeDescNullsLast();
+
+    @Query("SELECT s FROM Session s WHERE s.active = true ORDER BY s.startTime DESC NULLS LAST")
+    List<Session> findAllByActiveTrueOrderByStartTimeDescNullsLast();
+
+    List<Session> findByMovie_IdAndActiveTrueOrderByStartTimeAsc(Long movieId);
 }

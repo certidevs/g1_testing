@@ -33,8 +33,9 @@ package com.demo.controller;
         // Lista de sesiones
         @GetMapping("/sessions")
 public String listSessions(Model model) {
-    model.addAttribute("proyecciones", sessionRepository.findAllOrderByStartTimeDescNullsLast());
-    model.addAttribute("proyeccionesCount", sessionRepository.count());
+        List<Session> proyecciones = sessionRepository.findAllByActiveTrueOrderByStartTimeDescNullsLast();
+        model.addAttribute("proyecciones", proyecciones);
+        model.addAttribute("proyeccionesCount", (long) proyecciones.size());
     return "sessions/session-list";
 }
     // Formulario nueva sesión
@@ -79,10 +80,13 @@ public String listSessions(Model model) {
         return "redirect:/sessions";
     }
 
-    // GET: Eliminar
-    @GetMapping("/sessions/delete/{id}")
-    public String deleteSession(@PathVariable Long id) {
-        sessionRepository.deleteById(id);
+    // GET: Desactivar (en lugar de eliminar, para evitar errores de constraint con tickets asociados)
+    @GetMapping("/sessions/deactivate/{id}")
+    public String deactivateSession(@PathVariable Long id) {
+        sessionRepository.findById(id).ifPresent(session -> {
+            session.setActive(false);
+            sessionRepository.save(session);
+        });
         return "redirect:/sessions";
     }
 }

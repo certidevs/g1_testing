@@ -67,10 +67,14 @@
                             <i class="fa-solid fa-film me-2 text-gold"></i>Tipo de pantalla
                         </label>
                         <select class="form-select" id="screenType" name="screenType" th:field="*{screenType}">
-                            <option th:value="${T(com.demo.model.enums.ScreenType).STANDARD}" th:text="'Estándar'"></option>
-                            <option th:value="${T(com.demo.model.enums.ScreenType).D3}" th:text="'3D'"></option>
-                            <option th:value="${T(com.demo.model.enums.ScreenType).IMAX}" th:text="'IMAX'"></option>
-                            <option th:value="${T(com.demo.model.enums.ScreenType).D4X}" th:text="'4DX'"></option>
+                            <option th:value="${T(com.demo.model.enums.ScreenType).STANDARD}"
+                                    th:selected="${room.screenType == T(com.demo.model.enums.ScreenType).STANDARD}">Estándar</option>
+                            <option th:value="${T(com.demo.model.enums.ScreenType).D3}"
+                                    th:selected="${room.screenType == T(com.demo.model.enums.ScreenType).D3}">3D</option>
+                            <option th:value="${T(com.demo.model.enums.ScreenType).IMAX}"
+                                    th:selected="${room.screenType == T(com.demo.model.enums.ScreenType).IMAX}">IMAX</option>
+                            <option th:value="${T(com.demo.model.enums.ScreenType).D4X}"
+                                    th:selected="${room.screenType == T(com.demo.model.enums.ScreenType).D4X}">4DX</option>
                         </select>
                     </div>
                 </div>

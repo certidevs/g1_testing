@@ -3,8 +3,10 @@ package com.demo.service;
 import com.demo.dto.UserStatsDTO;
 import com.demo.model.Review;
 import com.demo.model.User;
+import com.demo.model.enums.BuyStatus;
 import com.demo.model.enums.Role;
 import com.demo.repository.ReviewRepository;
+import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
 import com.demo.dto.RegisterForm;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ReviewRepository reviewRepository;
+    private final TicketRepository ticketRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -147,7 +150,8 @@ public class UserService implements UserDetailsService {
     public UserStatsDTO findStatsById(Long id) {
         return new UserStatsDTO(
                 reviewRepository.countByUser_Id(id),
-                reviewRepository.findByUser_Id(id)
+                reviewRepository.findByUser_Id(id),
+                ticketRepository.findByUser_IdAndStatus(id, BuyStatus.PAGADO)
         );
     }
 

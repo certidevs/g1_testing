@@ -107,7 +107,7 @@
                             <div class="mt-auto">
                                 <div class="d-flex flex-wrap gap-2 mb-3 mt-3">
                                     <span class="badge badge-secondary" th:text="${movie.genre}">Género</span>
-                                    <span class="badge badge-secondary" th:text="|${movie.durationMinutes} min|">120 min</span>
+                                    <span class="badge badge-secondary" th:text="${movie.durationMinutes != null ? movie.durationMinutes + ' min' : '—'}">120 min</span>
                                 </div>
                                 <div class="d-flex flex-column gap-2">
                                     <a th:href="@{/movies/{id}(id=${movie.id})}"
