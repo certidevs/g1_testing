@@ -21,7 +21,7 @@
                     <p class="lead text-secondary mb-4">Explora nuestro catálogo completo de películas premium. Descubre clásicos, estrenos y más.</p>
 
                     <div class="mb-4">
-                        <span class="badge badge-secondary fs-6" th:text="|${numMovies} películas disponibles|">0 películas disponibles</span>
+                        <span id="countMovies" class="badge badge-secondary fs-6" th:text="|${numMovies} películas disponibles|">0 películas disponibles</span>
                     </div>
 
                     <div sec:authorize="hasRole('ADMIN')" class="mb-4">
@@ -107,10 +107,10 @@
                             <div class="mt-auto">
                                 <div class="d-flex flex-wrap gap-2 mb-3 mt-3">
                                     <span class="badge badge-secondary" th:text="${movie.genre}">Género</span>
-                                    <span class="badge badge-secondary" th:text="|${movie.durationMinutes} min|">120 min</span>
+                                    <span class="badge badge-secondary" th:text="${movie.durationMinutes != null ? movie.durationMinutes + ' min' : '—'}">120 min</span>
                                 </div>
                                 <div class="d-flex flex-column gap-2">
-                                    <a th:href="@{/movies/{id}(id=${movie.id})}"
+                                    <a th:id="'viewMovie-' + ${movie.id}" th:href="@{/movies/{id}(id=${movie.id})}"
                                        class="btn btn-outline-light btn-sm w-100">
                                         <i class="fa-regular fa-eye me-1"></i> Más información
                                     </a>

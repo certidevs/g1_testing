@@ -34,6 +34,10 @@ public class Session {
     //Integer numAds o Integer adMinutes o Duration adMinutes
     private Integer adMinutes;
 
+    @Builder.Default
+    @Column(columnDefinition = "BOOLEAN DEFAULT true")
+    private Boolean active = true;
+
     //asociación con la película que se proyectará en esta sesión.
     @ManyToOne
     @ToString.Exclude

@@ -91,12 +91,11 @@
                                        data-bs-toggle="tooltip">
                                         <i class="fa-solid fa-pencil"></i>
                                     </a>
-
-                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/sessions/delete/{id}(id=${proyeccion.id})}"
+                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/sessions/deactivate/{id}(id=${proyeccion.id})}"
                                        class="btn btn-danger"
-                                       title="Eliminar proyección"
+                                       title="Desactivar proyección"
                                        data-bs-toggle="tooltip"
-                                       onclick="return confirm('¿Estás seguro de que deseas eliminar esta proyección?');">
+                                       onclick="return confirm('¿Estás seguro de que deseas desactivar esta proyección?');">
                                         <i class="fa-solid fa-trash"></i>
                                     </a>
                                 </div>

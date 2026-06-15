@@ -1,5 +1,10 @@
 package com.demo.controller;
 
+import com.demo.model.Session;
+import com.demo.model.Ticket;
+import com.demo.model.enums.BuyStatus;
+import com.demo.repository.SessionRepository;
+import com.demo.repository.TicketRepository;
 import com.demo.model.Movie;
 import com.demo.model.Review;
 import com.demo.model.User;
@@ -46,6 +51,9 @@ class ReviewControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired private SessionRepository sessionRepository;
+    @Autowired private TicketRepository ticketRepository;
+
     private Movie movie;
     private User user;
     private User otherUser;
@@ -75,6 +83,12 @@ class ReviewControllerTest {
                         .role(Role.ROLE_USER)
                         .build()
         );
+
+        Session session = sessionRepository.save(
+                Session.builder().movie(movie).price(10.0).build());
+
+        ticketRepository.save(
+                Ticket.builder().user(user).session(session).status(BuyStatus.PAGADO).build());
 
         otherUser = userRepository.save(
                 User.builder()
@@ -131,7 +145,9 @@ class ReviewControllerTest {
     @Test
     void newReview_shouldReturnForm() throws Exception {
 
-        mockMvc.perform(get("/reviews/new").with(user(user)))
+        mockMvc.perform(get("/reviews/new")
+                        .param("movieId", movie.getId().toString())
+                        .with(user(user)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("reviews/review-form"))
                 .andExpect(model().attributeExists("review"));
@@ -189,4 +205,20 @@ class ReviewControllerTest {
 
         assertThat(reviewRepository.findById(id)).isEmpty();
     }
+
+    @Test
+    void saveReview_shouldRejectWithoutTicket() throws Exception {
+        long now = reviewRepository.count();
+
+        mockMvc.perform(post("/reviews")
+                        .with(user(otherUser)).with(csrf())
+                        .param("title", "X").param("description", "Y").param("rating", "3")
+                        .param("movieId", movie.getId().toString()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/movies/" + movie.getId()));
+
+        assertEquals(now, reviewRepository.count()); // NO se creó la reseña
+    }
+
+
 }

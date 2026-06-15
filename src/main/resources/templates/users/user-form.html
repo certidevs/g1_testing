@@ -18,7 +18,9 @@
 
                 <div class="mb-3" th:if="${edit}">
                     <label class="form-label" for="id">ID</label>
-                    <input type="number" class="form-control" id="id" th:field="*{id}" disabled>
+                    <!-- hidden envia el valor; el disabled solo es para que no sea editable visualmente -->
+                    <input type="hidden" th:field="*{id}">
+                    <input type="number" class="form-control" id="id" th:value="*{id}" disabled>
                 </div>
 
                 <div class="mb-3">

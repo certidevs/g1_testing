@@ -1,5 +1,7 @@
 package com.demo.controller;
 
+import com.demo.model.enums.BuyStatus;
+import com.demo.repository.TicketRepository;
 import com.demo.model.Review;
 import com.demo.model.User;
 import com.demo.model.enums.Role;
@@ -19,11 +21,12 @@ public class ReviewController {
     // inyectar el repositorio de reviews
     private final ReviewRepository reviewRepository;
     private final MovieRepository movieRepository;
+    private final TicketRepository ticketRepository;
 
     // getmapping reviews
     @GetMapping("/reviews")
     public String reviews(Model model) {
-        model.addAttribute("reviews", reviewRepository.findAll());
+        model.addAttribute("reviews", reviewRepository.findAllByOrderByCreationDateDesc());
         return "reviews/review-list";
     }
 
@@ -38,10 +41,19 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/new")
-    public String newReview(Model model, @RequestParam(required = false) Long movieId) {
+    public String newReview(Model model,
+                            @RequestParam(required = false) Long movieId,
+                            @AuthenticationPrincipal User currentUser,
+                            RedirectAttributes ra) {
+
+        if (movieId == null ||
+                !ticketRepository.existsByUser_IdAndSession_Movie_IdAndStatus(currentUser.getId(), movieId, BuyStatus.PAGADO)) {
+            ra.addFlashAttribute("error", "Debes haber comprado una entrada de esta película para reseñarla.");
+            return movieId != null ? "redirect:/movies/" + movieId : "redirect:/movies";
+        }
+
         Review review = new Review();
-        if (movieId != null)
-            review.setMovie(movieRepository.findById(movieId).orElseThrow());
+        review.setMovie(movieRepository.findById(movieId).orElseThrow());
         model.addAttribute("review", review);
         return "reviews/review-form";
     }
@@ -67,18 +79,23 @@ public class ReviewController {
     @PostMapping("/reviews")
     public String saveReview(@ModelAttribute Review review,
                              @RequestParam(required = false) Long movieId,
-                             @AuthenticationPrincipal User currentUser) {
+                             @AuthenticationPrincipal User currentUser,
+                             RedirectAttributes ra) {
 
-        //System.out.println("CURRENT USER: " + currentUser);
         if (movieId != null)
             review.setMovie(movieRepository.findById(movieId).orElse(null));
 
         if (review.getId() != null) {
-            // Edición: conservar el autor original, no sobreescribirlo
+            // Edición: conservar el autor original
             reviewRepository.findById(review.getId())
                     .ifPresent(existing -> review.setUser(existing.getUser()));
         } else {
-            // Nueva reseña: asignar el usuario autenticado como autor
+            // Creación: exigir entrada comprada de esa película
+            if (movieId == null ||
+                    !ticketRepository.existsByUser_IdAndSession_Movie_IdAndStatus(currentUser.getId(), movieId, BuyStatus.PAGADO)) {
+                ra.addFlashAttribute("error", "Debes haber comprado una entrada de esta película para reseñarla.");
+                return movieId != null ? "redirect:/movies/" + movieId : "redirect:/movies";
+            }
             review.setUser(currentUser);
         }
 
@@ -86,7 +103,6 @@ public class ReviewController {
 
         if (review.getMovie() != null)
             return "redirect:/movies/" + review.getMovie().getId();
-
         return "redirect:/reviews";
     }
 

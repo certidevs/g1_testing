@@ -82,35 +82,38 @@
                     <h5 class="text-gold mb-3">
                         <i class="fa-solid fa-table me-2"></i>Resumen
                     </h5>
-                    <div class="bg-gradient-dark p-4 rounded">
-                        <table class="table table-borderless mb-0 table-sm">
-                            <tbody>
-                                <tr>
-                                    <td class="text-muted ps-0">ID:</td>
-                                    <td class="text-end text-secondary pe-0" th:text="${room.id}">1</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-muted ps-0">Nombre:</td>
-                                    <td class="text-end text-secondary pe-0" th:text="${room.name}">Sala 1</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-muted ps-0">Capacidad:</td>
-                                    <td class="text-end text-secondary pe-0" th:text="${room.capacity}">100</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-muted ps-0">Tipo pantalla:</td>
-                                    <td class="text-end text-secondary pe-0">
-                                        <span th:switch="${room.screenType}">
-                                            <span th:case="${T(com.demo.model.enums.ScreenType).D4X}">4DX</span>
-                                            <span th:case="${T(com.demo.model.enums.ScreenType).IMAX}">IMAX</span>
-                                            <span th:case="${T(com.demo.model.enums.ScreenType).D3}">3D</span>
-                                            <span th:case="${T(com.demo.model.enums.ScreenType).STANDARD}">Estándar</span>
-                                            <span th:case="*">Estándar</span>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="ticket-price-breakdown">
+                        <div class="breakdown-line">
+                            <span class="text-muted small"><i class="fa-solid fa-hashtag me-2"></i>ID</span>
+                            <span class="text-secondary small" th:text="${room.id}">1</span>
+                        </div>
+                        <div class="breakdown-line">
+                            <span class="text-muted small"><i class="fa-solid fa-door-open me-2"></i>Nombre</span>
+                            <span class="text-secondary small" th:text="${room.name}">Sala 1</span>
+                        </div>
+                        <div class="breakdown-divider"></div>
+                        <div class="breakdown-line">
+                            <span class="text-muted small"><i class="fa-solid fa-people-group me-2"></i>Capacidad</span>
+                            <span class="text-secondary small" th:text="${room.capacity + ' personas'}">100 personas</span>
+                        </div>
+                        <div class="breakdown-line">
+                            <span class="text-muted small"><i class="fa-solid fa-film me-2"></i>Tipo pantalla</span>
+                            <span class="text-secondary small">
+                                <span th:switch="${room.screenType}">
+                                    <span th:case="${T(com.demo.model.enums.ScreenType).D4X}">4DX</span>
+                                    <span th:case="${T(com.demo.model.enums.ScreenType).IMAX}">IMAX</span>
+                                    <span th:case="${T(com.demo.model.enums.ScreenType).D3}">3D</span>
+                                    <span th:case="${T(com.demo.model.enums.ScreenType).STANDARD}">Estándar</span>
+                                    <span th:case="*">Estándar</span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="breakdown-divider"></div>
+                        <div class="breakdown-line breakdown-total">
+                            <span class="fw-bold">Estado</span>
+                            <span th:if="${room.active}" class="badge bg-success"><i class="fa-solid fa-check me-1"></i>Activa</span>
+                            <span th:if="${!room.active}" class="badge bg-danger"><i class="fa-solid fa-xmark me-1"></i>Inactiva</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -120,5 +123,25 @@
 </main>
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
+<style>
+    .ticket-price-breakdown {
+        background: var(--cinema-surface-2);
+        border-radius: 10px;
+        padding: 14px 16px;
+        border: 1px solid rgba(200,169,107,0.1);
+    }
+    .breakdown-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+    }
+    .breakdown-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(200,169,107,0.25), transparent);
+        margin: 6px 0;
+    }
+    .breakdown-total { padding-top: 4px; }
+</style>
 </body>
 </html>

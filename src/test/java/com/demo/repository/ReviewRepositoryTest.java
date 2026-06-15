@@ -58,7 +58,7 @@ public class ReviewRepositoryTest {
     void findByMovieId_shouldReturnReviewsForSpecificMovie(){
         Long movieId = movie.getId();
 
-        Review review = reviewRepository.findByMovieId(movieId).getFirst();
+        Review review = reviewRepository.findByMovieIdOrderByCreationDateDesc(movieId).getFirst();
         assertEquals(review.getMovie().getId(), movieId);
     }
 
@@ -82,7 +82,7 @@ public class ReviewRepositoryTest {
     @Test
     void findByUser_Id(){
         Long UserId = userRepository.findAll().get(2).getId();
-        List<Review> reviews = reviewRepository.findByUser_Id(UserId);
+        List<Review> reviews = reviewRepository.findByUser_IdOrderByCreationDateDesc(UserId);
         assertEquals(2, reviews.size());
     }
 

@@ -4,6 +4,7 @@ import com.demo.model.Movie;
 import com.demo.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -17,6 +18,7 @@ import java.time.Duration;
 import java.util.Map;
 
 //Ponemos un puerto aleatorio para no tener problema con el puerto 8080 que estamos utilizando porque podria fallar el test
+@ExtendWith(ScreenshotOnFailure.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BaseSeleniumTest {
     @LocalServerPort

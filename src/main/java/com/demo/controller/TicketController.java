@@ -36,14 +36,18 @@ public class TicketController {
     @GetMapping("tickets")
     public String getTickets(Model model, @AuthenticationPrincipal User user) {
         List<Ticket> tickets;
-        if (user.getRole() == Role.ROLE_ADMIN) {
-            tickets = ticketService.findAll();
+        boolean isAdmin = user.getRole() == Role.ROLE_ADMIN;
+        if (isAdmin) {
+            tickets = ticketService.findAllPagado();
+            model.addAttribute("title", "Entradas vendidas");
+            model.addAttribute("isAdmin", true);
         } else {
             tickets = ticketService.getByUserId(user.getId());
+            model.addAttribute("title", "Mis entradas");
+            model.addAttribute("isAdmin", false);
         }
         model.addAttribute("tickets", tickets);
         model.addAttribute("numTickets", tickets != null ? tickets.size() : 0);
-        model.addAttribute("title", "Listado de tickets");
         return "tickets/ticket-list";
     }
 
