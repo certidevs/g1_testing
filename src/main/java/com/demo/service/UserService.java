@@ -150,7 +150,7 @@ public class UserService implements UserDetailsService {
     public UserStatsDTO findStatsById(Long id) {
         return new UserStatsDTO(
                 reviewRepository.countByUser_Id(id),
-                reviewRepository.findByUser_Id(id),
+                reviewRepository.findByUser_IdOrderByCreationDateDesc(id),
                 ticketRepository.findByUser_IdAndStatus(id, BuyStatus.PAGADO)
         );
     }
