@@ -1,11 +1,15 @@
 package com.demo.controller;
 
 import com.demo.model.Movie;
+import com.demo.model.User;
+import com.demo.model.enums.BuyStatus;
 import com.demo.repository.MovieRepository;
 import com.demo.repository.ReviewRepository;
 import com.demo.repository.SessionRepository;
+import com.demo.repository.TicketRepository;
 import com.demo.service.FileService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +27,7 @@ public class MovieController {
     private final FileService fileService;
     private final SessionRepository sessionRepository;
     private final ReviewRepository reviewRepository;
+    private final TicketRepository ticketRepository;
 
     //Redirect raíz a /movies
     @GetMapping("/")
@@ -51,7 +56,7 @@ public class MovieController {
 
     //Ver las asociaciones que apuntan a movie (session y review)
     @GetMapping("movies/{id}")
-    public String movieDetail(@PathVariable Long id, Model model){
+    public String movieDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal User user){
         Optional<Movie> movieOptional = movieRepository.findById(id);
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
@@ -59,6 +64,11 @@ public class MovieController {
             model.addAttribute("sessions", sessionRepository.findByMovie_IdAndActiveTrueOrderByStartTimeAsc(id));
             model.addAttribute("reviews", reviewRepository.findByMovieIdOrderByCreationDateDesc(id));
             model.addAttribute("esLocale", new java.util.Locale("es"));     // Lo puse en el HTML pero se queja, la solucion: sacarlo fuera al controlador y pasarle el atributo
+
+            boolean canReview = user != null &&
+                    ticketRepository.existsByUser_IdAndSession_Movie_IdAndStatus(user.getId(), id, BuyStatus.PAGADO);
+            model.addAttribute("canReview", canReview);
+
             return "movies/movie-detail";
         }
         return"redirect:/movies";
