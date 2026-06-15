@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/head :: head('Mi perfil — Only Film')}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
+<main class="container flex-grow-1 my-4" style="max-width: 720px">
+
+    <h1 class="mb-4">
+        <i class="fa-solid fa-user-pen text-gold me-2"
+           aria-hidden="true"></i>
+        Editar mi perfil
+    </h1>
+
+    <div th:if="${error}" class="alert alert-danger"
+         th:text="${error}"></div>
+
+    <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+        <div class="card-body p-4">
+
+            <!-- OJO: sin id, sin role, sin active. El servidor los toma de @AuthenticationPrincipal -->
+            <form th:action="@{/profile}" th:object="${user}"
+                  method="post" enctype="multipart/form-data">
+
+                <div class="mb-3">
+                    <label for="username" class="form-label fw-semibold">Username</label>
+                    <input type="text" class="form-control"
+                           id="username"
+                           placeholder="usuario" required
+                           th:field="*{username}" minlength="3" maxlength="100" autofocus>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label fw-semibold">Email</label>
+                    <input type="email" class="form-control"
+                           id="email"
+                           placeholder="usuario@gmail.com"
+                           required th:field="*{email}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label fw-semibold">Contraseña</label>
+                    <input type="password"
+                           th:field="*{password}"
+                           class="form-control" id="password"
+                           minlength="4">
+                    <small class="text-muted">Deja este campo
+                        vacío para conservar la misma contraseña.</small>
+                </div>
+
+                <div class="mb-4">
+                    <label for="imageFile" class="form-label fw-semibold">Imagen de perfil</label>
+
+                    <!-- conserva la imagen guardada si no subes una nueva -->
+                    <input type="hidden" th:field="*{imageUrl}">
+
+                    <input type="file" class="form-control"
+                           id="imageFile" name="imageFile" accept="image/*">
+
+                    <img id="preview" alt="Previsualización"
+                         class="mt-2 rounded"
+                         style="max-height:150px; display:none"
+                         th:src="${user != null and user.imageUrl != null ? user.imageUrl : null}">
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check me-1"
+                           aria-hidden="true"></i> Guardar
+                    </button>
+                    <a th:href="@{/profile}" class="btn btn-outline-primary">
+                        <i class="fa-solid fa-xmark me-1"
+                           aria-hidden="true"></i> Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</main>
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<script th:replace="~{layout/footer :: scripts}"></script>
+<script th:src="@{/js/img-preview.js}"></script>
+</body>
+</html>
