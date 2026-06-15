@@ -161,6 +161,12 @@
                             Entrada válida solo para la sesión indicada
                         </p>
                         <div class="d-flex gap-2">
+                            <!-- NUEVO: escribir reseña, solo si el ticket está pagado -->
+                            <a th:if="${ticket.status.name() == 'PAGADO'}"
+                               th:href="@{/reviews/new(movieId=${ticket.session.movie.id})}"
+                               class="btn btn-outline-light btn-sm">
+                                <i class="fa-regular fa-comment me-1"></i> Escribir reseña
+                            </a>
                             <button class="btn btn-secondary btn-sm" onclick="window.print()">
                                 <i class="fa-solid fa-print me-1"></i> Imprimir
                             </button>
