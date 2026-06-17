@@ -121,6 +121,52 @@
         </div>
     </div>
 
+    <!-- RESEÑAS ESCRITAS -->
+    <div class="mb-5">
+        <h3 class="mb-4">
+            <i class="fa-regular fa-comments text-gold me-2"></i>
+            Reseñas escritas
+            <span class="badge badge-secondary ms-2 align-middle" th:text="${userStats.countReviews()}">0</span>
+        </h3>
+
+        <div th:if="${#lists.isEmpty(userStats.reviews())}" class="alert alert-info border">
+            <i class="fa-solid fa-info-circle me-2"></i>
+            Este usuario no ha escrito ninguna reseña todavía.
+        </div>
+
+        <div th:if="${!#lists.isEmpty(userStats.reviews())}" class="row row-cols-1 row-cols-md-2 g-3">
+            <div class="col" th:each="review : ${userStats.reviews()}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="card-title mb-0" th:text="${review.title}">Título</h6>
+                            <span class="badge" style="background-color:#C8A96B; color:#0B0B0D; padding:0.3rem 0.6rem; border-radius:0.4rem; white-space:nowrap;">
+                                <i class="fa-solid fa-star me-1"></i>
+                                <span th:text="${review.rating + ' / 5'}"></span>
+                            </span>
+                        </div>
+                        <p class="card-text text-muted small mb-2" th:text="${review.description}">Descripción</p>
+                        <div th:if="${review.movie != null}" class="small">
+                            <i class="fa-solid fa-film text-gold me-1"></i>
+                            <a th:href="@{/movies/{id}(id=${review.movie.id})}"
+                               th:text="${review.movie.title}"
+                               class="text-gold text-decoration-none"></a>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-top small d-flex justify-content-between align-items-center pt-2">
+                        <span class="text-muted">
+                            <i class="fa-regular fa-calendar me-1"></i>
+                            <span th:text="${#temporals.format(review.creationDate, 'dd/MM/yyyy')}"></span>
+                        </span>
+                        <a class="btn btn-sm btn-outline-light" th:href="@{/reviews/{id}(id=${review.id})}">
+                            <i class="fa-solid fa-eye me-1"></i> Ver
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main>
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>

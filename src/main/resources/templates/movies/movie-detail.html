@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
@@ -8,7 +8,8 @@
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
 <main class="container flex-grow-1 my-4">
-    <!-- Mensaje de error (Si intentas reseñar sin hacer una compra antes) -->
+
+    <!-- Mensaje de error (si intentas reseñar sin haber comprado antes) -->
     <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="fa-solid fa-circle-exclamation me-2"></i>
         <span th:text="${error}"></span>
@@ -70,27 +71,27 @@
                             <i class="fa-solid fa-angle-left me-1"></i>Volver
                         </a>
 
-                        <!-- Solo si has comprado entrada de esta película -->
+                        <!-- Autenticado CON entrada comprada: puede escribir reseña
                         <a sec:authorize="isAuthenticated()" th:if="${canReview}"
                            th:href="@{/reviews/new(movieId=${movie.id})}"
                            class="btn btn-outline-light ms-auto">
                             <i class="fa-regular fa-comment me-1"></i> Escribir reseña
-                        </a>
+                        </a> -->
 
-                        <!-- Autenticado pero sin entrada comprada: botón desactivado con explicación -->
+                        <!-- Autenticado SIN entrada comprada: botón deshabilitado con tooltip
                         <span sec:authorize="isAuthenticated()" th:unless="${canReview}"
                               class="btn btn-outline-light ms-auto disabled"
                               title="Debes haber comprado una entrada de esta película para reseñarla">
-      <i class="fa-regular fa-comment me-1"></i> Escribir reseña
-  </span>
+                            <i class="fa-regular fa-comment me-1"></i> Escribir reseña
+                        </span> -->
 
-                        <!-- Anónimo: invitación a iniciar sesión -->
+                        <!-- Anónimo: invitación a iniciar sesión
                         <a sec:authorize="!isAuthenticated()"
                            th:href="@{/login}"
                            class="btn btn-outline-light ms-auto"
                            title="Inicia sesión para escribir una reseña">
                             <i class="fa-regular fa-comment me-1"></i> Escribe una reseña
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </div>
@@ -152,14 +153,13 @@
                     <div class="session-info">
                         <span class="session-room">
                             <i class="fa-solid fa-door-open me-1"></i>
-                            <span th:text="${s.room.name}">Sala 1</span>    <!-- "Sala 1", "Sala 5"... -->
+                            <span th:text="${s.room.name}">Sala 1</span>
                         </span>
-
                         <span th:if="${screenTypeName != 'STANDARD'}"
                               th:class="${screenTypeBadgeClass}"
-                              th:text="${screenTypeLabel}">IMAX</span>      <!-- "IMAX", "4DX", "3D" -->    <!-- Como en los cines normales, cuando la pantalla es normal no se pone -->
-                        <span th:if="${s.language != null and s.language != 'doblada'}" class="session-lang"> <!-- Como en los cines normales, cuando el idioma está doblado no se pone -->
-                            <span th:text="${s.language}">VO</span>         <!-- "VO", "VOSE" -->
+                              th:text="${screenTypeLabel}">IMAX</span>
+                        <span th:if="${s.language != null and s.language != 'doblada'}" class="session-lang">
+                            <span th:text="${s.language}">VO</span>
                         </span>
                     </div>
 
@@ -195,30 +195,72 @@
     </div>
 
     <!-- RESEÑAS -->
-    <div class="mb-5">
-        <h3 class="mb-4">
-            <i class="fa-regular fa-comments text-gold me-2"></i>
-            Reseñas
-            <span class="badge badge-secondary ms-2" th:text="${#lists.size(reviews)}"></span>
-        </h3>
+    <div class="mb-5" id="reviews">
 
+        <!-- Cabecera de la sección -->
+        <div class="reviews-header mb-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <h3 class="mb-1">
+                        <i class="fa-regular fa-comments text-gold me-2"></i>
+                        Reseñas verificadas
+                        <span class="badge badge-secondary ms-2" th:text="${#lists.size(reviews)}"></span>
+                    </h3>
+                    <p class="text-muted small mb-0">
+                        <i class="fa-solid fa-shield-halved me-1 text-gold"></i>
+                        Solo los espectadores que hayan comprado una entrada pueden publicar una reseña.
+                    </p>
+                </div>
+
+                <!-- CTA según estado del usuario -->
+
+                <!-- Anónimo -->
+                <div sec:authorize="!isAuthenticated()" class="review-cta-block">
+                    <a th:href="@{/login}" class="btn btn-outline-light">
+                        <i class="fa-regular fa-user me-2"></i>Inicia sesión para escribir una reseña
+                    </a>
+                </div>
+
+                <!-- Logueado SIN compra -->
+                <div sec:authorize="isAuthenticated()" th:if="${!canReview}" class="review-cta-block text-end">
+                    <button class="btn btn-outline-light disabled review-locked-btn" disabled>
+                        <i class="fa-solid fa-lock me-2"></i>Escribir reseña
+                    </button>
+                    <p class="text-muted small mt-2 mb-0">
+                        <i class="fa-solid fa-circle-info me-1"></i>
+                        Necesitas haber comprado una entrada para esta película.
+                    </p>
+                </div>
+
+                <!-- Logueado CON compra -->
+                <div sec:authorize="isAuthenticated()" th:if="${canReview}" class="review-cta-block text-end">
+                    <p class="review-verified-label mb-2">
+                        <i class="fa-solid fa-circle-check me-1"></i>Espectador verificado
+                    </p>
+                    <a th:href="@{/reviews/new(movieId=${movie.id})}" class="btn btn-primary">
+                        <i class="fa-regular fa-comment me-2"></i>Escribir reseña
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Sin reseñas todavía -->
         <div th:if="${#lists.isEmpty(reviews)}" class="alert alert-info border">
             <i class="fa-solid fa-info-circle me-2"></i>
             Todavía no hay reseñas para esta película.
-
-            <!-- Autenticado y con entrada comprada: puede ser el primero -->
+            <!-- Autenticado con entrada: puede ser el primero -->
             <a sec:authorize="isAuthenticated()" th:if="${canReview}"
                th:href="@{/reviews/new(movieId=${movie.id})}" class="ms-2">¡Sé el primero en escribir una!</a>
-
-            <!-- Autenticado pero sin entrada: se le explica el requisito -->
+            <!-- Autenticado sin entrada: se le explica el requisito -->
             <span sec:authorize="isAuthenticated()" th:unless="${canReview}" class="ms-2 text-muted">
-                 Compra una entrada de esta película para poder reseñarla.
+                Compra una entrada de esta película para poder reseñarla.
             </span>
-
-            <!-- Anónimo: invitación a iniciar sesión -->
+            <!-- Anónimo -->
             <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="ms-2">Inicia sesión para escribir la primera reseña.</a>
         </div>
 
+        <!-- Grid de reseñas -->
         <div class="row row-cols-1 row-cols-md-2 g-3" th:if="${!#lists.isEmpty(reviews)}">
             <div class="col" th:each="review : ${reviews}">
                 <div class="card h-100 review-card">
@@ -233,11 +275,13 @@
                         <p class="card-text text-secondary small" th:text="${review.description}">Descripción de la reseña</p>
                     </div>
                     <div class="card-footer bg-transparent border-top border-secondary d-flex justify-content-between align-items-center pt-3">
-                        <small class="text-muted">
-                            <i class="fa-regular fa-user me-1"></i>
+                        <small class="text-muted d-flex align-items-center gap-1">
+                            <span class="review-author-verified" title="Espectador verificado">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </span>
                             <span th:if="${review.user != null}" th:text="${review.user.firstName}"></span>
                             <span th:if="${review.user == null}">Anónimo</span>
-                            <span class="mx-2">·</span>
+                            <span class="mx-1">·</span>
                             <i class="fa-regular fa-calendar me-1"></i>
                             <span th:text="${#temporals.format(review.creationDate, 'dd/MM/yyyy')}"></span>
                         </small>
@@ -248,11 +292,24 @@
                 </div>
             </div>
         </div>
+
     </div>
 
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
 <script th:replace="~{layout/footer :: scripts}"></script>
+<script>
+    // Scroll a reseñas después de guardar una reseña
+    if (window.location.hash === '#reviews') {
+        window.addEventListener('load', function () {
+            const section = document.getElementById('reviews');
+            if (!section) return;
+            const top = section.getBoundingClientRect().top + window.scrollY;
+            const offset = 120;
+            window.scrollTo({ top: Math.max(0, top - offset), behavior: 'smooth' });
+        });
+    }
+</script>
 </body>
 </html>

@@ -102,7 +102,7 @@ public class ReviewController {
         reviewRepository.save(review);
 
         if (review.getMovie() != null)
-            return "redirect:/movies/" + review.getMovie().getId();
+            return "redirect:/movies/" + review.getMovie().getId() + "#reviews";
         return "redirect:/reviews";
     }
 
