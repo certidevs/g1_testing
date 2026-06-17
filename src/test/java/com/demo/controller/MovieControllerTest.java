@@ -154,7 +154,7 @@ public class MovieControllerTest {
                 .andExpect(model().attributeExists("movie"));
     }
 
-//El enpoint /movies/edit necesita admin
+//El enpoint /movies/edit necesita admin. ANTES de editar
     @Test
     void editMovieForm() throws Exception {
         // Verificamos que GET /movies/edit/{id} devuelve el formulario con la película CARGADA
@@ -169,6 +169,25 @@ public class MovieControllerTest {
                 .andExpect(model().attribute("movie", hasProperty("id", is(movieId))))
                 .andExpect(model().attribute("movie", hasProperty("title", is(movie.getTitle()))));
     }
+//DESPUES de editar
+    @Test
+    void editMovie() throws Exception {
+        Movie movie = movieRepository.findAll().getFirst();
+        Long id = movie.getId();
+        long countBefore = movieRepository.count();
+
+        mockMvc.perform(multipart("/movies").file("imageFile", new byte[0])
+                        .param("id", id.toString())
+                        .param("title", "Titulo Editado")
+                        .param("director", "Director Editado")
+                        .param("genre", "Drama"))
+                .andExpect(status().is3xxRedirection());
+
+        assertEquals(countBefore, movieRepository.count());   // NO se creó una peli nueva
+        Movie editada = movieRepository.findById(id).orElseThrow();
+        assertEquals("Titulo Editado", editada.getTitle());
+        assertEquals("Director Editado", editada.getDirector());
+    }
 
     @Test
     void deactivateMovieNotFound() throws Exception {
@@ -178,5 +197,14 @@ public class MovieControllerTest {
                 .andExpect(redirectedUrl("/movies"));
     }
 
+    @Test
+    void movieDetailWithSessionsAndReviews() throws Exception {
+        Movie movie = movieRepository.findAll().getFirst();
+
+        mockMvc.perform(get("/movies/" + movie.getId()))
+                .andExpect(status().isOk()) // codigo 200
+                .andExpect(model().attributeExists("sessions"))   // se agregan las sessions
+                .andExpect(model().attributeExists("reviews"));    // y también "reviews"
+    }
 
 }
