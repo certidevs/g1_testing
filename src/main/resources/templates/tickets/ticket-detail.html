@@ -63,7 +63,7 @@
                     <div class="row g-0">
 
                         <!-- Info principal -->
-                        <div class="col-md-7 ticket-info-col">
+                        <div class="col-md-6 ticket-info-col">
 
                             <div class="ticket-info-grid">
                                 <div class="ticket-info-item">
@@ -127,9 +127,23 @@
                         <div class="ticket-perforation d-none d-md-flex"></div>
 
                         <!-- QR -->
-                        <div class="col-md-5 ticket-qr-col">
+                        <div class="col-md-6 ticket-qr-col">
                             <!-- QR — solo si el ticket está pagado y tiene código -->
-                        <div class="text-center" th:if="${ticket.QRCode != null}">
+                        <div class="ticket-qr-col-inner" th:if="${ticket.QRCode != null}">
+                            <!-- Poster de la peli -->
+                            <div class="ticket-qr-poster-wrap mb-3">
+                                <img th:src="${ticket.session.movie.imageUrl}"
+                                     alt="Póster"
+                                     class="ticket-qr-poster">
+                            </div>
+                            <!-- Idioma de la sesión -->
+                            <div class="mb-3" th:if="${ticket.session.language != null}">
+                                <span class="ticket-lang-badge">
+                                    <i class="fa-solid fa-language me-1"></i>
+                                    <span th:text="${ticket.session.language}">VO</span>
+                                </span>
+                            </div>
+                            <!-- QR -->
                             <p class="text-muted small text-uppercase mb-2" style="letter-spacing:0.1em">
                                 Código de acceso
                             </p>
@@ -285,7 +299,15 @@
 
     /* Cuerpo */
     .ticket-body {
-        background: var(--cinema-surface-1);
+    background: var(--cinema-surface-1);
+    }
+    .ticket-body > .row {
+        flex-wrap: nowrap;
+    }
+    .ticket-info-col,
+    .ticket-qr-col {
+        min-width: 0;
+        flex: 1 1 50%;
     }
 
     /* Columna info */
@@ -353,6 +375,39 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    .ticket-qr-col-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        width: 100%;
+    }
+    .ticket-qr-poster-wrap {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .ticket-qr-poster {
+        width: 130px;
+        height: 185px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid rgba(200,169,107,0.4);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+    .ticket-lang-badge {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(200,169,107,0.12);
+        border: 1px solid rgba(200,169,107,0.3);
+        color: var(--cinema-accent-gold);
+        border-radius: 999px;
+        padding: 3px 12px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
     }
     .ticket-qr-frame {
         display: inline-block;

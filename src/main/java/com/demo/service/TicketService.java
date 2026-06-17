@@ -34,16 +34,16 @@ public class TicketService {
         return ticketRepository.findBySession_Movie_Id(id);
     }
     public List<Ticket> getByUserId(Long id){
-        return ticketRepository.findByUser_Id(id);
+        return ticketRepository.findByUser_IdOrderByBuyDateTimeDesc(id);
     }
     public List<Ticket> findAll(){
         return ticketRepository.findAll();
     }
     public List<Ticket> findAllPagado(){
-        return ticketRepository.findByStatus(BuyStatus.PAGADO);
+        return ticketRepository.findByStatusOrderByBuyDateTimeDesc(BuyStatus.PAGADO);
     }
     public List<Ticket> findPagadoByUserId(Long userId){
-        return ticketRepository.findByUser_IdAndStatus(userId, BuyStatus.PAGADO);
+        return ticketRepository.findByUser_IdAndStatusOrderByBuyDateTimeDesc(userId, BuyStatus.PAGADO);
     }
 
     public Optional<Ticket> findById(Long id){

@@ -266,13 +266,14 @@
                                        class="form-control payment-input card-number-input"
                                        id="cardNumber"
                                        name="cardNumber"
-                                       placeholder="1234123412341234"
-                                       maxlength="16"
+                                       placeholder="1234 5678 9012 3456"
+                                       maxlength="19"
                                        inputmode="numeric"
-                                       pattern="[0-9]{16}"
+                                       autocomplete="cc-number"
                                        required>
+                                <span id="card-brand-icon" class="card-brand-icon" aria-hidden="true"></span>
                             </div>
-                            <div class="invalid-feedback">Introduce un número de tarjeta válido (16 dígitos).</div>
+                            <div class="invalid-feedback" id="cardNumber-error">Introduce un número de tarjeta válido (16 dígitos).</div>
                         </div>
 
                         <!-- Fecha + CVV -->
@@ -288,10 +289,9 @@
                                        placeholder="MM/AA"
                                        maxlength="5"
                                        inputmode="numeric"
-                                       pattern="(0[1-9]|1[0-2])\/[0-9]{2}"
                                        autocomplete="cc-exp"
                                        required>
-                                <div class="invalid-feedback">Formato MM/AA inválido.</div>
+                                <div class="invalid-feedback" id="cardExpiry-error">Formato MM/AA inválido.</div>
                             </div>
                             <div class="col-5">
                                 <label for="cardCvv" class="form-label payment-label">
@@ -301,12 +301,12 @@
                                        class="form-control payment-input"
                                        id="cardCvv"
                                        name="cardCvv"
-                                       placeholder="123"
+                                       placeholder="•••"
                                        maxlength="4"
                                        inputmode="numeric"
-                                       pattern="[0-9]{3,4}"
+                                       autocomplete="cc-csc"
                                        required>
-                                <div class="invalid-feedback">CVV inválido.</div>
+                                <div class="invalid-feedback" id="cardCvv-error">CVV inválido (3 o 4 dígitos).</div>
                             </div>
                         </div>
 
@@ -628,21 +628,14 @@
             snackTotal += qty * price;
         });
         const total = BASE_PRICE + snackTotal;
-
-        const fmt = function (n) {
-            return n.toFixed(2).replace('.', ',') + ' €';
-        };
-
-        document.getElementById('snack-subtotal').textContent     = fmt(snackTotal);
-        document.getElementById('pay-snack-subtotal').textContent  = fmt(snackTotal);
-        document.getElementById('total-display').textContent       = fmt(total);
-        document.getElementById('pay-total-display').textContent   = fmt(total);
-        document.getElementById('pay-btn-amount').textContent      = fmt(total);
-
-        const snackLine = document.getElementById('snack-line');
-        snackLine.style.display = snackTotal > 0 ? 'flex' : 'none';
+        const fmt = function (n) { return n.toFixed(2).replace('.', ',') + ' €'; };
+        document.getElementById('snack-subtotal').textContent    = fmt(snackTotal);
+        document.getElementById('pay-snack-subtotal').textContent = fmt(snackTotal);
+        document.getElementById('total-display').textContent      = fmt(total);
+        document.getElementById('pay-total-display').textContent  = fmt(total);
+        document.getElementById('pay-btn-amount').textContent     = fmt(total);
+        document.getElementById('snack-line').style.display = snackTotal > 0 ? 'flex' : 'none';
     }
-
     document.querySelectorAll('.snack-counter').forEach(function (input) {
         input.addEventListener('input', recalculate);
     });
@@ -651,67 +644,266 @@
     document.querySelectorAll('.snack-toggle').forEach(btn => {
 
         btn.addEventListener('click', function () {
-
-            const input =
-                this.parentElement.querySelector('.snack-counter');
-
-            if (input.value === "0") {
-                input.value = "1";
-                this.textContent = "✓ Añadido";
+            const input = this.parentElement.querySelector('.snack-counter');
+            if (input.value === '0') {
+                input.value = '1';
+                this.textContent = '✓ Añadido';
                 this.classList.add('active');
             } else {
-                input.value = "0";
-                this.textContent = "+ Añadir";
+                input.value = '0';
+                this.textContent = '+ Añadir';
                 this.classList.remove('active');
             }
-
             recalculate();
         });
-
     });
-
     recalculate();
 
+    /* VALIDACIONES DE TARJETA */
 
-    /*validacion tarketa*/
-    document.querySelectorAll('#cardNumber, #cardCvv').forEach(input => {
+    /* ── validacion de Luhn ── */
+    function luhn(num) {
+        let sum = 0, alt = false;
+        for (let i = num.length - 1; i >= 0; i--) {
+            let n = parseInt(num[i], 10);
+            if (alt) { n *= 2; if (n > 9) n -= 9; }
+            sum += n;
+            alt = !alt;
+        }
+        return sum % 10 === 0;
+    }
 
-        input.addEventListener('input', function () {
+    /* ── Detectar marca por prefijo ── */
+    function detectBrand(digits) {
+        if (/^4/.test(digits))                        return { icon: 'fa-cc-visa',       label: 'Visa' };
+        if (/^5[1-5]|^2[2-7]/.test(digits))          return { icon: 'fa-cc-mastercard', label: 'Mastercard' };
+        if (/^3[47]/.test(digits))                    return { icon: 'fa-cc-amex',       label: 'Amex' };
+        return null;
+    }
 
-            this.value = this.value.replace(/\D/g, '');
+    /* ── Helpers de feedback visual ── */
+    function setValid(input) {
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+        const fb = document.getElementById(input.id + '-error');
+        if (fb) fb.style.display = 'none';
+    }
+    function setInvalid(input, msg) {
+        input.classList.remove('is-valid');
+        input.classList.add('is-invalid');
+        const fb = document.getElementById(input.id + '-error');
+        if (fb) { fb.textContent = msg; fb.style.display = 'block'; }
+    }
+    function clearState(input) {
+        input.classList.remove('is-valid', 'is-invalid');
+    }
 
-        });
+    /* ── Número de tarjeta: formato 4-4-4-4 + icono marca ── */
+    const cardNumberInput = document.getElementById('cardNumber');
+    const brandIcon       = document.getElementById('card-brand-icon');
+    let   cleanCardNumber = '';
 
+    cardNumberInput.addEventListener('input', function () {
+        const raw    = this.value.replace(/\D/g, '').slice(0, 16);
+        cleanCardNumber = raw;
+        // Formatear con espacios cada 4 dígitos
+        this.value   = raw.match(/.{1,4}/g)?.join(' ') || '';
+        // Icono de marca
+        const brand  = detectBrand(raw);
+        if (brand && raw.length >= 1) {
+            brandIcon.innerHTML = `<i class="fa-brands ${brand.icon} fs-5" title="${brand.label}"></i>`;
+        } else {
+            brandIcon.innerHTML = raw.length > 0
+                ? '<i class="fa-regular fa-credit-card fs-5"></i>'
+                : '';
+        }
+        // Validación en tiempo real (solo cuando hay suficientes dígitos)
+        if (raw.length === 0) { clearState(this); return; }
+        if (raw.length < 16) {
+            setInvalid(this, 'El número debe tener 16 dígitos.');
+        } else if (!luhn(raw)) {
+            setInvalid(this, 'Número de tarjeta no válido.');
+        } else {
+            setValid(this);
+        }
     });
-    /* que no este caducada */
+
+    /* Al enviar el form, el campo debe mandar solo dígitos */
+    cardNumberInput.addEventListener('keydown', function (e) {
+        if ([8,9,35,36,37,38,39,40,46].includes(e.keyCode)) return;
+        if ((e.ctrlKey || e.metaKey) && [65,67,86,88].includes(e.keyCode)) return;
+        // Bloquear si no es dígito
+        if (!/^\d$/.test(e.key)) e.preventDefault();
+    });
+
+    /* ── Fecha de caducidad: insertar la barrita / al completar el mes ── */
+    const expiryInput = document.getElementById('cardExpiry');
+    let expiryPrev = '';
+    expiryInput.addEventListener('input', function () {
+        const isDeleting = this.value.length < expiryPrev.length;
+        let digits = this.value.replace(/\D/g, '').slice(0, 4);
+        let formatted = digits;
+        // Insertar -> / automáticamente tras los 2 dígitos del mes (solo si no borramos)
+        if (!isDeleting && digits.length >= 2) {
+            formatted = digits.slice(0, 2) + '/' + digits.slice(2);
+        }
+        this.value = formatted;
+        expiryPrev = this.value;
+        // Validar
+        if (formatted.length === 0) { clearState(this); return; }
+        const parts = formatted.split('/');
+        const mm = parseInt(parts[0], 10);
+        const yy = parseInt(parts[1] || '', 10);
+        const now = new Date();
+        const curY = now.getFullYear() % 100;
+        const curM = now.getMonth() + 1;
+        if (parts[0].length === 2 && (mm < 1 || mm > 12)) {
+            setInvalid(this, 'Mes inválido (01-12).');
+        } else if (parts[1]?.length === 2 && (yy < curY || (yy === curY && mm < curM))) {
+            setInvalid(this, 'La tarjeta está caducada.');
+        } else if (formatted.length === 5) {
+            setValid(this);
+        } else {
+            clearState(this);
+        }
+    });
+    expiryInput.addEventListener('keydown', function (e) {
+        if ([8,9,35,36,37,38,39,40,46].includes(e.keyCode)) return;
+        if ((e.ctrlKey || e.metaKey) && [65,67,86,88].includes(e.keyCode)) return;
+        if (!/^\d$/.test(e.key)) e.preventDefault();
+    });
+
+    /* ── CVV: solo dígitos, enmascarar al perder foco ── */
+    const cvvInput = document.getElementById('cardCvv');
+    let cvvReal = '';
+    cvvInput.addEventListener('input', function () {
+        cvvReal = this.value.replace(/\D/g, '').slice(0, 4);
+        this.value = cvvReal;
+        if (cvvReal.length === 0) { clearState(this); return; }
+        if (cvvReal.length < 3) {
+            setInvalid(this, 'CVV inválido (3 o 4 dígitos).');
+        } else {
+            setValid(this);
+        }
+    });
+    cvvInput.addEventListener('blur', function () {
+        if (cvvReal.length >= 3) {
+            this.value = '•'.repeat(cvvReal.length);
+        }
+    });
+    cvvInput.addEventListener('focus', function () {
+        this.value = cvvReal;
+    });
+    cvvInput.addEventListener('keydown', function (e) {
+        if ([8,9,35,36,37,38,39,40,46].includes(e.keyCode)) return;
+        if ((e.ctrlKey || e.metaKey) && [65,67,86,88].includes(e.keyCode)) return;
+        if (!/^\d$/.test(e.key)) e.preventDefault();
+    });
+
+    /* ── Nombre del titular: mínimo nombre y 1 apellido ── */
+    const holderInput = document.getElementById('cardHolder');
+    holderInput.addEventListener('blur', function () {
+        const val = this.value.trim();
+        if (val.length === 0) { clearState(this); return; }
+        if (val.split(/\s+/).length < 2) {
+            setInvalid(this, 'Introduce nombre y apellido como aparece en la tarjeta.');
+        } else {
+            setValid(this);
+        }
+    });
+    holderInput.addEventListener('input', function () {
+        if (this.classList.contains('is-invalid') && this.value.trim().split(/\s+/).length >= 2) {
+            setValid(this);
+        }
+    });
+
+    /* ── Validación global en submit ── */
     document.getElementById('checkout-form').addEventListener('submit', function (e) {
+        let ok = true;
 
-        const expiry = document.getElementById('cardExpiry');
-
-        const [month, year] = expiry.value.split('/');
-
-        if (!month || !year) return;
-
-        const expiryDate = new Date(
-            2000 + parseInt(year),
-            parseInt(month)
-        );
-
-        const today = new Date();
-
-        if (expiryDate <= today) {
-
-            e.preventDefault();
-
-            alert('La tarjeta está caducada');
-
-            expiry.focus();
+        // Nombre
+        const holder = holderInput.value.trim();
+        if (holder.split(/\s+/).length < 2) {
+            setInvalid(holderInput, 'Introduce nombre y apellido como aparece en la tarjeta.');
+            ok = false;
         }
 
+        // Número
+        if (cleanCardNumber.length !== 16 || !luhn(cleanCardNumber)) {
+            setInvalid(cardNumberInput, cleanCardNumber.length < 16
+                ? 'El número debe tener 16 dígitos.'
+                : 'Número de tarjeta no válido.');
+            ok = false;
+        }
+
+        // Caducidad
+        const expVal = expiryInput.value;
+        const parts  = expVal.split('/');
+        const mm     = parseInt(parts[0], 10);
+        const yy     = parseInt(parts[1] || '', 10);
+        const now    = new Date();
+        const curY   = now.getFullYear() % 100;
+        const curM   = now.getMonth() + 1;
+        if (expVal.length !== 5 || mm < 1 || mm > 12) {
+            setInvalid(expiryInput, 'Formato MM/AA inválido.');
+            ok = false;
+        } else if (yy < curY || (yy === curY && mm < curM)) {
+            setInvalid(expiryInput, 'La tarjeta está caducada.');
+            ok = false;
+        }
+
+        // CVV
+        if (cvvReal.length < 3) {
+            setInvalid(cvvInput, 'CVV inválido (3 o 4 dígitos).');
+            ok = false;
+        }
+
+        if (!ok) {
+            e.preventDefault();
+            // Scroll al primer error
+            document.querySelector('.is-invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        // Limpiar número (quitar espacios) antes de enviar
+        cardNumberInput.value = cleanCardNumber;
+        // Restaurar CVV real (sin asteriscos)
+        cvvInput.value = cvvReal;
+
+        // Spinner + pausa simulada antes del envío real e_e
+        e.preventDefault();
+        // Guardamos los valores limpios en campos hidden para que el submit
+        // posterior no los pierda (el input ya estará formateado con espacios/asteriscos)
+        let hiddenCard = document.getElementById('_hiddenCardNumber');
+        if (!hiddenCard) {
+            hiddenCard = document.createElement('input');
+            hiddenCard.type = 'hidden';
+            hiddenCard.id   = '_hiddenCardNumber';
+            hiddenCard.name = 'cardNumber';
+            cardNumberInput.removeAttribute('name'); // evitar duplicado
+            this.appendChild(hiddenCard);
+        }
+        hiddenCard.value = cleanCardNumber;
+
+        let hiddenCvv = document.getElementById('_hiddenCvv');
+        if (!hiddenCvv) {
+            hiddenCvv = document.createElement('input');
+            hiddenCvv.type = 'hidden';
+            hiddenCvv.id   = '_hiddenCvv';
+            hiddenCvv.name = 'cardCvv';
+            cvvInput.removeAttribute('name');
+            this.appendChild(hiddenCvv);
+        }
+        hiddenCvv.value = cvvReal;
+
+        const btn = document.getElementById('pay-btn');
+        btn.classList.add('loading');
+        const form = this;
+        setTimeout(function () {
+            form.submit();
+        }, 1500);
     });
 })();
-
-
 </script>
 
 </body>

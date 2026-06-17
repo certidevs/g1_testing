@@ -11,12 +11,13 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     List<Ticket> findBySession_Movie_Id(Long id);
 
-    List<Ticket> findByUser_Id(Long id);
+    List<Ticket> findByUser_IdOrderByBuyDateTimeDesc(Long id);
 
-    List<Ticket> findByStatus(BuyStatus status);
+    List<Ticket> findByStatusOrderByBuyDateTimeDesc(BuyStatus status);
 
-    List<Ticket> findByUser_IdAndStatus(Long userId, BuyStatus status);
+    List<Ticket> findByUser_IdAndStatusOrderByBuyDateTimeDesc(Long userId, BuyStatus status);
 
     boolean existsByUser_IdAndSession_Movie_IdAndStatus(Long userId, Long movieId, BuyStatus status);
 
+    List<Ticket> findByUser_IdAndStatus(Long id, BuyStatus buyStatus);
 }
