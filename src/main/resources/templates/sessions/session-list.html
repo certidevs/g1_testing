@@ -77,22 +77,22 @@
                                 —
                             </td>
                             <td class="align-middle text-end">
-                                <div class="btn-group btn-group-sm" role="group">
+                                <div class="d-flex gap-2 justify-content-end">
                                     <a sec:authorize="hasRole('ADMIN')" th:href="@{/sessions/{id}(id=${proyeccion.id})}"
-                                       class="btn btn-outline-light"
+                                       class="btn btn-outline-light btn-sm"
                                        title="Ver detalles"
                                        data-bs-toggle="tooltip">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
 
                                     <a sec:authorize="hasRole('ADMIN')" th:href="@{/sessions/edit/{id}(id=${proyeccion.id})}"
-                                       class="btn btn-primary"
+                                       class="btn btn-primary btn-sm"
                                        title="Editar proyección"
                                        data-bs-toggle="tooltip">
                                         <i class="fa-solid fa-pencil"></i>
                                     </a>
                                     <a sec:authorize="hasRole('ADMIN')" th:href="@{/sessions/deactivate/{id}(id=${proyeccion.id})}"
-                                       class="btn btn-danger"
+                                       class="btn btn-danger btn-sm"
                                        title="Desactivar proyección"
                                        data-bs-toggle="tooltip"
                                        onclick="return confirm('¿Estás seguro de que deseas desactivar esta proyección?');">
