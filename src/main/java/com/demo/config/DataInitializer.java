@@ -97,7 +97,7 @@ public class DataInitializer implements CommandLineRunner {
         // ══════════════════════════════════════════════════════════════════════
         var room1 = Room.builder().name("Sala 1").active(true).screenType(ScreenType.D4X).capacity(100).build();
         var room2 = Room.builder().name("Sala 2").active(true).screenType(ScreenType.IMAX).capacity(150).build();
-        var room3 = Room.builder().name("Sala 3").active(false).screenType(ScreenType.D3).capacity(80).build();
+        var room3 = Room.builder().name("Sala 3").active(true).screenType(ScreenType.D3).capacity(80).build();
         var room4 = Room.builder().name("Sala 4").screenType(ScreenType.D3).active(true).capacity(60).build();
         var room5 = Room.builder().name("Sala 5").screenType(ScreenType.STANDARD).active(true).capacity(100).build();
         var room6 = Room.builder().name("Sala 6").screenType(ScreenType.STANDARD).active(true).capacity(125).build();
