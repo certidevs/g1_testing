@@ -183,7 +183,7 @@ public class TicketServiceTest {
                 Ticket.builder().id(1L).build()
         );
 
-        when(ticketRepository.findByUser_Id(7L)).thenReturn(tickets);
+        when(ticketRepository.findByUser_IdOrderByBuyDateTimeDesc(7L)).thenReturn(tickets);
 
         // Act
         List<Ticket> result = ticketService.getByUserId(7L);
@@ -192,7 +192,7 @@ public class TicketServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
 
-        verify(ticketRepository, times(1)).findByUser_Id(7L);
+        verify(ticketRepository, times(1)).findByUser_IdOrderByBuyDateTimeDesc(7L);
         verifyNoMoreInteractions(ticketRepository, roomRepository);
     }
 
