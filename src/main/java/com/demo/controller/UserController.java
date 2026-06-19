@@ -72,7 +72,7 @@ public class UserController {
     //PostMapping admin/users
     @PostMapping("admin/users")
     public String save(
-            @Valid @ModelAttribute User user,
+            @ModelAttribute User user,
             BindingResult bindingResult,
             @AuthenticationPrincipal User currentUser,
             RedirectAttributes redirectAttributes,

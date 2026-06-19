@@ -91,7 +91,7 @@ public class TicketRepositoryTest {
         Ticket ticket = Ticket.builder().row("B").seat("5").session(session).user(user).build();
         ticketRepository.save(ticket);
 
-        List<Ticket> ticketsUsuario = ticketRepository.findByUser_Id(user.getId());
+        List<Ticket> ticketsUsuario = ticketRepository.findByUser_IdOrderByBuyDateTimeDesc(user.getId());
 
         assertFalse(ticketsUsuario.isEmpty());
         assertEquals(user.getId(), ticketsUsuario.get(0).getUser().getId());

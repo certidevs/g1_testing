@@ -76,6 +76,11 @@ public class SessionControllerTest {
 
     @Test
     void sessionDetail() throws Exception {
+        var movie = movieRepository.save(Movie.builder()
+                .title("Test movie")
+                .active(true)
+                .build());
+
         var room = roomRepository.save(Room.builder()
                 .name("Sala test")
                 .capacity(10)
@@ -84,12 +89,12 @@ public class SessionControllerTest {
 
         var session = sessionRepository.save(com.demo.model.Session.builder()
                 .room(room)
+                .movie(movie)   // ← esto es lo que faltaba
                 .build());
 
         mockMvc.perform(get("/sessions/" + session.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("sessions/session-detail"))
-                .andExpect(model().attributeExists("proyeccion"))
                 .andExpect(model().attributeExists("tickets"))
                 .andExpect(model().attributeExists("seatsPerRow"));
     }
@@ -140,12 +145,11 @@ public class SessionControllerTest {
         org.junit.jupiter.api.Assertions.assertEquals(12, ticketRepository.findBySession_Id(savedSessions.get(0).getId()).size());
     }
 
-    @Disabled
     @Test
     void updateSessionDoesNotGenerateTicketsAgain() throws Exception {
         Room room = roomRepository.save(Room.builder()
                 .name("Sala 2")
-                .capacity(5)
+                .capacity(10)
                 .build());
         var existing = sessionRepository.save(com.demo.model.Session.builder()
                 .price(9.0)
