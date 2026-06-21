@@ -38,8 +38,14 @@ public class SecurityConfig {
                 .requestMatchers("/", "/register", "/login",  "/error", "/css/**", "/webjars/**", "/images/**", "/uploads/**", "/.well-known/**").permitAll()
 
                 // 2. Control de Películas (MovieController)
-                .requestMatchers(HttpMethod.GET, "/movies", "/movies/{id}").permitAll()
+                // IMPORTANTE: las rutas específicas ("/movies/new", etc.) deben declararse
+                // ANTES que "/movies/{id}", porque Spring Security va mirando en orden
+                // y se queda con el PRIMERO que coincida. Como {id} es una variable,
+                // "/movies/new" también matchea con "/movies/{id}" (id="new"), así que si
+                // "/movies/{id}" va primero con permitAll(), "/movies/new" quedaría público
+                // sin pasar nunca por la regla hasRole("ADMIN").
                 .requestMatchers("/movies/new", "/movies/edit/**", "/movies/deactivate/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/movies", "/movies/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/movies").hasRole("ADMIN")
 
                 // 3. Control de Salas (RoomController)
