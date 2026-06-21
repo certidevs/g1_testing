@@ -1,8 +1,14 @@
 package com.demo.service;
 
 import com.demo.dto.RegisterForm;
+import com.demo.dto.UserStatsDTO;
+import com.demo.model.Review;
+import com.demo.model.Ticket;
 import com.demo.model.User;
+import com.demo.model.enums.BuyStatus;
 import com.demo.model.enums.Role;
+import com.demo.repository.ReviewRepository;
+import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +36,12 @@ public class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private ReviewRepository reviewRepository;
+
+    @Mock
+    private TicketRepository ticketRepository;
 
     @InjectMocks
     private UserService userService;
@@ -187,5 +200,200 @@ public class UserServiceTest {
 
         verify(userRepository, times(1)).findByUsername("nope");
         verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    @DisplayName("create: usuario válido -> encripta contraseña y guarda")
+    void create_withValidUser_encodesPasswordAndSaves() {
+        User user = User.builder()
+                .username("newuser")
+                .email("new@example.com")
+                .password("plainPassword")
+                .role(Role.ROLE_USER)
+                .active(true)
+                .build();
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("plainPassword")).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        User result = userService.create(user);
+
+        assertEquals("encodedPassword", result.getPassword());
+        verify(passwordEncoder).encode("plainPassword");
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    @DisplayName("create: password vacío -> lanza excepción")
+    void create_withBlankPassword_throwsException() {
+        User user = User.builder()
+                .username("newuser")
+                .email("new@example.com")
+                .password(" ")
+                .build();
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
+
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> userService.create(user)
+        );
+
+        assertTrue(ex.getMessage().contains("Password"));
+        verify(passwordEncoder, never()).encode(anyString());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("update: usuario válido sin nueva password -> conserva password anterior")
+    void update_withoutNewPassword_keepsCurrentPassword() {
+        User userDB = User.builder()
+                .id(1L)
+                .username("old")
+                .email("old@example.com")
+                .password("encodedOldPassword")
+                .role(Role.ROLE_USER)
+                .active(true)
+                .build();
+
+        User userForm = User.builder()
+                .id(1L)
+                .username("updated")
+                .email("updated@example.com")
+                .password("")
+                .role(Role.ROLE_ADMIN)
+                .active(true)
+                .imageUrl("/img/avatar.png")
+                .build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userDB));
+        when(userRepository.findByUsername("updated")).thenReturn(Optional.empty());
+        when(userRepository.findByEmail("updated@example.com")).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        User result = userService.update(userForm, 99L);
+
+        assertEquals("updated", result.getUsername());
+        assertEquals("updated@example.com", result.getEmail());
+        assertEquals(Role.ROLE_ADMIN, result.getRole());
+        assertEquals("encodedOldPassword", result.getPassword());
+        assertEquals("/img/avatar.png", result.getImageUrl());
+
+        verify(passwordEncoder, never()).encode(anyString());
+        verify(userRepository).save(userDB);
+    }
+
+    @Test
+    @DisplayName("update: admin no puede desactivarse a sí mismo")
+    void update_adminTryingToDeactivateHimself_throwsException() {
+        User userDB = User.builder()
+                .id(1L)
+                .username("admin")
+                .email("admin@example.com")
+                .password("encoded")
+                .role(Role.ROLE_ADMIN)
+                .active(true)
+                .build();
+
+        User userForm = User.builder()
+                .id(1L)
+                .username("admin")
+                .email("admin@example.com")
+                .role(Role.ROLE_ADMIN)
+                .active(false)
+                .build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userDB));
+        when(userRepository.findByUsername("admin")).thenReturn(Optional.of(userDB));
+        when(userRepository.findByEmail("admin@example.com")).thenReturn(Optional.of(userDB));
+
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> userService.update(userForm, 1L)
+        );
+
+        assertTrue(ex.getMessage().contains("administrador"));
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("deactivate: usuario normal -> lo desactiva")
+    void deactivate_normalUser_setsActiveFalse() {
+        User user = User.builder()
+                .id(2L)
+                .role(Role.ROLE_USER)
+                .active(true)
+                .build();
+
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user));
+
+        userService.deactivate(2L, 1L);
+
+        assertFalse(user.getActive());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    @DisplayName("deactivate: no permite desactivar una cuenta admin")
+    void deactivate_adminUser_throwsException() {
+        User admin = User.builder()
+                .id(2L)
+                .role(Role.ROLE_ADMIN)
+                .active(true)
+                .build();
+
+        when(userRepository.findById(2L)).thenReturn(Optional.of(admin));
+
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> userService.deactivate(2L, 1L)
+        );
+
+        assertTrue(ex.getMessage().contains("administrador"));
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("activate: usuario existente -> lo activa")
+    void activate_existingUser_setsActiveTrue() {
+        User user = User.builder()
+                .id(2L)
+                .active(false)
+                .build();
+
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user));
+
+        userService.activate(2L);
+
+        assertTrue(user.getActive());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    @DisplayName("findStatsById: devuelve estadísticas de reviews y tickets pagados")
+    void findStatsById_returnsUserStats() {
+        Long userId = 1L;
+
+        Review review = Review.builder().id(10L).build();
+        Ticket ticket = Ticket.builder()
+                .id(20L)
+                .status(BuyStatus.PAGADO)
+                .build();
+
+        when(reviewRepository.countByUser_Id(userId)).thenReturn(1L);
+        when(reviewRepository.findByUser_IdOrderByCreationDateDesc(userId))
+                .thenReturn(List.of(review));
+        when(ticketRepository.findByUser_IdAndStatus(userId, BuyStatus.PAGADO))
+                .thenReturn(List.of(ticket));
+
+        UserStatsDTO stats = userService.findStatsById(userId);
+
+        assertEquals(1L, stats.countReviews());
+        assertEquals(1, stats.reviews().size());
+        assertEquals(1, stats.tickets().size());
+        assertEquals(BuyStatus.PAGADO, stats.tickets().getFirst().getStatus());
     }
 }
