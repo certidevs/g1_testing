@@ -439,4 +439,76 @@ public class TicketServiceTest {
         verify(ticketRepository, never()).save(any());
         verifyNoMoreInteractions(ticketRepository, roomRepository);
     }
+
+    @Test
+    @DisplayName("findAllPagado: devuelve tickets pagados ordenados por fecha descendente")
+    void findAllPagado_returnsPaidTickets() {
+        List<Ticket> tickets = List.of(
+                Ticket.builder().id(1L).status(BuyStatus.PAGADO).build(),
+                Ticket.builder().id(2L).status(BuyStatus.PAGADO).build()
+        );
+
+        when(ticketRepository.findByStatusOrderByBuyDateTimeDesc(BuyStatus.PAGADO))
+                .thenReturn(tickets);
+
+        List<Ticket> result = ticketService.findAllPagado();
+
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(ticket -> ticket.getStatus() == BuyStatus.PAGADO));
+
+        verify(ticketRepository).findByStatusOrderByBuyDateTimeDesc(BuyStatus.PAGADO);
+        verifyNoMoreInteractions(ticketRepository, roomRepository);
+    }
+
+    @Test
+    @DisplayName("findPagadoByUserId: devuelve tickets pagados de un usuario")
+    void findPagadoByUserId_returnsPaidTicketsFromUser() {
+        List<Ticket> tickets = List.of(
+                Ticket.builder().id(1L).status(BuyStatus.PAGADO).build()
+        );
+
+        when(ticketRepository.findByUser_IdAndStatusOrderByBuyDateTimeDesc(7L, BuyStatus.PAGADO))
+                .thenReturn(tickets);
+
+        List<Ticket> result = ticketService.findPagadoByUserId(7L);
+
+        assertEquals(1, result.size());
+        assertEquals(BuyStatus.PAGADO, result.getFirst().getStatus());
+
+        verify(ticketRepository)
+                .findByUser_IdAndStatusOrderByBuyDateTimeDesc(7L, BuyStatus.PAGADO);
+        verifyNoMoreInteractions(ticketRepository, roomRepository);
+    }
+
+    @Test
+    @DisplayName("processCheckout: calcula correctamente todos los tipos de snacks")
+    void processCheckout_withAllSnackTypes_calculatesTotalSnackPrice() {
+        Ticket ticket = Ticket.builder()
+                .id(10L)
+                .session(session)
+                .status(BuyStatus.LIBRE)
+                .build();
+
+        when(ticketRepository.findById(10L)).thenReturn(Optional.of(ticket));
+
+        ticketService.processCheckout(
+                10L,
+                null,
+                2, // 2 * 4.50 = 9.00
+                1, // 1 * 6.00 = 6.00
+                3, // 3 * 3.00 = 9.00
+                2, // 2 * 8.50 = 17.00
+                1  // 1 * 14.00 = 14.00
+        );
+
+        assertEquals(BuyStatus.PAGADO, ticket.getStatus());
+        assertEquals(9.50, ticket.getPrice());
+        assertEquals(55.00, ticket.getSnackPrice());
+        assertNotNull(ticket.getQRCode());
+        assertTrue(ticket.getQRCode().startsWith("ONLYFILM-10-"));
+
+        verify(ticketRepository).findById(10L);
+        verify(ticketRepository).save(ticket);
+        verifyNoMoreInteractions(ticketRepository, roomRepository);
+    }
 }
