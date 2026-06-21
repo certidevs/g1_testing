@@ -109,4 +109,137 @@ public class TicketRepositoryTest {
         assertFalse(ticketsPelicula.isEmpty());
         assertEquals("Interstellar", ticketsPelicula.getFirst().getSession().getMovie().getTitle());
     }
+
+    @Test
+    @DisplayName("Debería encontrar tickets por estado ordenados por fecha descendente")
+    void findByStatusOrderByBuyDateTimeDescTest() {
+        Ticket oldPaid = Ticket.builder()
+                .row("A")
+                .seat("1")
+                .session(session)
+                .user(user)
+                .status(BuyStatus.PAGADO)
+                .buyDateTime(java.time.LocalDateTime.now().minusDays(1))
+                .build();
+
+        Ticket newPaid = Ticket.builder()
+                .row("A")
+                .seat("2")
+                .session(session)
+                .user(user)
+                .status(BuyStatus.PAGADO)
+                .buyDateTime(java.time.LocalDateTime.now())
+                .build();
+
+        Ticket free = Ticket.builder()
+                .row("A")
+                .seat("3")
+                .session(session)
+                .user(user)
+                .status(BuyStatus.LIBRE)
+                .build();
+
+        ticketRepository.saveAll(List.of(oldPaid, newPaid, free));
+
+        List<Ticket> result = ticketRepository.findByStatusOrderByBuyDateTimeDesc(BuyStatus.PAGADO);
+
+        assertEquals(2, result.size());
+        assertEquals("2", result.get(0).getSeat());
+        assertEquals("1", result.get(1).getSeat());
+        assertTrue(result.stream().allMatch(ticket -> ticket.getStatus() == BuyStatus.PAGADO));
+    }
+
+    @Test
+    @DisplayName("Debería encontrar tickets de un usuario por estado ordenados por fecha descendente")
+    void findByUserIdAndStatusOrderByBuyDateTimeDescTest() {
+        Ticket paidTicket = Ticket.builder()
+                .row("B")
+                .seat("1")
+                .session(session)
+                .user(user)
+                .status(BuyStatus.PAGADO)
+                .buyDateTime(java.time.LocalDateTime.now())
+                .build();
+
+        Ticket cancelledTicket = Ticket.builder()
+                .row("B")
+                .seat("2")
+                .session(session)
+                .user(user)
+                .status(BuyStatus.CANCELADO)
+                .buyDateTime(java.time.LocalDateTime.now())
+                .build();
+
+        ticketRepository.saveAll(List.of(paidTicket, cancelledTicket));
+
+        List<Ticket> result = ticketRepository
+                .findByUser_IdAndStatusOrderByBuyDateTimeDesc(user.getId(), BuyStatus.PAGADO);
+
+        assertEquals(1, result.size());
+        assertEquals(BuyStatus.PAGADO, result.getFirst().getStatus());
+        assertEquals(user.getId(), result.getFirst().getUser().getId());
+    }
+
+    @Test
+    @DisplayName("Debería comprobar si un usuario ya compró ticket pagado para una película")
+    void existsByUserIdAndMovieIdAndStatusTest() {
+        Ticket paidTicket = Ticket.builder()
+                .row("C")
+                .seat("1")
+                .session(session)
+                .user(user)
+                .status(BuyStatus.PAGADO)
+                .build();
+
+        ticketRepository.save(paidTicket);
+
+        boolean exists = ticketRepository.existsByUser_IdAndSession_Movie_IdAndStatus(
+                user.getId(),
+                session.getMovie().getId(),
+                BuyStatus.PAGADO
+        );
+
+        assertTrue(exists);
+    }
+
+    @Test
+    @DisplayName("No debería encontrar compra si el estado no coincide")
+    void existsByUserIdAndMovieIdAndDifferentStatusReturnsFalseTest() {
+        Ticket freeTicket = Ticket.builder()
+                .row("C")
+                .seat("2")
+                .session(session)
+                .user(user)
+                .status(BuyStatus.LIBRE)
+                .build();
+
+        ticketRepository.save(freeTicket);
+
+        boolean exists = ticketRepository.existsByUser_IdAndSession_Movie_IdAndStatus(
+                user.getId(),
+                session.getMovie().getId(),
+                BuyStatus.PAGADO
+        );
+
+        assertFalse(exists);
+    }
+
+    @Test
+    @DisplayName("Debería encontrar tickets por usuario y estado sin orden específico")
+    void findByUserIdAndStatusTest() {
+        Ticket paidTicket = Ticket.builder()
+                .row("D")
+                .seat("1")
+                .session(session)
+                .user(user)
+                .status(BuyStatus.PAGADO)
+                .build();
+
+        ticketRepository.save(paidTicket);
+
+        List<Ticket> result = ticketRepository.findByUser_IdAndStatus(user.getId(), BuyStatus.PAGADO);
+
+        assertEquals(1, result.size());
+        assertEquals(BuyStatus.PAGADO, result.getFirst().getStatus());
+    }
 }
