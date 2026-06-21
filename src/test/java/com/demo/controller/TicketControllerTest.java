@@ -6,14 +6,15 @@ import com.demo.model.Session;
 import com.demo.model.Ticket;
 import com.demo.model.User;
 import com.demo.model.enums.BuyStatus;
+import com.demo.model.enums.Role;
 import com.demo.repository.MovieRepository;
 import com.demo.repository.RoomRepository;
 import com.demo.repository.SessionRepository;
 import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
+import jakarta.servlet.ServletException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -260,5 +261,127 @@ public class TicketControllerTest {
         assertEquals("ONLYFILM-UPDATED-QR", updated.getQRCode());
     }
 
+    @Test
+    @DisplayName("GET /tickets como usuario normal muestra solo sus entradas")
+    void getTicketsAsRegularUserShowsOnlyOwnTickets() throws Exception {
+        User regularUser = userRepository.save(User.builder()
+                .username("regular_user")
+                .email("regular@cinema.com")
+                .firstName("Regular")
+                .password(passwordEncoder.encode("user123"))
+                .role(Role.ROLE_USER)
+                .active(true)
+                .build());
+
+        Ticket ownTicket = ticketRepository.save(Ticket.builder()
+                .session(session)
+                .row("C")
+                .seat("1")
+                .price(10.0)
+                .user(regularUser)
+                .status(BuyStatus.PAGADO)
+                .build());
+
+        ticketRepository.save(Ticket.builder()
+                .session(session)
+                .row("C")
+                .seat("2")
+                .price(10.0)
+                .user(user)
+                .status(BuyStatus.PAGADO)
+                .build());
+
+        mockMvc.perform(get("/tickets").with(user(regularUser)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("tickets/ticket-list"))
+                .andExpect(model().attributeExists("tickets"))
+                .andExpect(model().attribute("tickets", hasSize(1)))
+                .andExpect(model().attribute("tickets", hasItem(hasProperty("id", is(ownTicket.getId())))))
+                .andExpect(model().attribute("numTickets", 1))
+                .andExpect(model().attribute("title", "Mis entradas"))
+                .andExpect(model().attribute("isAdmin", false));
+    }
+
+    @Test
+    @DisplayName("GET /tickets/{id}/checkout muestra la pantalla de checkout")
+    void checkoutGetShowsCheckoutPage() throws Exception {
+        Long ticketId = ticket3.getId();
+
+        mockMvc.perform(get("/tickets/" + ticketId + "/checkout").with(user(user)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("tickets/ticket-checkout"))
+                .andExpect(model().attributeExists("ticket"))
+                .andExpect(model().attribute("ticket", hasProperty("id", is(ticketId))))
+                .andExpect(model().attribute("ticket", hasProperty("status", is(BuyStatus.LIBRE))));
+    }
+
+    @Test
+    @DisplayName("POST /tickets/{id}/checkout procesa compra sin snacks")
+    void checkoutPostWithoutSnacksMarksTicketAsPaid() throws Exception {
+        Long ticketId = ticket3.getId();
+
+        mockMvc.perform(post("/tickets/" + ticketId + "/checkout")
+                        .with(user(user))
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/tickets/" + ticketId))
+                .andExpect(flash().attribute("successMessage", "Disfruta la película 🎬"));
+
+        Ticket updated = ticketRepository.findById(ticketId).orElseThrow();
+
+        assertEquals(BuyStatus.PAGADO, updated.getStatus());
+        assertEquals(user.getId(), updated.getUser().getId());
+        assertEquals(session.getPrice(), updated.getPrice());
+        assertNull(updated.getSnackPrice());
+        assertNotNull(updated.getBuyDateTime());
+        assertNotNull(updated.getQRCode());
+        assertTrue(updated.getQRCode().startsWith("ONLYFILM-" + ticketId + "-"));
+    }
+
+    @Test
+    @DisplayName("POST /tickets/{id}/checkout calcula correctamente el precio de snacks")
+    void checkoutPostWithSnacksCalculatesSnackPrice() throws Exception {
+        Long ticketId = ticket3.getId();
+
+        mockMvc.perform(post("/tickets/" + ticketId + "/checkout")
+                        .with(user(user))
+                        .with(csrf())
+                        .param("qtyPalomitasMedianas", "1")
+                        .param("qtyPalomitasGrandes", "1")
+                        .param("qtyRefresco", "2")
+                        .param("qtyPackDuo", "1")
+                        .param("qtyComboFamiliar", "1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/tickets/" + ticketId));
+
+        Ticket updated = ticketRepository.findById(ticketId).orElseThrow();
+
+        double expectedSnackPrice = 4.50 + 6.00 + 6.00 + 8.50 + 14.00;
+
+        assertEquals(BuyStatus.PAGADO, updated.getStatus());
+        assertEquals(expectedSnackPrice, updated.getSnackPrice());
+        assertEquals(user.getId(), updated.getUser().getId());
+        assertNotNull(updated.getQRCode());
+    }
+
+    @Test
+    @DisplayName("GET /tickets/{id} con ticket inexistente lanza NoSuchElementException")
+    void ticketDetailNotFoundThrowsNoSuchElementException() {
+        Long nonExistingId = 999999L;
+
+        assertThrows(ServletException.class, () ->
+                mockMvc.perform(get("/tickets/" + nonExistingId).with(user(user)))
+        );
+    }
+
+    @Test
+    @DisplayName("GET /tickets/edit/{id} con ticket inexistente lanza NoSuchElementException")
+    void editTicketNotFoundThrowsNoSuchElementException() {
+        Long nonExistingId = 999999L;
+
+        assertThrows(ServletException.class, () ->
+                mockMvc.perform(get("/tickets/edit/" + nonExistingId).with(user(user)))
+        );
+    }
 
 }
