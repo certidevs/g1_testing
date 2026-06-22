@@ -50,7 +50,7 @@ public class MovieController {
         List<Movie> movies = movieRepository.findActiveFiltering(durationMinutes, genre, releaseYear, title);
         model.addAttribute("movies", movies);
         model.addAttribute("numMovies", movies.size());
-        model.addAttribute("title", "Listado de peliculas");
+        model.addAttribute("title", "Listado de películas");
         return "movies/movie-list";
     }
 

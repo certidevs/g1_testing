@@ -16,7 +16,7 @@ public class MovieSeleniumTest extends BaseSeleniumTest{
 
         //Verificamos el h1 de la página (debemos tener 1 solo h1 por html)
         //el .tagName busca la etiqueta <h1>
-        assertTrue(driver.findElement(By.tagName("h1")).getText().contains("Listado de peliculas"));
+        assertTrue(driver.findElement(By.tagName("h1")).getText().contains("Listado de películas"));
 
         //Verificamos el badge de resultados (ej: "2 resultados")
         //El .cssSelector es una clase de css compuesta
