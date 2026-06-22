@@ -64,6 +64,22 @@ jobs:
       - name: Ejecutar *ServiceTest
         run: mvn -B test -Dtest='*ServiceTest'
 
+
+  security-tests:
+    name: Tests de seguridad (rutas SecurityConfig)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Java 25 + cache Maven
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Ejecutar *SecurityTest
+        run: mvn -B test -Dtest='*SecurityConfigTest'
+
   selenium-tests:
     name: Tests de Selenium E2E
     runs-on: ubuntu-latest
