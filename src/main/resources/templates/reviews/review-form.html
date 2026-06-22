@@ -159,6 +159,10 @@
             selected = val;
             hidden.value = val;
             ratingError.style.display = 'none';
+
+            paintStars(selected);
+            ratingText.textContent =
+                selected + ' / 5 — ' + labels[selected];
         });
 
         // Accesibilidad: teclado
