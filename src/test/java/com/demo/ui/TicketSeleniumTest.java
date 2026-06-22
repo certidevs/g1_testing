@@ -142,6 +142,8 @@ public class TicketSeleniumTest extends BaseSeleniumTest {
 
         clickSafely(detailButtons.getFirst());
 
+        // Esperar a que la navegación termine antes de comprobar la URL (evita flaky)
+        wait.until(ExpectedConditions.urlToBe(baseUrl + "tickets/" + paidTicket.getId()));
         assertEquals(baseUrl + "tickets/" + paidTicket.getId(), driver.getCurrentUrl());
     }
 

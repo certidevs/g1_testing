@@ -13,7 +13,7 @@ import com.demo.repository.SessionRepository;
 import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
 import jakarta.servlet.ServletException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -169,8 +169,11 @@ public class TicketControllerTest {
                 .andExpect(model().attributeExists("ticket"))
                 .andExpect(model().attributeExists("users"))
                 .andExpect(model().attributeExists("sessions"))
-                .andExpect(model().attribute("users", hasSize(1)))
-                .andExpect(model().attribute("sessions", hasSize(1)));
+                // findAll() puede contener datos de otras clases de test (H2 en memoria
+                // compartido), así que verificamos que el modelo CONTIENE el usuario y la
+                // sesión esperados en vez de afirmar un tamaño absoluto (frágil).
+                .andExpect(model().attribute("users", hasItem(hasProperty("id", is(user.getId())))))
+                .andExpect(model().attribute("sessions", hasItem(hasProperty("id", is(session.getId())))));
     }
 
 
