@@ -2,7 +2,6 @@ package com.demo.repository;
 
 import com.demo.model.Room;
 import com.demo.model.enums.ScreenType;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -13,11 +13,6 @@ package com.demo.controller;
     import org.springframework.web.bind.annotation.ModelAttribute;
     import org.springframework.web.bind.annotation.PathVariable;
     import org.springframework.web.bind.annotation.PostMapping;
-
-    import com.demo.model.Ticket;
-    import com.demo.model.Room;
-    import com.demo.model.enums.BuyStatus;
-    import java.util.ArrayList;
     import java.util.List;
 
 @Controller

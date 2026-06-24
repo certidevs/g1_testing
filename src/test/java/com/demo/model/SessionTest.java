@@ -1,7 +1,5 @@
 package com.demo.model;
 
-import com.demo.model.enums.BuyStatus;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 

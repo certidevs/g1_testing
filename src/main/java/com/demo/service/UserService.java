@@ -1,7 +1,6 @@
 package com.demo.service;
 
 import com.demo.dto.UserStatsDTO;
-import com.demo.model.Review;
 import com.demo.model.User;
 import com.demo.model.enums.BuyStatus;
 import com.demo.model.enums.Role;

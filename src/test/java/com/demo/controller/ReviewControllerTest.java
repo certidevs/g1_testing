@@ -21,7 +21,6 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
