@@ -10,6 +10,8 @@ import com.demo.repository.RoomRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -79,7 +81,10 @@ public class TicketService {
         int created = 0;
 
         while (created < capacity && rowLetter <= 'Z') {
-            for (int seatNum = 1; seatNum <= seatsPerRow && created < capacity; seatNum++) {
+
+            for (int seatNum = 1;
+                 seatNum <= seatsPerRow && created < capacity;
+                 seatNum++, created++) {
 
                 Ticket ticket = Ticket.builder()
                         .session(session)
@@ -91,8 +96,8 @@ public class TicketService {
                         .build();
 
                 tickets.add(ticket);
-                created++;
             }
+
             rowLetter++;
         }
 
@@ -130,7 +135,7 @@ public class TicketService {
 
         ticket.setPrice(ticket.getSession().getPrice());
 
-        ticket.setBuyDateTime(java.time.LocalDateTime.now());
+        ticket.setBuyDateTime(LocalDateTime.now(ZoneId.of("Europe/Madrid")));
 
         ticket.setStatus(BuyStatus.PAGADO);
 
