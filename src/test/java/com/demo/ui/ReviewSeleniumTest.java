@@ -98,7 +98,7 @@ public class ReviewSeleniumTest extends BaseSeleniumTest {
                 .price(12.50)
                 .discount(0.0)
                 .status(BuyStatus.PAGADO)
-                .QRCode("REVIEW-TEST-QR")
+                .qrCode("REVIEW-TEST-QR")
                 .build());
     }
 

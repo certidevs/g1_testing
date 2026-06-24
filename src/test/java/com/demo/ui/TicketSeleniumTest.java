@@ -110,7 +110,7 @@ public class TicketSeleniumTest extends BaseSeleniumTest {
                 .discount(0.0)
                 .snackPrice(4.50)
                 .status(BuyStatus.PAGADO)
-                .QRCode("ONLYFILM-TEST-QR")
+                .qrCode("ONLYFILM-TEST-QR")
                 .build());
 
         freeTicket = ticketRepository.save(Ticket.builder()
@@ -261,8 +261,8 @@ public class TicketSeleniumTest extends BaseSeleniumTest {
 
         assertEquals(BuyStatus.PAGADO, ticketDB.getStatus());
         assertEquals(user.getId(), ticketDB.getUser().getId());
-        assertNotNull(ticketDB.getQRCode());
-        assertTrue(ticketDB.getQRCode().startsWith("ONLYFILM-"));
+        assertNotNull(ticketDB.getQrCode());
+        assertTrue(ticketDB.getQrCode().startsWith("ONLYFILM-"));
         assertEquals(4.50, ticketDB.getSnackPrice());
     }
 
@@ -295,7 +295,7 @@ public class TicketSeleniumTest extends BaseSeleniumTest {
         WebElement statusSelect = driver.findElement(By.id("status"));
         WebElement sessionSelect = driver.findElement(By.id("session"));
         WebElement userSelect = driver.findElement(By.id("user"));
-        WebElement qrInput = driver.findElement(By.id("QRCode"));
+        WebElement qrInput = driver.findElement(By.id("qrCode"));
 
         assertEquals(paidTicket.getRow(), rowInput.getAttribute("value"));
         assertEquals(paidTicket.getSeat(), seatInput.getAttribute("value"));

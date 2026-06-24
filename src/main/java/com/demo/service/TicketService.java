@@ -138,7 +138,7 @@ public class TicketService {
             ticket.setUser(user);
         }
 
-        ticket.setQRCode(generateQrCode(ticket.getId()));
+        ticket.setQrCode(generateQrCode(ticket.getId()));
 
         ticketRepository.save(ticket);
     }

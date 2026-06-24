@@ -210,8 +210,8 @@ public class CheckoutSeleniumTest extends BaseSeleniumTest {
 
         assertEquals(BuyStatus.PAGADO, paidTicket.getStatus());
         assertEquals(testUser.getId(), paidTicket.getUser().getId());
-        assertNotNull(paidTicket.getQRCode());
-        assertTrue(paidTicket.getQRCode().startsWith("ONLYFILM-"));
+        assertNotNull(paidTicket.getQrCode());
+        assertTrue(paidTicket.getQrCode().startsWith("ONLYFILM-"));
         assertEquals(4.50, paidTicket.getSnackPrice());
     }
 

@@ -371,8 +371,8 @@ public class TicketServiceTest {
         assertEquals(13.50, ticket.getSnackPrice());
         assertNotNull(ticket.getBuyDateTime());
         assertSame(user, ticket.getUser());
-        assertNotNull(ticket.getQRCode());
-        assertTrue(ticket.getQRCode().startsWith("ONLYFILM-1-"));
+        assertNotNull(ticket.getQrCode());
+        assertTrue(ticket.getQrCode().startsWith("ONLYFILM-1-"));
 
         verify(ticketRepository, times(1)).findById(1L);
         verify(ticketRepository, times(1)).save(ticket);
@@ -408,8 +408,8 @@ public class TicketServiceTest {
         assertNull(ticket.getSnackPrice());
         assertNull(ticket.getUser());
         assertNotNull(ticket.getBuyDateTime());
-        assertNotNull(ticket.getQRCode());
-        assertTrue(ticket.getQRCode().startsWith("ONLYFILM-1-"));
+        assertNotNull(ticket.getQrCode());
+        assertTrue(ticket.getQrCode().startsWith("ONLYFILM-1-"));
 
         verify(ticketRepository, times(1)).findById(1L);
         verify(ticketRepository, times(1)).save(ticket);
@@ -504,8 +504,8 @@ public class TicketServiceTest {
         assertEquals(BuyStatus.PAGADO, ticket.getStatus());
         assertEquals(9.50, ticket.getPrice());
         assertEquals(55.00, ticket.getSnackPrice());
-        assertNotNull(ticket.getQRCode());
-        assertTrue(ticket.getQRCode().startsWith("ONLYFILM-10-"));
+        assertNotNull(ticket.getQrCode());
+        assertTrue(ticket.getQrCode().startsWith("ONLYFILM-10-"));
 
         verify(ticketRepository).findById(10L);
         verify(ticketRepository).save(ticket);

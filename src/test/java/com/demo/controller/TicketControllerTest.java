@@ -213,7 +213,7 @@ public class TicketControllerTest {
                         .param("status", BuyStatus.LIBRE.name())
                         .param("session", session.getId().toString())
                         .param("user", user.getId().toString())
-                        .param("QRCode", "ONLYFILM-NEW-QR"))
+                        .param("qrCode", "ONLYFILM-NEW-QR"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/tickets"));
 
@@ -229,7 +229,7 @@ public class TicketControllerTest {
         assertEquals(BuyStatus.LIBRE, saved.getStatus());
         assertEquals(session.getId(), saved.getSession().getId());
         assertEquals(user.getId(), saved.getUser().getId());
-        assertEquals("ONLYFILM-NEW-QR", saved.getQRCode());
+        assertEquals("ONLYFILM-NEW-QR", saved.getQrCode());
     }
 
     @Test
@@ -248,7 +248,7 @@ public class TicketControllerTest {
                         .param("status", BuyStatus.PAGADO.name())
                         .param("session", session.getId().toString())
                         .param("user", user.getId().toString())
-                        .param("QRCode", "ONLYFILM-UPDATED-QR"))
+                        .param("qrCode", "ONLYFILM-UPDATED-QR"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/tickets"));
 
@@ -261,7 +261,7 @@ public class TicketControllerTest {
         assertEquals(BuyStatus.PAGADO, updated.getStatus());
         assertEquals(session.getId(), updated.getSession().getId());
         assertEquals(user.getId(), updated.getUser().getId());
-        assertEquals("ONLYFILM-UPDATED-QR", updated.getQRCode());
+        assertEquals("ONLYFILM-UPDATED-QR", updated.getQrCode());
     }
 
     @Test
@@ -337,8 +337,8 @@ public class TicketControllerTest {
         assertEquals(session.getPrice(), updated.getPrice());
         assertNull(updated.getSnackPrice());
         assertNotNull(updated.getBuyDateTime());
-        assertNotNull(updated.getQRCode());
-        assertTrue(updated.getQRCode().startsWith("ONLYFILM-" + ticketId + "-"));
+        assertNotNull(updated.getQrCode());
+        assertTrue(updated.getQrCode().startsWith("ONLYFILM-" + ticketId + "-"));
     }
 
     @Test
@@ -364,7 +364,7 @@ public class TicketControllerTest {
         assertEquals(BuyStatus.PAGADO, updated.getStatus());
         assertEquals(expectedSnackPrice, updated.getSnackPrice());
         assertEquals(user.getId(), updated.getUser().getId());
-        assertNotNull(updated.getQRCode());
+        assertNotNull(updated.getQrCode());
     }
 
     @Test

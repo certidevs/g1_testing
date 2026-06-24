@@ -32,7 +32,7 @@ class TicketTest {
                 .seat("12")
                 .price(9.50)
                 .discount(1.50)
-                .QRCode("QR-INT-2026-XYZ")
+                .qrCode("QR-INT-2026-XYZ")
                 .user(mockUser)
                 .session(mockSession)
                 .build();
@@ -44,7 +44,7 @@ class TicketTest {
                 () -> assertEquals("12", ticket.getSeat()),
                 () -> assertEquals(9.50, ticket.getPrice()),
                 () -> assertEquals(1.50, ticket.getDiscount()),
-                () -> assertEquals("QR-INT-2026-XYZ", ticket.getQRCode())
+                () -> assertEquals("QR-INT-2026-XYZ", ticket.getQrCode())
         );
 
         assertAll("Verificación de relaciones y valores por defecto",

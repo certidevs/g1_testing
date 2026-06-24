@@ -129,7 +129,7 @@
                         <!-- QR -->
                         <div class="col-md-6 ticket-qr-col">
                             <!-- QR — solo si el ticket está pagado y tiene código -->
-                        <div class="ticket-qr-col-inner" th:if="${ticket.QRCode != null}">
+                        <div class="ticket-qr-col-inner" th:if="${ticket.qrCode != null}">
                             <!-- Poster de la peli -->
                             <div class="ticket-qr-poster-wrap mb-3">
                                 <img th:src="${ticket.session.movie.imageUrl}"
@@ -148,17 +148,17 @@
                                 Código de acceso
                             </p>
                             <div class="ticket-qr-frame">
-                                <img th:src="${'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + ticket.QRCode}"
+                                <img th:src="${'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + ticket.qrCode}"
                                      alt="QR Code"
                                      class="ticket-qr-img">
                             </div>
                             <p class="font-monospace small text-muted mt-2 mb-0"
-                               th:text="${ticket.QRCode}"
+                               th:text="${ticket.qrCode}"
                                style="font-size:0.7rem; letter-spacing:0.05em; word-break:break-all">
                                 HASH-ID
                             </p>
                         </div>
-                        <div class="text-center text-muted" th:if="${ticket.QRCode == null}">
+                        <div class="text-center text-muted" th:if="${ticket.qrCode == null}">
                             <i class="fa-solid fa-clock fa-2x mb-2 text-secondary"></i>
                             <p class="small">Entrada pendiente de compra</p>
                         </div>

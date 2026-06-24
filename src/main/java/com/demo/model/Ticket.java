@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -37,13 +38,13 @@ public class Ticket {
     private Double discount;
 
     @Builder.Default
-    private LocalDateTime buyDateTime = LocalDateTime.now();
+    private LocalDateTime buyDateTime = LocalDateTime.now(ZoneId.of("Europe/Madrid"));
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private BuyStatus status = BuyStatus.LIBRE;
 
-    private String QRCode;
+    private String qrCode;
 
     @ManyToOne
     private User user;
